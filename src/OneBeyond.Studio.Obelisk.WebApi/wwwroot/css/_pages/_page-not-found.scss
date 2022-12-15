@@ -1,0 +1,34 @@
+﻿
+@import '../_components/_variables.scss';
+@import '../_components/_mixins.scss';
+
+
+
+#page-not-found {
+
+    h1 {
+        padding-top: 50px;
+        font-size: 10rem;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        margin-bottom: 50px;
+    }
+
+    .btn.btn-go-to-home {
+        background-color: transparent;
+        border-width: 2px;
+        border-radius: 20px;
+        padding: 0.375rem 1.5rem;
+        border-color: $themeColour;
+        color: $themeColour;
+
+        &:hover {
+            background-color: $themeColour;
+            color: #FFF;
+        }
+    }
+}

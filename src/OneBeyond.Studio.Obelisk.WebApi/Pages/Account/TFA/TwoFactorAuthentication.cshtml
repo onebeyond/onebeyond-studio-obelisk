@@ -1,0 +1,92 @@
+@page
+@model             TwoFactorAuthenticationModel
+@{
+    Layout = null;
+    ViewData["Title"] = @sharedLocalizer["Two-factor authentication (2FA)"];
+}
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using OneBeyond.Studio.Obelisk.WebApi.Localizations;
+@using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+@using OneBeyond.Studio.Obelisk.WebApi.Pages.Account.TFA;
+@inject IHtmlLocalizer<SharedResources> sharedLocalizer;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no" name="viewport">
+
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/@UIBuildFileHelpers.GetFileNameFromUIBundle("mainCss.*.css")" rel="stylesheet" />
+</head>
+
+<body id="page-account">
+
+    <div class="d-flex align-items-center justify-content-center row min-vh-100">
+        <div id="siteLogin" class="account-box login-box">
+
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <h4>@ViewData["Title"]</h4>
+
+            @if (Model.Is2faEnabled)
+            {
+                if (Model.RecoveryCodesLeft == 0)
+                {
+                    <div class="alert alert-danger">
+                        <strong>@sharedLocalizer["You have no recovery codes left."]</strong>
+                        <p>@sharedLocalizer["You must"] <a asp-page="./ GenerateRecoveryCodes">@sharedLocalizer["generate a new set of recovery codes"]</a> @sharedLocalizer["before you can log in with a recovery code."]</p>
+                    </div>
+                }
+                else if (Model.RecoveryCodesLeft == 1)
+                {
+                    <div class="alert alert-danger">
+                        <strong>@sharedLocalizer["You have 1 recovery code left."]</strong>
+                        <p>@sharedLocalizer["You can"] <a asp-page="./ GenerateRecoveryCodes">@sharedLocalizer["generate a new set of recovery codes"]</a>.</p>
+                    </div>
+                }
+                else if (Model.RecoveryCodesLeft <= 3)
+                {
+                    <div class="alert alert-warning">
+                        <strong>@sharedLocalizer["You have {0} recovery codes left.", Model.RecoveryCodesLeft]</strong>
+                        <p>@sharedLocalizer["You should"] <a asp-page="./ GenerateRecoveryCodes">@sharedLocalizer["generate a new set of recovery codes"]</a>.</p>
+                    </div>
+                }
+
+                if (Model.IsMachineRemembered)
+                {
+                    <form method="post" style="display: inline-block">
+                        <button type="submit" class="btn btn-default">@sharedLocalizer["Forget this browser"]</button>
+                    </form>
+                }
+
+                if (!Model.Is2faMandatory)
+                {
+                    <div><a asp-page="./Disable2fa" class="btn btn-default">@sharedLocalizer["Disable 2FA"]</a></div>
+                }
+
+                <div><a asp-page="./GenerateRecoveryCodes" class="btn btn-default">@sharedLocalizer["Reset recovery codes"]</a></div>
+            }
+
+            <h5>@sharedLocalizer["Authenticator app"]</h5>
+
+            @if (!Model.HasAuthenticator)
+            {
+                <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-default">@sharedLocalizer["Add authenticator app"]</a>
+            }
+            else
+            {
+                <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-default">@sharedLocalizer["Reset authenticator app"]</a>
+            }
+            <partial name="_ValidationScriptsPartial" />
+        </div>
+    </div>
+
+    <partial name="_PageFooter" />
+
+</body>
+
+</html>

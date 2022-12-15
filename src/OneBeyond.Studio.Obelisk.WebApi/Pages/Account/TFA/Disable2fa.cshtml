@@ -1,0 +1,53 @@
+@page
+@model             Disable2faModel
+@{
+    Layout = null;
+    ViewData["Title"] = @sharedLocalizer["Disable two-factor authentication (2FA)"];
+}
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using OneBeyond.Studio.Obelisk.WebApi.Pages.Account.TFA;
+@using OneBeyond.Studio.Obelisk.WebApi.Localizations;
+@using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+@inject IHtmlLocalizer<SharedResources> sharedLocalizer;
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no" name="viewport">
+
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/@UIBuildFileHelpers.GetFileNameFromUIBundle("mainCss.*.css")" rel="stylesheet" />
+</head>
+
+<body id="page-account">
+
+    <div class="d-flex align-items-center justify-content-center row min-vh-100">
+        <div id="siteLogin" class="account-box login-box">
+
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <div class="alert alert-warning" role="alert">
+                <p>
+                    <strong>@sharedLocalizer["This action only disables 2FA."]</strong>
+                </p>
+                <p>
+                    @sharedLocalizer["Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key " +
+                    "used in an authenticator app you should"] <a asp-page="./ResetAuthenticator">@sharedLocalizer["reset your authenticator keys."]</a>
+                </p>
+            </div>
+
+            <div>
+                <form method="post" class="form-group">
+                    <button class="btn btn-danger" type="submit">@sharedLocalizer["Disable 2FA"]</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no"
+            name="viewport"
+        />
+
+        <title>Waterloo Template</title>
+
+        <!-- Favicons generated from https://realfavicongenerator.net/ -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png" />
+        <link rel="manifest" href="/assets/images/icons/site.webmanifest" />
+        <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="/assets/images/icons/favicon.ico" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml" />
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="stylesheet" href="/assets/fontawesome-free-5.7.0-web/css/all.min.css" />
+        <script src="/assets/fontawesome-free-5.7.0-web/js/all.min.js" data-auto-replace-svg="nest"></script>
+
+        <!-- Please do NOT delete the line below -->
+        <script>/** @preserve ENVIRONMENT_SETUP_PLACEHOLDER */</script>
+        <!-- e.g. <script>window.env = 'qa'</script> -->
+        
+    </head>
+    <body>
+        <div id="adminApp">
+            <!--@* Load mask *@-->
+
+            <div class="page-load-mask" v-if="!$data" v-transition>
+                <div class="lds-css">
+                    <div class="lds-spinner" style="width: 100%; height: 100%"></div>
+                </div>
+            </div>
+
+            <!-- @* App content *@-->
+
+            <div v-cloak>
+                <nav id="main-menu" class="navbar navbar-expand-lg navbar-dark fixed-top">
+                    <button id="leftBurger" class="hamburger-icon sidebar-toggler offcanvas-toggle" type="button">
+                        <div></div>
+                    </button>
+
+                    <router-link class="navbar-brand" to="/" exact>
+                        <img src="/assets/images/one-beyond-logo-black.svg" alt="Waterloo Template Homepage" />
+                    </router-link>
+
+                    <div
+                        class="hamburger-icon navbar-toggle float-right"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        id="hamburger-menu"
+                    >
+                        <div></div>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <router-link class="nav-item" tag="li" to="/" exact>
+                                <a class="nav-link">Dashboard</a>
+                            </router-link>
+                            <router-link
+                                v-if="$store.state.userContext.isInRole('Administrator')"
+                                class="nav-item"
+                                tag="li"
+                                to="/users"
+                            >
+                                <a class="nav-link">Users</a>
+                            </router-link>
+                        </ul>
+
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown" id="userNameButton">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <div class="profileImage">
+                                        <span id="userAvatarText">{{$store.state.userContext.initials}}</span>
+                                        <img
+                                            src="/assets/images/generic-avatar.jpg"
+                                            id="userAvatarImage"
+                                            alt="avatar"
+                                            class="clip-circle"
+                                        />
+                                    </div>
+
+                                    <span id="userName">{{$store.state.userContext.userName}}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <div class="dropdown-divider"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <div class="page-body container-fluid">
+                    <!-- @* Sidebar *@-->
+
+                    <aside id="sidebar-left">
+                        <div class="sidebar-logo">
+                            <img
+                                src="/assets/images/one-beyond-logo-black.svg"
+                                height="36"
+                                class="d-inline-block align-top"
+                                alt="Waterloo Template Homepage"
+                            />
+
+                            <button
+                                class="hamburger-icon hamburger-icon-close sidebar-toggler offcanvas-toggle close-sidebar"
+                                type="button"
+                                data-toggle="collapse"
+                            >
+                                <div></div>
+                            </button>
+
+                            <a
+                                class="btn btn-primary user-collapse-button text-left"
+                                data-toggle="collapse"
+                                href="#userCollapse"
+                                role="button"
+                                aria-expanded="false"
+                                aria-controls="collapseExample"
+                            >
+                                <i class="far fa-user mr-2"></i> {{ $store.state.userContext.username }}
+                            </a>
+
+                            <div class="collapse" id="userCollapse">
+                                <a class="btn btn-link d-block text-left" href="/authentication#/ChangePassword"
+                                    ><i class="fas fa-key"></i> Change password</a
+                                >
+                                <a
+                                    class="btn btn-link d-block text-left"
+                                    href="/authentication#/TwoFactorAuthentication"
+                                    ><i class="fas fa-key"></i> Authentication Settings</a
+                                >
+                            </div>
+
+                            <div v-if="$i18n.availableLocales.length > 1" class="sidebar-language-selector">
+                                <language-selector></language-selector>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-search-field">
+                            <input
+                                type="text"
+                                id="sidebarSearchInput"
+                                onkeyup="sidebarSearch()"
+                                placeholder="Search..."
+                                class="form-control"
+                            />
+                            <button id="reset-sidebar-search" class="btn" onclick="sidebarSearchReset()">
+                                <span></span>
+                            </button>
+                        </div>
+
+                        <div v-if="$i18n.availableLocales.length > 1" class="sidebar-language-selector">
+                            <language-selector></language-selector>
+                        </div>
+
+                        <a
+                            class="nav-section-title"
+                            data-toggle="collapse"
+                            href="#collapse-navigation"
+                            role="button"
+                            aria-expanded="false"
+                            aria-controls="collapseExample"
+                            >Navigation</a
+                        >
+                        <div class="collapse show mt-2" id="collapse-navigation">
+                            <ul class="sidebar-menu">
+                                <router-link class="nav-item" tag="li" to="/" exact>
+                                    <a class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+                                </router-link>
+
+                                <router-link
+                                    v-if="$store.state.userContext.isInRole('Administrator')"
+                                    class="nav-item"
+                                    tag="li"
+                                    to="/users"
+                                >
+                                    <a class="nav-link"><i class="fas fa-users"></i> Users</a>
+                                </router-link>
+                            </ul>
+                        </div>
+                    </aside>
+                    <div id="sidebar-mask"></div>
+
+                    <!--@* Content *@-->
+
+                    <main class="page-content">
+                        <!--@RenderBody()-->
+                        <router-view :key="$route.fullPath"></router-view>
+                    </main>
+                </div>
+            </div>
+
+            <!--@* Session timeout *@-->
+            <session-timeout></session-timeout>
+
+            <!-- @* User Context*@-->
+            <user-context></user-context>
+
+            <!-- Please do not remove this div, it's used to detect if the app is displayed on the mobile screen (See EntityCrudMixin -> isMobile) -->
+            <div id="isMobileCheckDiv" class="hide-on-desktop"></div>
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <span>Waterloo Template</span> -
+                    <span>Developed by <a href="https://www.one-beyond.com" target="_blank">One Beyond</a></span>
+                    <span>Build: {{$buildNumber}} ({{$buildDate}})</span>
+                </div>
+            </footer>
+        </div>
+
+        <script src="/assets/jquery.min.js" asp-append-version="true"></script>
+        <script defer src="/assets/ui-scripts.js" asp-append-version="true"></script>
+
+        <script>
+            $("#hamburger-menu").click(function () {
+                $("#hamburger-menu").toggleClass("hamburger-icon-close");
+            });
+        </script>
+    </body>
+</html>

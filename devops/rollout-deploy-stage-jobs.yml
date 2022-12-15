@@ -1,0 +1,195 @@
+parameters:
+  - name: buildArtifactPipelineId
+    displayName: 'ID of pipeline used for building artifacts'
+  - name: projectCode
+    displayName: 'Proejct code'
+  - name: stageCode
+    displayName: 'Stage code'
+    values:
+      - qa
+      - uat
+      - prod
+  - name: devOpsEnvironment
+    displayName: 'Environment name in Azure DevOps to be target by the stage deployment'
+  - name: devOpsServiceConnection
+    displayName: 'Azure DevOps service connection'
+  - name: runtimeEnvironment # Used for picking up the appsettings.<runtimeEnvironment>.json file, so case is important on Linux'
+    displayName: 'Environment name to run the code against.'
+
+jobs:
+  - job: Build_TF_Plan
+    displayName: 'Build Stage TF Plan'
+    variables:
+      tf.workingDirectory: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/TF-Files'
+    steps:
+      - checkout: none
+
+      - download: ${{parameters.buildArtifactPipelineId}}
+        displayName: 'Download TF Files'
+        artifact: 'TF-Files'
+    
+      - template: 'infra-build-tfp-steps.yml'
+        parameters:
+          stageCode: ${{parameters.stageCode}}
+          azServiceConnection: '${{parameters.devOpsServiceConnection}}'
+          tfWorkingDirectory: '$(tf.workingDirectory)'
+          tfBackendResourceGroupName: '${{lower(parameters.projectCode)}}-infra-rg'
+          tfBackendStorageAccountName: ${{replace(lower(parameters.projectCode), '-', '')}}infrastorage
+
+      - task: ArchiveFiles@2
+        displayName: 'Archive TF Plan'
+        inputs:
+          includeRootFolder: false
+          rootFolderOrFile: '$(tf.workingDirectory)'
+          archiveFile: '$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip'
+
+      - publish: '$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip'
+        displayName: 'Publish TF Plan'
+        artifact: 'TF-Plan-${{parameters.stageCode}}'
+
+  - ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
+    - job: Confirm_TF_Plan
+      displayName: 'Confirm Stage TF Plan'
+      dependsOn: [ Build_TF_Plan ]
+      variables:
+        tfPlanHasChanges: $[dependencies.Build_TF_Plan.outputs['Terraform_Plan.changesPresent']]
+      pool: server
+      steps:
+        - task: ManualValidation@0
+          displayName: 'Confirm TF Plan for "$(System.StageDisplayName)"'
+          condition: and(succeeded(), eq(variables.tfPlanHasChanges, true))
+          inputs:
+            instructions: 'Please check and confirm TF plan for "$(System.StageDisplayName)"'
+            #notifyUsers: might be useful to configure
+
+  - deployment:
+    displayName: 'Deploy to Stage'
+    ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
+      dependsOn: [ Build_TF_Plan, Confirm_TF_Plan ]
+    ${{ else }}:
+      dependsOn: [ Build_TF_Plan ]
+    environment: ${{parameters.devOpsEnvironment}}
+    variables:
+      - name: tf.workingDirectory
+        value: '$(Agent.TempDirectory)/TFPlan'
+      - name: spa.workingDirectory
+        value: '$(Agent.TempDirectory)/WebUISpa'
+      - name: ef.workingDirectory
+        value: '$(Pipeline.Workspace)/EFBundle'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: current
+              displayName: 'Download This Pipeline Artifacts'
+
+            - download: ${{parameters.buildArtifactPipelineId}}
+              displayName: 'Download Build Pipeline Artifacts'
+
+            - task: ExtractFiles@1
+              displayName: 'Extract TF Plan'
+              inputs:
+                archiveFilePatterns:  '$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}/TF-Plan-${{parameters.stageCode}}.zip'
+                destinationFolder: '$(tf.workingDirectory)'
+
+            - task: ExtractFiles@1
+              displayName: 'Extract Web UI SPA'
+              inputs:
+                archiveFilePatterns: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebUISpa/*.zip'
+                destinationFolder: '$(spa.workingDirectory)'
+
+            - task: ExtractFiles@1
+              displayName: 'Extract EF Bundle'
+              inputs:
+                archiveFilePatterns: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/EF-Bundle/*.zip'
+                destinationFolder: '$(ef.workingDirectory)'
+
+            - task: TerraformInstaller@0
+              displayName: 'Install TF'
+              inputs:
+                terraformVersion: latest
+
+            - task: TerraformTaskV3@3
+              displayName: 'Apply TF Plan'
+              inputs:
+                workingDirectory: '$(tf.workingDirectory)'
+                environmentServiceNameAzureRM: '${{parameters.devOpsServiceConnection}}'
+                command: apply
+                commandOptions: >
+                  -input=false
+                  terraform.tfplan
+
+            - bash: |
+                set -euo pipefail
+                terraform output -json | jq -r '
+                  . as $in
+                  | keys[]
+                  | ($in[.].value | tostring | gsub("\\\\"; "\\") | gsub("\n"; "\n")) as $value                                      # gsub replacements are confusing
+                  | ($in[.].sensitive | tostring) as $sensitive
+                  | [
+                    "- " + . + ": " + if $sensitive == "true" then "(sensitive)" else $value end,                                    # Output name to console
+                    "##vso[task.setvariable variable=" + . + ";isreadonly=true;isoutput=true;issecret=" + $sensitive + "]" + $value  # Also set as ADO job variable
+                    ]
+                  | .[]'
+              name: Terraform_Output
+              displayName: 'Publish TF Outputs'
+              workingDirectory: '$(tf.workingDirectory)'
+
+            - bash: |
+                echo "##vso[task.setvariable variable=appSettings.apiUrl;isreadonly=true]$(Terraform_Output.web_api_url)"
+              displayName: 'Bind Variables for Web UI SPA Settings'
+
+            - task: FileTransform@2
+              displayName: 'Transform Web UI SPA Settings'
+              inputs:
+                folderPath: '$(spa.workingDirectory)'
+                jsonTargetFiles: 'configuration/*.json'
+                xmlTargetFiles: ''
+                xmlTransformationRules: ''
+
+            - bash: |
+                sed -i 's/\/\*\* @preserve ENVIRONMENT_SETUP_PLACEHOLDER \*\//window.env = '\'${{parameters.runtimeEnvironment}}\''/g' $(spa.workingDirectory)/*.html
+              displayName: 'Set up Web UI SPA Runtime Environment'
+
+            - bash: |
+                chmod a+x ./efbundle
+                ./efbundle --connection "$(Terraform_Output.web_api_sqldb_connection_string)"
+              displayName: 'Apply EF Bundle'
+              workingDirectory: '$(ef.workingDirectory)'
+
+            # Please use the AzureRmWebAppDeployment@4 should you need the webDeploy method.
+            # For zipDeploy, runFromPackage, please bear in mind
+            # these types of deployment make any specific Web Job unstoppable, unless WEBJOBS_STOPPED setting is used
+            # (https://azureappservices.blogspot.com/2020/08/unable-to-stop-continuous-webjobs.html)
+            - task: AzureWebApp@1
+              displayName: 'Deploy Web App Service'
+              inputs:
+                azureSubscription: ${{parameters.devOpsServiceConnection}}
+                appType: webAppLinux
+                appName: '$(Terraform_Output.web_api_app_service_name)'
+                package: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebApi/WebApi.zip'
+                deploymentMethod: zipDeploy
+                appSettings: >
+                  -ASPNETCORE_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
+
+            - task: AzureFunctionApp@1
+              displayName: 'Deploy Workers Function'
+              inputs:
+                azureSubscription: ${{parameters.devOpsServiceConnection}}
+                appType: functionAppLinux
+                appName: '$(Terraform_Output.workers_app_name)'
+                package: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip'
+                deploymentMethod: runFromPackage
+                appSettings: >
+                  -AZURE_FUNCTIONS_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
+
+            - task: AzureStaticWebApp@0
+              displayName: 'Deploy Azure Static Web App'
+              inputs:
+                cwd: '$(spa.workingDirectory)'
+                app_location: '/'
+                output_location: ''
+                skip_app_build: true
+                api_location: ''
+                skip_api_build: true
+                azure_static_web_apps_api_token: '$(Terraform_Output.static_ui_deployment_token)'

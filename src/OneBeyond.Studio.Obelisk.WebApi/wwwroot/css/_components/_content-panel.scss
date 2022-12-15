@@ -1,0 +1,12 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
+.card.content-panel {
+    border: solid 1px #e8edf1;
+    border-radius: 0px;
+    margin-bottom: 25px;
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+}

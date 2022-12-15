@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "outDir": "./wwwroot/dist/",
+    "baseUrl": "./",
+    "paths": {
+      "@js/*": [
+        "./wwwroot/js/*"
+      ],
+      "@components/*": [
+        "./wwwroot/components/*"
+      ],
+      "@styles/*": [
+        "./wwwroot/css/*"
+      ]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop":true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
+    "module": "ES2015",
+    "target": "ES5", //required to support IE11
+    "lib": [
+      "ES2017",
+      "dom"
+    ],
+    "types": [
+      "webpack-env"
+    ]
+
+  },
+  "include": [
+    "./**/*",
+    "./wwwroot/js/**/*",
+    "../../node_modules/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

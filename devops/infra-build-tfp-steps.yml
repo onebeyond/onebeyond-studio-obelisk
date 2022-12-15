@@ -1,0 +1,58 @@
+parameters:
+  - name: stageCode
+    displayName: 'Stage code'
+    values:
+      - qa
+      - uat
+      - prod
+  - name: azServiceConnection
+    displayName: 'Azure DevOps service connection'
+  - name: tfWorkingDirectory
+    displayName: 'Directory containing TF files'
+  - name: tfBackendResourceGroupName
+    displayName: 'Name of a resource group used for TF backend'
+  - name: tfBackendStorageAccountName
+    displayName: 'Name of a storage account used for TF backend'
+  - name: tfPlanFileName
+    displayName: 'Name of resulting TF plan (Default terraform.tfplan)'
+    default: 'terraform.tfplan'
+
+steps:
+  - task: TerraformInstaller@0
+    displayName: 'Install TF'
+    inputs:
+      terraformVersion: latest
+
+  - task: TerraformTaskV3@3
+    displayName: 'Initialize TF'
+    inputs:
+      workingDirectory: '${{parameters.tfWorkingDirectory}}'
+      backendServiceArm: '${{parameters.azServiceConnection}}'
+      backendAzureRmResourceGroupName: '${{parameters.tfBackendResourceGroupName}}'
+      backendAzureRmStorageAccountName: '${{parameters.tfBackendStorageAccountName}}' # It has to exist before running, i.e. it should be created manually
+      backendAzureRmContainerName: 'terraform'
+      backendAzureRmKey: 'terraform.tfstate'
+
+  - bash: |
+      if [ $(terraform workspace list | grep -c "${{parameters.stageCode}}") -eq 0 ] ; then
+        echo "Creating new workspace ${{parameters.stageCode}}"
+        terraform workspace new "${{parameters.stageCode}}" -no-color
+      else
+        echo "Switching to existing workspace ${{parameters.stageCode}}"
+        terraform workspace select "${{parameters.stageCode}}" -no-color
+      fi
+    displayName: 'Select TF Workspace'
+    workingDirectory: '${{parameters.tfWorkingDirectory}}'
+
+  - task: TerraformTaskV3@3
+    name: Terraform_Plan
+    displayName: 'Build TF Plan'
+    inputs:
+      workingDirectory: '${{parameters.tfWorkingDirectory}}'
+      environmentServiceNameAzureRM: '${{parameters.azServiceConnection}}'
+      command: plan
+      commandOptions: >
+        -var-file=terraform.tfvars
+        -var-file=terraform.${{parameters.stageCode}}.tfvars
+        -out=${{parameters.tfPlanFileName}}
+        -input=false

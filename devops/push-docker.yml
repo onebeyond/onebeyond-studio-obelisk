@@ -1,0 +1,48 @@
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: build_pipeline
+      source: "Obelisk CI"
+      # trigger:
+      #   branches:
+      #     include:
+      #       - dev
+
+stages:
+  - stage: Set_Deployment_Number
+    displayName: "Set Deployment Number"
+    jobs:
+      - job:
+        steps:
+          - checkout: none
+          - bash: |
+              echo "##vso[build.updatebuildnumber]$(resources.pipeline.build_pipeline.runName)"
+            displayName: "Set Deployment Number"
+
+  - stage: Build_Push_Docker_Images
+    displayName: "Build & Push Docker Images"
+    dependsOn: [Set_Deployment_Number]
+
+    jobs:
+      - job:
+        displayName: "Build & Push Web API Docker Image"
+        steps:
+          - template: "build-push-docker-image-steps.yml"
+            parameters:
+              devOpsDockerRegistryServiceConnection: "dcslgswtcr"
+              repositoryName: "web-api"
+              buildPipelineId: build_pipeline
+              publishArtifactName: WebApi
+              dockerfileArtifactName: WebApi-Dockerfile
+
+      - job:
+        displayName: "Build & Push Workers Docker Image"
+        steps:
+          - template: "build-push-docker-image-steps.yml"
+            parameters:
+              devOpsDockerRegistryServiceConnection: "dcslgswtcr"
+              repositoryName: "workers"
+              buildPipelineId: build_pipeline
+              publishArtifactName: Workers
+              dockerfileArtifactName: Workers-Dockerfile

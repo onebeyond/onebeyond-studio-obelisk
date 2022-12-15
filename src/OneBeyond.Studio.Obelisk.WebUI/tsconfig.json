@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "baseUrl": "./",
+    "paths": {
+    "@assets/*": [
+        "assets/*"
+      ],
+      "@js/*": [
+        "src/js/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop":true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "module": "es2020",
+    "target": "ES5", //required to support IE11
+    "lib": [
+      "ES2017",
+      "dom"
+    ],
+    "types": [
+      "webpack-env"
+    ]
+
+  },
+  "include": [
+    "./**/*",
+    "./src/js/**/*",
+    "./src/components/**/*",
+    "../../node_modules/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

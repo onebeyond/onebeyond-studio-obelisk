@@ -1,0 +1,48 @@
+
+// Variables
+
+@import '_components/_variables.scss';
+
+
+// Bootstrap
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+// Multiselect
+@import "~vue-multiselect/dist/vue-multiselect.min.css";
+
+// Fonts
+
+@import "./google-fonts/google-fonts.css";
+
+//FEATURE: FILE MANAGER
+//vue-context styles
+@import '~vue-context/dist/css/vue-context.css';
+
+// Components
+
+@import '_components/_load-mask.scss';
+@import '_components/_transitions.scss';
+@import '_components/_general.scss';
+@import '_components/_navbar.scss';
+@import '_components/_titles.scss';
+@import '_components/_footer.scss';
+@import '_components/_tables.scss';
+@import '_components/_forms.scss';
+@import '_components/_buttons.scss';
+@import '_components/_buttons-element-ui.scss';
+@import '_components/_modals.scss';
+@import '_components/_card-center.scss';
+@import '_components/_sidebar.scss';
+@import '_components/_content-panel.scss';
+@import '~element-ui/lib/theme-chalk/index.css';
+@import '_components/_file-manager.scss';
+@import '_components/_card-flip-effect.scss';
+@import '_components/_navtabs.scss';
+
+
+// Pages
+
+@import '_pages/_page-print.scss';
+@import '_pages/_page-account.scss';
+@import '_pages/_page-not-found.scss';

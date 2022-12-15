@@ -1,0 +1,50 @@
+trigger: none
+
+variables:
+  devOpsServiceConnection: "Microsoft Azure Sponsorship (5c41ba40-6ca2-4e8a-9646-d3585df38b5a)" # As it stands in Azure DevOps
+
+resources:
+  pipelines:
+    - pipeline: build-ci
+      source: "Obelisk CI"
+      trigger:
+        branches:
+          include:
+            - main
+
+stages:
+  - stage: Set_Deployment_Number
+    displayName: "Set Deployment Number"
+    jobs:
+      - job:
+        steps:
+          - checkout: none
+          - bash: |
+              echo "##vso[build.updatebuildnumber]$(resources.pipeline.build-ci.runName)"
+            displayName: "Set Deployment Number"
+
+  - stage: Deploy_To_QA
+    displayName: "QA"
+    dependsOn: [Set_Deployment_Number]
+    jobs:
+      - template: "rollout-deploy-stage-jobs.yml"
+        parameters:
+          buildArtifactPipelineId: build-ci
+          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          stageCode: "qa"
+          devOpsEnvironment: "WT QA"
+          devOpsServiceConnection: $(devOpsServiceConnection)
+          runtimeEnvironment: "QA"
+
+  - stage: Deploy_To_UAT
+    displayName: "UAT"
+    dependsOn: [Deploy_To_QA]
+    jobs:
+      - template: "rollout-deploy-stage-jobs.yml"
+        parameters:
+          buildArtifactPipelineId: build-ci
+          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          stageCode: "uat"
+          devOpsEnvironment: "WT UAT"
+          devOpsServiceConnection: $(devOpsServiceConnection)
+          runtimeEnvironment: "UAT"

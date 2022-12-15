@@ -1,0 +1,28 @@
+version: "3.8"
+
+name: "wt_services"
+
+services:
+  azurite:
+    container_name: wt_azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+
+  mssql:
+    container_name: wt_mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  web_app:
+    depends_on:
+      - azurite
+      - mssql
+    container_name: wt_web_app
+    image: dcslgswtcr.azurecr.io/web-api
+    pull_policy: always
+
+  func_app:
+    depends_on:
+      - azure
+      - mssql
+    container_name: wt_func_app
+    image: dcslgswtcr.azurecr.io/workers
+    pull_policy: always

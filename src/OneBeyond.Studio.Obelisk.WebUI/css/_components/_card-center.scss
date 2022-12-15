@@ -1,0 +1,18 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
+.card.card-center {
+    .card-title {
+        margin-bottom: 50px;
+    }
+    .card-body {
+        padding: 40px;
+    }
+    .card-buttons {
+        text-align: right;
+    }
+}
+
+.card {
+    word-wrap: normal;
+}

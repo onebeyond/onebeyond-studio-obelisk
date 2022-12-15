@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C7B2FD65-9A28-4439-8BB7-BA9AFA7848A4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.WebApi", "src\OneBeyond.Studio.Obelisk.WebApi\OneBeyond.Studio.Obelisk.WebApi.csproj", "{1BBA6599-8FCB-4167-9B40-B4B3314861F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Domain", "src\OneBeyond.Studio.Obelisk.Domain\OneBeyond.Studio.Obelisk.Domain.csproj", "{707B588B-24B2-438D-A2B7-C9456DD49BB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Infrastructure", "src\OneBeyond.Studio.Obelisk.Infrastructure\OneBeyond.Studio.Obelisk.Infrastructure.csproj", "{BFFBF0D3-2233-463D-89DC-10394C5136F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Application", "src\OneBeyond.Studio.Obelisk.Application\OneBeyond.Studio.Obelisk.Application.csproj", "{42126FE1-F91D-4E51-B552-98A13FE08610}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{730C80BF-5F3A-4211-BD00-EF0DCA94920D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Authentication.Domain", "src\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Domain\OneBeyond.Studio.Obelisk.Authentication.Domain.csproj", "{6A153ED9-4A97-45EE-B019-825C5A6561AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Authentication.Application", "src\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Application\OneBeyond.Studio.Obelisk.Authentication.Application.csproj", "{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE} = {6A153ED9-4A97-45EE-B019-825C5A6561AE}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Domain.Tests", "src\OneBeyond.Studio.Obelisk.Domain.Tests\OneBeyond.Studio.Obelisk.Domain.Tests.csproj", "{401E2A2C-5466-47C3-ABA7-C437D9FE442C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Workers", "src\OneBeyond.Studio.Obelisk.Workers\OneBeyond.Studio.Obelisk.Workers.csproj", "{3826B005-74AD-48CA-9CF1-C9BFED6A1196}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1BBA6599-8FCB-4167-9B40-B4B3314861F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBA6599-8FCB-4167-9B40-B4B3314861F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBA6599-8FCB-4167-9B40-B4B3314861F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBA6599-8FCB-4167-9B40-B4B3314861F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{707B588B-24B2-438D-A2B7-C9456DD49BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707B588B-24B2-438D-A2B7-C9456DD49BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707B588B-24B2-438D-A2B7-C9456DD49BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707B588B-24B2-438D-A2B7-C9456DD49BB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFBF0D3-2233-463D-89DC-10394C5136F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFFBF0D3-2233-463D-89DC-10394C5136F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFBF0D3-2233-463D-89DC-10394C5136F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFFBF0D3-2233-463D-89DC-10394C5136F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42126FE1-F91D-4E51-B552-98A13FE08610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42126FE1-F91D-4E51-B552-98A13FE08610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42126FE1-F91D-4E51-B552-98A13FE08610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42126FE1-F91D-4E51-B552-98A13FE08610}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{401E2A2C-5466-47C3-ABA7-C437D9FE442C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{401E2A2C-5466-47C3-ABA7-C437D9FE442C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{401E2A2C-5466-47C3-ABA7-C437D9FE442C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{401E2A2C-5466-47C3-ABA7-C437D9FE442C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A153ED9-4A97-45EE-B019-825C5A6561AE} = {730C80BF-5F3A-4211-BD00-EF0DCA94920D}
+		{FB4E2E9C-5ED9-444F-BE3E-9D640BDB6B0E} = {730C80BF-5F3A-4211-BD00-EF0DCA94920D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2EB4AD2-A950-4AFB-ABC8-5C15067A73B9}
+	EndGlobalSection
+EndGlobal

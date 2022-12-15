@@ -1,0 +1,33 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
+.vue-tabs {
+  .nav-tabs-wrapper {
+    .nav.nav-tabs {
+      li.tab {
+        a {
+          padding: 0.5rem 1rem;
+          display: block;
+          border-bottom: 0;
+          margin: 2px 2px 0 0;
+          border-radius: 4px 4px 0 0;
+          background: #ddd;
+          color: #555;
+
+          &.active_tab {
+            background: $themeColour;
+            color: white;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    .tab-container {
+      padding: 1rem 0;
+      min-height: 100px;
+    }
+  }
+}

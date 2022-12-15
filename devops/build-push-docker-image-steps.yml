@@ -1,0 +1,44 @@
+parameters:
+  - name: devOpsDockerRegistryServiceConnection
+    displayName: 'Azure DevOps service connection name for Docker registry'
+  - name: repositoryName
+    displayName: 'Docker registry repository name'
+  - name: buildPipelineId
+    displayName: 'ID of pipeline used for building artifacts'
+  - name: publishArtifactName
+    displayName: 'Name of build artifact to pack as image'
+  - name: dockerfileArtifactName
+    displayName: 'Name of Dockerfile artifact'
+
+steps:
+  - download: ${{parameters.buildPipelineId}}
+    displayName: 'Download Build Artifact'
+    artifact: ${{parameters.publishArtifactName}}
+
+  - download: ${{parameters.buildPipelineId}}
+    displayName: 'Download Dockerfile Artifact'
+    artifact: ${{parameters.dockerfileArtifactName}}
+
+  - task: ExtractFiles@1
+    displayName: 'Extract Build Artifact'
+    inputs:
+      archiveFilePatterns: '$(Pipeline.Workspace)/${{parameters.buildPipelineId}}/${{parameters.publishArtifactName}}/*.zip'
+      destinationFolder: '$(Agent.TempDirectory)/${{parameters.publishArtifactName}}/publish'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Dockerfile Artifact'
+    inputs:
+      sourceFolder: '$(Pipeline.Workspace)/${{parameters.buildPipelineId}}/${{parameters.dockerfileArtifactName}}'
+      targetFolder: '$(Agent.TempDirectory)/${{parameters.publishArtifactName}}'
+
+  - task: Docker@2
+    displayName: 'Build & Push Docker Image'
+    inputs:
+      command: buildAndPush
+      containerRegistry: ${{parameters.devOpsDockerRegistryServiceConnection}}
+      repository: ${{parameters.repositoryName}}
+      tags: |
+        $(Build.BuildNumber)
+        latest
+      dockerfile: '$(Agent.TempDirectory)/${{parameters.publishArtifactName}}/Dockerfile'
+      buildContext: '$(Agent.TempDirectory)/${{parameters.publishArtifactName}}'

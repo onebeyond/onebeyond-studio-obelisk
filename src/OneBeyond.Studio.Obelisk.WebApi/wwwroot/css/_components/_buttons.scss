@@ -1,0 +1,134 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
+
+.modal-footer .btn {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.6rem;
+}
+
+.btn {
+  border:none;
+}
+
+// Ripple effect on click
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, .25);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 1;
+  }
+
+  20% {
+    transform: scale(25, 25);
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+.btn:focus:not(:active):not(.dropdown-toggle):not(.btn-animated)::after {
+  animation: ripple 2s ease-out;
+}
+
+
+// Animated alternative button style
+$button-border-radius: 3px;
+$button-font-size: 16px;
+$button-icon-size: 18px;
+$button-color-left: $primary;
+$button-color-right: darken($primary, 10%);
+
+.btn-animated {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 53px;
+  border-radius: $button-border-radius;
+  line-height: 30px;
+  padding: 0px;
+  border: 0px;
+  ;
+}
+
+.btn-animated span.icon,
+.btn-animated span.title {
+  display: block;
+  position: relative;
+  line-height: 54px;
+  padding: 0 30px;
+  border-radius: $button-border-radius;
+  font-size: $button-font-size;
+}
+
+.btn-animated span.left {
+  float: left;
+  border-radius: $button-border-radius 0 0 $button-border-radius;
+}
+
+.btn-animated span.right {
+  float: right;
+  border-radius: 0 $button-border-radius $button-border-radius 0;
+}
+
+.btn-animated span.icon {
+  font-size: $button-icon-size;
+  background-color: $button-color-right;
+}
+
+.btn-animated span.title {
+  background-color: $button-color-left;
+}
+
+.btn-animated span.arrow-right {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 27px solid transparent;
+  border-bottom: 27px solid transparent;
+  -transition: all .15s;
+  transition-property: left, right;
+}
+
+.btn-animated.left span.arrow-right {
+  left: 0;
+  box-shadow: -10px 0 0 0 $button-color-left, -10px 3px 0 0 $button-color-right;
+  border-left: 10px solid $button-color-left;
+}
+
+.btn-animated.right span.arrow-right {
+  left: 0;
+  box-shadow: -10px 0 0 0 $button-color-left, -10px 3px 0 0 $button-color-right;
+  border-left: 10px solid $button-color-left;
+}
+
+.btn-animated:active,
+.btn-animated.active {
+  height: 51px;
+}
+
+.btn-animated:hover span.arrow-right {
+  left: 10px;
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File name extension must be .runsettings -->
+<RunSettings>
+    <DataCollectionRunSettings>
+        <DataCollectors>
+            <DataCollector friendlyName="XPlat Code Coverage">
+                <Configuration>
+                    <Format>cobertura, opencover</Format>
+                    <!-- [Assembly-Filter]Type-Filter -->
+                    <Exclude>
+                    </Exclude>
+                    <ExcludeByAttribute>
+                        Obsolete,
+                        GeneratedCodeAttribute,
+                        CompilerGeneratedAttribute,
+                        DebuggerHiddenAttribute,
+                        DebuggerNonUserCodeAttribute,
+                        ExcludeFromCodeCoverage,
+                    </ExcludeByAttribute>
+                     <!--Glob format--> 
+                    <ExcludeByFile>
+                        **/Migrations/*
+                    </ExcludeByFile>
+                    <!--Specifies whether to limit code coverage hit reporting to a single hit for each location.-->
+                    <SingleHit>false</SingleHit>
+                    <!--Specifies whether to use SourceLink URIs in place of file system paths.-->
+                    <UseSourceLink>true</UseSourceLink>
+                    <!--Include coverage of the test assembly.-->
+                    <IncludeTestAssembly>false</IncludeTestAssembly>
+                    <!--Neither track nor record auto-implemented properties.-->
+                    <SkipAutoProps>true</SkipAutoProps>
+                </Configuration>
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
+</RunSettings>

@@ -1,0 +1,64 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no"
+            name="viewport"
+        />
+
+        <title>Waterloo Template</title>
+
+        <!-- Favicons generated from https://realfavicongenerator.net/ -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png" />
+        <link rel="manifest" href="/assets/images/icons/site.webmanifest" />
+        <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="/assets/images/icons/favicon.ico" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml" />
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="stylesheet" href="/assets/fontawesome-free-5.7.0-web/css/all.min.css" />
+        <script src="/assets/fontawesome-free-5.7.0-web/js/all.min.js" data-auto-replace-svg="nest"></script>
+
+        <!-- Please do NOT delete the line below -->
+        <script>/** @preserve ENVIRONMENT_SETUP_PLACEHOLDER */</script>
+        <!-- e.g. <script>window.env = 'qa'</script> -->
+        
+    </head>
+    <body>
+        <div id="indexApp">
+            <div class="page-load-mask" v-if="!$data" v-transition>
+                <div class="lds-css">
+                    <div class="lds-spinner" style="width: 100%; height: 100%"></div>
+                </div>
+            </div>
+
+            <div v-cloak>
+                <nav id="main-menu" class="navbar navbar-expand-lg navbar-dark fixed-top">
+                    <router-link class="navbar-brand" to="/" exact>
+                        <img src="/assets/images/one-beyond-logo-black.svg" alt="Waterloo Template Homepage" />
+                    </router-link>
+                    <h2 style="color: white">Welcome to Waterloo Template</h2>
+                </nav>
+
+                <div class="page-body">
+                    <main>
+                        <router-view :key="$route.fullPath"></router-view>
+                    </main>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <span>Waterloo Template</span> -
+                    <span>Developed by <a href="https://www.one-beyond.com" target="_blank">One Beyond</a></span>
+                    <span>Build: {{$buildNumber}} ({{$buildDate}})</span>
+                </div>
+            </footer>
+        </div>
+
+        <script src="/assets/jquery.min.js" asp-append-version="true"></script>
+    </body>
+</html>

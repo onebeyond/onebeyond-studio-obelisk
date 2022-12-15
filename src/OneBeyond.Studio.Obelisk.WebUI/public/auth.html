@@ -1,0 +1,66 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no"
+            name="viewport"
+        />
+
+        <title>Waterloo Template</title>
+
+        <!-- Favicons generated from https://realfavicongenerator.net/ -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png" />
+        <link rel="manifest" href="/assets/images/icons/site.webmanifest" />
+        <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="/assets/images/icons/favicon.ico" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml" />
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="stylesheet" href="/assets/fontawesome-free-5.7.0-web/css/all.min.css" />
+        <script src="/assets/fontawesome-free-5.7.0-web/js/all.min.js" data-auto-replace-svg="nest"></script>
+
+        <!-- Please do NOT delete the line below -->
+        <script>/** @preserve ENVIRONMENT_SETUP_PLACEHOLDER */</script>
+        <!-- e.g. <script>window.env = 'qa'</script> -->
+        
+    </head>
+    <body>
+        <div id="authApp">
+            <!--@* Load mask *@-->
+
+            <div class="page-load-mask" v-if="!$data" v-transition>
+                <div class="lds-css">
+                    <div class="lds-spinner" style="width: 100%; height: 100%"></div>
+                </div>
+            </div>
+
+            <!--@* Content *@-->
+            <main id="page-account">
+                <router-view :key="$route.fullPath"></router-view>
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div>
+                            <span>Waterloo Template</span> -
+                            <span
+                                >Developed by <a href="https://www.one-beyond.com" target="_blank">One Beyond</a></span
+                            >
+                            <span>Build: {{$buildNumber}} ({{$buildDate}})</span>
+                        </div>
+                        <p>
+                            <a href="/authentication#/PrivacyPolicy"> Privacy Policy </a>
+                            -
+                            <a href="/authentication#/TermsAndConditions">Terms & Conditions</a>
+                            -
+                            <a href="/authentication#/CookiePolicy" class="">Cookie Policy</a>
+                            -
+                            <a href="/authentication#/OpenSource">Open Source List</a>
+                        </p>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </body>
+</html>

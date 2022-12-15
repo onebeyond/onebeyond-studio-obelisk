@@ -1,0 +1,66 @@
+// Set to 'true' to show User Avatar image or 'false' to show text:
+$setUserAvatarImage: false !default;
+
+
+// Set to 'false' to hide the sidebar:
+$setSidebar: true !default;
+
+
+// The sidebar will hide when the window width is below this number:
+$hideSidebar: 1400px !default;
+
+
+// Sidebar width:
+$sidebar-size: 220px !default;
+
+
+// Content width, change to "100%" for full width
+$page-content-width: 100% !default;
+
+
+// Basic variables
+$themeColour: #338855 !default;
+$body-bg: #fafafa !default;
+$body-color: #111 !default; // Text colour
+$font-family-base: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol" !default;
+
+//syncfusion and grids
+$gridHeaderBackground: $themeColour;
+$gridHeaderColor: white;
+$gridAccent: $themeColour; /*used in filter popups and other syncfusion elements: calendar, dropdowns, checkboxes, input and input groups*/
+$gridAccentInner: white; /*used in filter popups and other syncfusion elements: calendar, dropdowns, checkboxes, input and input groups*/
+$gridPagerBackground: $themeColour;
+$gridPagerColor: white;
+
+// Navbar
+$navbarBg: $themeColour !default;
+$navbarDropdownLink: $themeColour !default;
+$navbarLogoBg: #FFFFFF !default;
+
+
+// Sidebar
+$sidebarBg: #FFFFFF !default;
+
+
+// Footer
+$footerBg: transparent !default;
+$footerHeight: 60px !default;
+
+
+// Titles
+$pageTitleColor: $themeColour !default;
+
+
+// Transitions (fadeIn, slideLeft, slideRight)
+$pageTransition: slideBottom !default;
+
+
+// Bootstrap variables
+$primary: $themeColour !default;
+$secondary: #cccccc !default;
+$success: #28a745 !default;
+$danger: #dc3545 !default;
+$warning: #ffc107 !default;
+$info: #17a2b8 !default;
+$light: #f8f9fa !default;
+$dark: #343a40 !default;

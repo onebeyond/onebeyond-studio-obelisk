@@ -1,0 +1,76 @@
+@page
+@model LoginModel
+@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using OneBeyond.Studio.Obelisk.WebApi.Pages.Account;
+@using OneBeyond.Studio.Obelisk.WebApi.Localizations;
+@using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+@inject IHtmlLocalizer<SharedResources> sharedLocalizer;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no" name="viewport">
+
+    <title>Login</title>
+    <link href="~/@UIBuildFileHelpers.GetFileNameFromUIBundle("mainCss.*.css")" rel="stylesheet" />
+
+</head>
+
+<body id="page-account">
+
+    <div class="d-flex align-items-center justify-content-center row min-vh-100">
+        <div id="siteLogin" class="account-box login-box">
+
+            <img src="~/images/one-beyond-logo-black.svg" height="60" class="mx-auto d-block logo" />
+            <h1 class="text-center">@sharedLocalizer["Login"]</h1>
+            <form id="loginForm" method="post" class="label-float-animation">
+
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(false, "", new { id = "loginValidationSummary", @class = "text-danger" })
+
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="@sharedLocalizer["Username"]" id="inputUserName" name="Input.UserName" />
+                    <label for="inputUserName">@sharedLocalizer["Username"]</label>
+                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="@sharedLocalizer["Password"]" id="inputPassword" name="Input.Password" autocomplete="new-password" />
+                    <label for="inputPassword">@sharedLocalizer["Password"]</label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="inputRememberMe" name="Input.RememberMe" value="true">
+                        <label class="custom-control-label" for="inputRememberMe">Remember Me</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" id="submit-btn" class="btn btn-success">Login</button>
+                </div>
+
+            </form>
+
+            <p class="text-center">
+                <a href="ForgotPassword">Forgotten your password?</a>
+            </p>
+
+            <p class="text-center" style="margin-top:30px;">
+                <span>@sharedLocalizer["or"] </span><a href="@Model.GetLoginViaAzureADUrl()">@sharedLocalizer["Login via Azure AD"]</a>
+            </p>
+
+        </div>
+    </div>
+
+    <partial name="_PageFooter" />
+
+</body>
+</html>

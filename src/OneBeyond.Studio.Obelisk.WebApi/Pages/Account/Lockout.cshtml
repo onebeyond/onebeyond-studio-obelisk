@@ -1,0 +1,33 @@
+@page
+@model LockoutModel
+@{
+    ViewData["Title"] = @sharedLocalizer["Locked out"];
+}
+@using Microsoft.AspNetCore.Mvc.Localization;
+@using OneBeyond.Studio.Obelisk.WebApi.Localizations;
+@using OneBeyond.Studio.Obelisk.WebApi.Pages.Account;
+@using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+@inject IHtmlLocalizer<SharedResources> sharedLocalizer;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,maximum-scale=1.0,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes,shrink-to-fit=no" name="viewport">
+
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/@UIBuildFileHelpers.GetFileNameFromUIBundle("mainCss.*.css")" rel="stylesheet" />
+</head>
+<body id="page-account">
+    <div class="d-flex align-items-center justify-content-center min-vh-100 row">
+        <div id="siteLogin" class="account-box login-box">
+            @*<img src="~/images/logo-login.png" height="30" class="mx-auto d-block logo" />*@
+            <h1 class="text-danger text-center">@ViewData["Title"]</h1>
+            <p class="text-danger text-center">@sharedLocalizer["This account has been locked out, please try again later."]</p>
+        </div>
+    </div>
+    <partial name="_PageFooter" />
+</body>
+</html>

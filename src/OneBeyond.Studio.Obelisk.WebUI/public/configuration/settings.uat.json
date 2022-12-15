@@ -1,0 +1,13 @@
+{
+    "appSettings": 
+    {
+        "apiUrl": "< Please specify >"
+    },
+    "comments":
+    {
+        "WARNING_1": "DO NOT STORE SECRETS IN THIS FILE!",
+        "WARNING_2": "Please use lower camel case notation for all settings in the appSettings",
+        "ImplementationDetails_1": "See @js/dataModels/settings/appSettings.ts to perform a proper Typescript mapping of properties added here",
+        "ImplementationDetails_2": "This file can be changed on-the-fly and new changes will be read on browser refresh"
+    }
+}

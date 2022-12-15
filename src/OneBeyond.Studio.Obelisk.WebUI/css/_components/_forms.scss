@@ -1,0 +1,232 @@
+@import '_variables.scss';
+@import '_mixins.scss';
+
+label,
+.col-form-label {
+    font-size: 0.9rem;
+}
+
+.el-input {
+    font-size: 1rem !important;
+    width: 100% !important;
+
+    .el-input__icon {
+        line-height: 35px;
+    }
+}
+
+.el-input__inner {
+    border: 1px solid #ced4da;
+    height: calc(1.5em + .75rem + 2px);
+    line-height: calc(1.5em + .75rem + 2px);
+
+    &:focus {
+        border-color: lighten($themeColour, 25%);
+        box-shadow: 0 0 0 0.2rem rgba($themeColour, 0.25);
+    }
+}
+
+.el-date-editor {
+    &.el-input__inner {
+        padding: 0 5px;
+        height: inherit;
+        line-height: inherit;
+    }
+
+    .el-range-input {
+        font-size: inherit;
+    }
+
+    .el-range-separator {
+        font-size: inherit;
+        line-height: 24px;
+        line-height: 25px;
+    }
+
+    .el-range__icon {
+        line-height: 25px;
+    }
+
+    .el-range__close-icon {
+        line-height: 25px;
+    }
+}
+
+input[type=checkbox],
+input[type=radio] {
+    vertical-align: bottom;
+}
+
+
+// Multiselect
+.multiselect {
+    min-height: 30px;
+    font-size: 1rem;
+
+    &.multiselect--active {
+        .multiselect__input {
+            margin: 5px 0 5px -5px;
+        }
+
+        .multiselect__select {
+            padding-bottom: 0;
+        }
+    }
+
+    .multiselect__input,
+    .multiselect__option,
+    .multiselect__single {
+        font-size: 1rem;
+    }
+
+    .multiselect__single {
+        padding-left: 0;
+        margin-top: 5px;
+    }
+
+    .multiselect__tags {
+        min-height: 30px;
+        padding: 0px 20px 0 12px;
+        border: 1px solid #ced4da;
+        font-size: 1rem;
+        line-height: 30px;
+
+        .multiselect__placeholder {
+            margin-bottom: 2px;
+            padding-top: 0;
+        }
+    }
+
+    .multiselect__select {
+        width: 19px;
+        height: 35px;
+        padding: 4px 3px;
+
+        &:before {
+            border-width: 6px 3px 0;
+            border-color: #555 transparent transparent;
+        }
+    }
+}
+
+.el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+        width: 100%;
+    }
+}
+
+
+// Custom checkbox
+.custom-control {
+
+    .custom-control-label:after,
+    .custom-control-label:before {
+        top: 0;
+    }
+}
+
+// Custom validation error message
+.custom-validation-message {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: $danger;
+}
+
+// Label Float Animation
+.label-float-animation {
+    $speed: 10ms;
+    $easing: ease-in-out;
+
+    .form-group {
+        position: relative;
+    }
+
+    input.form-control {
+        height: auto;
+
+        ~label {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 12px;
+            color: #777;
+            font-size: 1rem;
+            line-height: calc(1.5em + .75rem + 2px);
+        }
+    }
+
+    input.form-control {
+        &::-webkit-input-placeholder {
+            opacity: 1;
+            transition: $speed $easing opacity;
+        }
+
+        &:-moz-placeholder,
+        {
+        opacity: 1;
+        transition: opacity $speed $easing;
+    }
+
+    /* FF 4-18 */
+    &::-moz-placeholder,
+    {
+    opacity: 1;
+    transition: opacity $speed $easing;
+}
+
+/* FF 19+ */
+&:-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity $speed $easing;
+}
+
+/* IE 10+ */
+&:focus {
+    // on focus, increase the height to accomodate the label
+    height: 40px;
+    padding-bottom: 0;
+
+    &::-webkit-input-placeholder {
+        opacity: 0;
+    }
+
+    &:-moz-placeholder,
+    {
+    opacity: 0;
+}
+
+/* FF 4-18 */
+&::-moz-placeholder,
+{
+opacity: 0;
+}
+
+/* FF 19+ */
+&:-ms-input-placeholder {
+    opacity: 0;
+}
+
+/* IE 10+ */
+}
+
+~label {
+    transition: top $speed $easing, opacity $speed $easing, color $speed $easing;
+}
+
+&:focus+label,
+&.filled+label {
+    opacity: 1;
+    // How high the label floats
+    top: 2px;
+    font-size: 0.7rem;
+    line-height: 0.8rem;
+}
+
+&:focus+label {
+    color: $themeColour;
+}
+}
+}

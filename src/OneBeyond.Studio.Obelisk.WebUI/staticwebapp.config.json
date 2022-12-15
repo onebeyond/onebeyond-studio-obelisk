@@ -1,0 +1,16 @@
+{
+  "navigationFallback": {
+    "rewrite": "/admin.html",
+    "exclude": ["/images/*.{png,jpg,gif}", "/css/*"]
+  },
+  "routes": [
+    {
+      "route": "/auth",
+      "rewrite": "/auth.html"
+    },
+    {
+      "route": "/admin",
+      "rewrite": "/admin.html"
+    }
+  ]
+}

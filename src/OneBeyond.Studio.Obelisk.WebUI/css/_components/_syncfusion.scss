@@ -1,0 +1,47 @@
+@import '@syncfusion/ej2-base/styles/material.css';
+@import '@syncfusion/ej2-buttons/styles/material.css';
+@import '@syncfusion/ej2-calendars/styles/material.css';
+@import '@syncfusion/ej2-dropdowns/styles/material.css';
+@import '@syncfusion/ej2-inputs/styles/material.css';
+@import '@syncfusion/ej2-navigations/styles/material.css';
+@import '@syncfusion/ej2-popups/styles/material.css';
+@import '@syncfusion/ej2-splitbuttons/styles/material.css';
+@import '@syncfusion/ej2-vue-grids/styles/material.css';
+
+.e-grid th {
+  vertical-align: middle !important; //Bootstrap styles fix
+}
+
+div[id^="strui-grid"] {
+  visibility: hidden !important;
+}
+
+.e-rowcell.column-contextmenu {
+  overflow: visible;
+  position: relative;
+  opacity: 1 !important;
+
+  .dropdown {
+    .dropdown-menu {
+      top: 0;
+      left: 33px;
+      position: absolute;
+      background: white;
+    }
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    margin: 0;
+  }
+}
+
+.e-grid .e-gridcontent {
+  &,
+  .e-content, .e-frozencontent {
+    overflow: visible !important;
+  }
+}
+
+
+@import '_syncfusion-grid-overrides.scss';

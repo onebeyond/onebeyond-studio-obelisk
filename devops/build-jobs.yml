@@ -1,0 +1,248 @@
+parameters:
+  - name: publishArtifacts
+    displayName: "Publish artifacts"
+    type: boolean
+  - name: projects_webApi_folder
+    default: "src/OneBeyond.Studio.Obelisk.WebApi"
+  - name: projects_webApi
+    default: "src/OneBeyond.Studio.Obelisk.WebApi/OneBeyond.Studio.Obelisk.WebApi.csproj"
+  - name: projects_workers_folder
+    default: "src/OneBeyond.Studio.Obelisk.Workers"
+  - name: projects_workers
+    default: "src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj"
+  - name: projects_efMigrations
+    default: "src/OneBeyond.Studio.Obelisk.Infrastructure/OneBeyond.Studio.Obelisk.Infrastructure.csproj"
+  - name: build_nuGetFeedId
+    default: "b9a7f0e7-4bcb-4ec1-9bbb-b299c0ac03c1"
+
+jobs:
+  - job: Build_Publish_Web_App
+    displayName: "Build & Publish Web App"
+    variables:
+      buildConfiguration: "Release"
+      webpackNpmCommand: "build-release"
+      projects.workingFolders.webApi: "${{parameters.projects_webApi_folder}}"
+      projects.workingFolders.workers: "${{parameters.projects_workers_folder}}"
+      projects.webApp: "${{parameters.projects_webApi}}"
+      projects.workers: "${{parameters.projects_workers}}"
+      projects.tests: "**/*.Tests.csproj"
+      sonarCloud.projectKey: "dcslsoftwareltd_Waterloo-Template" # Comes from project setup in SonarCloud
+      sonarCloud.projectName: "Waterloo Template" # Comes from project setup in SonarCloud
+    steps:
+      - task: SonarCloudPrepare@1
+        displayName: "Prepare SonarCloud Analysis"
+        condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
+        inputs:
+          sonarCloud: $(sonarCloud.endpoint)
+          organization: "dcslsoftwareltd"
+          scannerMode: "MSBuild"
+          projectKey: $(sonarCloud.projectKey)
+          projectName: $(sonarCloud.projectName)
+          extraProperties: |
+            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+
+      - task: DotNetCoreCLI@2
+        displayName: "Restore Projects NuGets"
+        inputs:
+          command: restore
+          projects: |
+            $(projects.webApp)
+            $(projects.workers)
+          feedsToUse: select
+          vstsFeed: ${{parameters.build_nuGetFeedId}}
+          verbosityRestore: Minimal
+
+      - task: DotNetCoreCLI@2
+        displayName: "Build Projects"
+        inputs:
+          projects: |
+            $(projects.webApp)
+            $(projects.workers)
+          arguments: >
+            --no-restore
+            --configuration $(buildConfiguration)
+            -p:CompileMigrationDesignerFiles=$(build.compileMigrationDesignerFiles)
+
+      - task: DotNetCoreCLI@2
+        displayName: "Run Solution Tests"
+        condition: and(succeeded(), eq(variables['run.tests'], 'true'))
+        inputs:
+          command: test
+          projects: "$(projects.tests)"
+          arguments: >
+            --configuration $(buildConfiguration)
+            --settings $(Build.SourcesDirectory)/src/CodeCoverage.runsettings
+            --collect "XPlat Code Coverage"
+
+      - task: PublishCodeCoverageResults@1
+        displayName: "Publish Code Coverage Results"
+        inputs:
+          codeCoverageTool: "Cobertura"
+          summaryFileLocation: $(Agent.TempDirectory)/**/coverage.cobertura.xml
+
+      - task: SonarCloudAnalyze@1
+        displayName: "Analyze SonarCloud"
+        condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
+
+      - task: Npm@1
+        displayName: "Install NPMs"
+        inputs:
+          command: "custom"
+          customCommand: "ci"
+          workingDir: "$(projects.workingFolders.webApi)"
+
+      #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/9
+      - task: Npm@1
+        displayName: "Run Webpack"
+        inputs:
+          command: custom
+          workingDir: "$(projects.workingFolders.webApi)"
+          verbose: false
+          customCommand: "run $(webpackNpmCommand)" #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
+
+      - ${{ if eq(parameters.publishArtifacts, true) }}:
+          - task: DotNetCoreCLI@2
+            displayName: "Publish Web App"
+            inputs:
+              command: publish
+              workingDirectory: $(projects.workingFolders.webApi)
+              publishWebProjects: false
+              arguments: >
+                --no-restore
+                --no-build
+                --configuration $(buildConfiguration)
+                --output $(Build.ArtifactStagingDirectory)/WebApi
+              zipAfterPublish: true
+
+          - task: DotNetCoreCLI@2
+            displayName: "Publish Workers"
+            inputs:
+              command: publish
+              workingDirectory: $(projects.workingFolders.workers)
+              publishWebProjects: false
+              arguments: >
+                --no-restore
+                --no-build
+                --configuration $(buildConfiguration)
+                --output $(Build.ArtifactStagingDirectory)/Workers
+              zipAfterPublish: true
+
+          - publish: $(Build.ArtifactStagingDirectory)/WebApi
+            displayName: "Publish Web API Artifact"
+            artifact: WebApi
+
+          - publish: "$(projects.workingFolders.webApi)/Dockerfile"
+            displayName: "Publish Web API Dockerfile"
+            artifact: WebApi-Dockerfile
+
+          - publish: $(Build.ArtifactStagingDirectory)/Workers
+            displayName: "Publish Workers Artifact"
+            artifact: Workers
+
+          - publish: "$(projects.workingFolders.workers)/Dockerfile"
+            displayName: "Publish Workers Dockerfile"
+            artifact: Workers-Dockerfile
+
+  - job: Build_Publish_Web_UI_SPA
+    displayName: "Build & Publish Web UI SPA"
+    variables:
+      webpackNpmCommand: "build -- --env BUILD_NUMBER=$(Build.BuildNumber)"
+      projects.workingFolders.WebUI: "src/OneBeyond.Studio.Obelisk.WebUI"
+    steps:
+      - task: Npm@1
+        displayName: "Install NPMs"
+        inputs:
+          command: "custom"
+          customCommand: "ci"
+          workingDir: "$(projects.workingFolders.WebUI)"
+
+      - task: Npm@1
+        displayName: "Build Web UI SPA"
+        inputs:
+          command: custom
+          workingDir: "$(projects.workingFolders.webUI)"
+          verbose: false
+          customCommand: "run $(webpackNpmCommand)" #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
+
+      - ${{ if eq(parameters.publishArtifacts, true) }}:
+          - task: ArchiveFiles@2
+            displayName: "Archive Web UI SPA"
+            inputs:
+              includeRootFolder: false
+              rootFolderOrFile: "$(projects.workingFolders.WebUI)/dist"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip"
+
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish Web UI SPA Artifact"
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip"
+              artifact: WebUISpa
+
+  - job: Build_Publish_EF_Bundle
+    displayName: "Build & Publish EF Bundle"
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: "Restore Projects NuGets"
+        inputs:
+          command: restore
+          projects: |
+            ${{parameters.projects_webApi}}
+          feedsToUse: select
+          vstsFeed: ${{parameters.build_nuGetFeedId}}
+          verbosityRestore: Minimal
+
+      - task: DotNetCoreCLI@2
+        displayName: "Install EF Tools"
+        inputs:
+          command: "custom"
+          custom: "tool"
+          arguments: >
+            install
+            --global
+            dotnet-ef
+            --version 6.0.*
+
+      - task: DotNetCoreCLI@2
+        displayName: "Build EF Bundle"
+        inputs:
+          command: custom
+          custom: ef
+          arguments: >
+            migrations bundle
+            --project ${{parameters.projects_efMigrations}}
+            --startup-project ${{parameters.projects_webApi}}
+            --self-contained
+            --target-runtime linux-x64
+            --configuration github.com.dotnet.efcore.issues.25555
+            --verbose
+
+      - ${{ if eq(parameters.publishArtifacts, true) }}:
+          - task: CopyFiles@2
+            displayName: "Gather EF Bundle"
+            inputs:
+              contents: |
+                efbundle
+                ${{parameters.projects_webApi_folder}}/appsettings.json
+                ${{parameters.projects_webApi_folder}}/appsettings.Development.json
+              targetFolder: "EF-Bundle"
+              flattenFolders: true
+
+          - task: ArchiveFiles@2
+            displayName: "Archive EF Bundle"
+            inputs:
+              includeRootFolder: false
+              rootFolderOrFile: "EF-Bundle"
+              archiveFile: "EF-Bundle/EF-Bundle.zip"
+
+          - publish: "EF-Bundle/EF-Bundle.zip"
+            displayName: "Publish EF Bundle"
+            artifact: "EF-Bundle"
+
+  - ${{ if eq(parameters.publishArtifacts, true) }}:
+      - job: Build_Publish_Infra
+        displayName: "Build & Publish Infra"
+        steps:
+          - publish: "$(Build.SourcesDirectory)/devops/Terraform"
+            displayName: "Publish TF Files"
+            artifact: "TF-Files"

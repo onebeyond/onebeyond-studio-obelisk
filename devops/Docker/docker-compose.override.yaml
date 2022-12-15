@@ -1,0 +1,35 @@
+services:
+  azurite:
+    ports:
+      - ${AZURITE_BLOB_HOST_PORT}:10000
+      - ${AZURITE_QUEUE_HOST_PORT}:10001
+      - ${AZURITE_TABLE_HOST_PORT}:10002
+    volumes:
+      - azurite_volume:/data
+
+  mssql:
+    ports:
+      - ${MSSQL_HOST_PORT}:1433
+    volumes:
+      - mssql_volume:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+
+  web_app:
+    ports:
+      - ${WEB_APP_HTTP_HOST_PORT}:80
+      - ${WEB_APP_HTTPS_HOST_PORT}:443
+    environment:
+      - ASPNETCORE_URLS=http://*:80
+      - ConnectionStrings__ApplicationConnectionString=Server=tcp:wt_mssql,1433; Database=WaterlooTemplateDev; User ID=sa;Password=${MSSQL_SA_PASSWORD};MultipleActiveResultSets=true;
+      - DomainEvents__Queue__ConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;QueueEndpoint=http://wt_azurite:10001/devstoreaccount1;
+
+  func_app:
+    environment:
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://wt_azurite:10000/devstoreaccount1;
+      - DomainEvents_Queue_ConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;QueueEndpoint=http://wt_azurite:10001/devstoreaccount1;
+
+volumes:
+  azurite_volume:
+  mssql_volume:
