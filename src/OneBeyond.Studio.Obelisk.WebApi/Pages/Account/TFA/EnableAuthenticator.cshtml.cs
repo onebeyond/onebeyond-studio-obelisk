@@ -147,7 +147,7 @@ public sealed class EnableAuthenticatorModel : PageModel
     private string GenerateQrCodeUri(string email, string unformattedKey)
         => string.Format(
             AUTHENTICATOR_URI_FORMAT,
-            _urlEncoder.Encode("WaterlooTemplate"),
+            _urlEncoder.Encode("Obelisk"),
             _urlEncoder.Encode(email),
             unformattedKey);
 }

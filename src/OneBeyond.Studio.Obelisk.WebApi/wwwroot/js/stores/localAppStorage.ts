@@ -1,5 +1,5 @@
 export default class LocalAppStorage {
-    public static readonly APPLICATION_NAME: string = 'WaterlooTemplate';
+    public static readonly APPLICATION_NAME: string = 'Obelisk';
 
     public static setValueForKey(key: string, value: string): void {
         window.localStorage.setItem(this.getKey(key), value);

@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
-//Note! It is derived from Exception, not WaterlooTemplateDomainException!
 [Serializable]
 public class AuthException : Exception
 {

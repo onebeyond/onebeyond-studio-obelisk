@@ -77,7 +77,7 @@ public static class Program
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
                 ?? throw new Exception("The ASPNETCORE_ENVIRONMENT variable is not set.");
 
-            Log.Information("WaterlooTemplate starting up using environment: {RunTimeEnvironment}", environmentName);
+            Log.Information("Obelisk starting up using environment: {RunTimeEnvironment}", environmentName);
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -108,11 +108,11 @@ public static class Program
         catch (Exception exception)
         when (exception is not HostAbortedException) // Used by EF migration building process
         {
-            Log.Fatal(exception, "WaterlooTemplate web host terminated unexpectedly");
+            Log.Fatal(exception, "Obelisk web host terminated unexpectedly");
         }
         finally
         {
-            Log.Information("WaterlooTemplate shut down complete");
+            Log.Information("Obelisk shut down complete");
             Log.CloseAndFlush();
         }
     }
