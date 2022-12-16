@@ -9,6 +9,8 @@ trigger:
   #     - WaterlooTemplate.DevOps/Terraform
   #     - WaterlooTemplate.DevOps/infra-*
 
+pr: none
+
 pool:
   vmImage: "ubuntu-latest"
 
