@@ -1,5 +1,7 @@
 trigger: none
 
+pr: none
+
 variables:
   devOpsServiceConnection: "Microsoft Azure Sponsorship (5c41ba40-6ca2-4e8a-9646-d3585df38b5a)" # As it stands in Azure DevOps
 
