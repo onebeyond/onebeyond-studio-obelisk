@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "DomainEvents_Queue_ConnectionString": "UseDevelopmentStorage=true",
-    "DomainEvents_Queue_QueueName": "waterlootemplate-domain-events",
+    "DomainEvents_Queue_QueueName": "obelisk-domain-events",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
   }
 }

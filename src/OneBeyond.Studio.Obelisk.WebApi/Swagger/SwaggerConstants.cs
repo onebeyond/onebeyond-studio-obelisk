@@ -9,5 +9,5 @@ public static class SwaggerConstants
     /// The title to be used for the API
     /// CHANGE ME: Rename appropriately for your system
     /// </summary>
-    public const string APITitle = "Waterloo Template API";
+    public const string APITitle = "Obelisk API";
 }

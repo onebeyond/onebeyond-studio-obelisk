@@ -12,7 +12,7 @@ public static class SessionConstants
     /// The name to be used for authentication cookies
     /// CHANGE ME: Rename appropriately for your system
     /// </summary>
-    public const string CookieName = "WaterlooTemplateCookie";
+    public const string CookieName = "ObeliskTemplateCookie";
     /// <summary>
     /// The session duration. It is used for cookie expiration and session automatic locking out both
     /// </summary>

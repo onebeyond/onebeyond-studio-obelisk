@@ -1,7 +1,7 @@
 export default {
     en: {
         application: {
-            applicationName: 'Waterloo Template',
+            applicationName: 'Obelisk',
             developedBy: 'Developed by',
             version: 'Version',
             language: 'English'
@@ -39,7 +39,7 @@ export default {
         },
         imageAltText: {
             entityImage: 'Entity image',
-            logoImage: 'Waterloo Template Homepage'
+            logoImage: 'Obelisk Homepage'
         },
         layout: {
             dashboard: 'Dashboard',

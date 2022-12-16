@@ -38,7 +38,6 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
         {
             //Please note! The reason we use mediator within a command handler
             //is because we consider Authentication project as an external for us (for our Domain).
-            //This is the only way to communicate to external systems Waterloo provides at the moment.
             //In case if you want to use mediator to execute commands or your Domain - that most likely would be considered as a code smell.
             await _mediator.Send(
                 new UpdateLogin(

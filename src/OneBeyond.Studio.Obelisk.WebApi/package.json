@@ -1,6 +1,6 @@
 {
   "version": "8.0.0",
-  "name": "waterloo-template",
+  "name": "obelisk",
   "private": true,
   "scripts": {
     "watch-debug": "npx webpack --env NODE_ENV=development --watch --color --config webpack.Debug.config",
