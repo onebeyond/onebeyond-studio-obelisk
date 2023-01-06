@@ -49,7 +49,7 @@ jobs:
           name: "test-results"
           path: "src/**/TestResults/*.trx"
          
-      - name: "Lint"
+      - name: "Lint Web.UI"
         run: |
           cd src/OneBeyond.Studio.Obelisk.WebUI
           npm install --legacy-peer-deps
