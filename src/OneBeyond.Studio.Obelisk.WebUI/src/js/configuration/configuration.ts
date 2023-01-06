@@ -8,7 +8,7 @@ export default abstract class Configuration {
 
     public static load(
         environment: string,
-        onSettingsLoaded: Function | null = null): Promise<any> {
+        onSettingsLoaded: Function | null = null): Promise<any> { // eslint-disable-line @typescript-eslint/ban-types
         this._appSettings = new AppSettings();
 
         const envSettingsFile = `settings.${(environment || "dev").toLowerCase()}.json`;
@@ -28,7 +28,7 @@ export default abstract class Configuration {
             throw Error("Please call the 'load' function before accessing this object");
         }
         return this._appSettings;
-    };
+    }
 
     private static async readFromFile(jsonFile: string): Promise<any> {
         if (!jsonFile) {
@@ -43,7 +43,7 @@ export default abstract class Configuration {
         }
         catch (e: any) {
             this.logError(jsonFile, `Failed to load ${jsonFile}: ${e.message}`);
-        };
+        }
     }
 
     private static setEnvironmentVariables(jsonFile: string, jsonSettings: any): void {

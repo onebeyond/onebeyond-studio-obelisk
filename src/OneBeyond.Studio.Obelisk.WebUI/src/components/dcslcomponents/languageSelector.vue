@@ -5,7 +5,9 @@
                 v-for="locale in $i18n.availableLocales"
                 :key="locale"
                 :value="locale"
-            >{{ $i18n.messages[locale]['application']['language'] }}</option>
+            >
+                {{$i18n.messages[locale]['application']['language']}}
+            </option>
         </select>
     </div>
 </template>

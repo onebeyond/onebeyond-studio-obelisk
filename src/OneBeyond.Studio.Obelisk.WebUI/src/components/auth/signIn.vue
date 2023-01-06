@@ -6,24 +6,28 @@
                     src="/assets/images/one-beyond-logo-black.svg"
                     height="60"
                     class="mx-auto d-block logo"
-                />
-                <h1 class="text-center">{{ $t('title') }}</h1>
+                >
+                <h1 class="text-center">{{$t('title')}}</h1>
 
                 <div class="form-group">
-                    <label for="username">{{ $t('field.username') }}</label>
-                    <input type="text" v-model="username" name="username" class="form-control" />
+                    <label for="username">{{$t('field.username')}}</label>
+                    <input type="text" v-model="username" name="username" class="form-control">
                     <div
                         v-show="!username"
                         class="invalid-feedback"
-                    >{{ $t('message.userNameRequired') }}</div>
+                    >
+                        {{$t('message.userNameRequired')}}
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="password">{{ $t('field.password') }}</label>
-                    <input type="password" v-model="password" name="password" class="form-control" />
+                    <label for="password">{{$t('field.password')}}</label>
+                    <input type="password" v-model="password" name="password" class="form-control">
                     <div
                         v-show="!password"
                         class="invalid-feedback"
-                    >{{ $t('message.passwordRequired') }}</div>
+                    >
+                        {{$t('message.passwordRequired')}}
+                    </div>
                 </div>
                 <div class="form-group text-center">
                     <div class="custom-control custom-checkbox">
@@ -34,11 +38,11 @@
                             name="rememberMe"
                             value="true"
                             v-model="rememberMe"
-                        />
+                        >
                         <label
                             class="custom-control-label"
                             for="rememberMe"
-                        >{{ $t('field.rememberMe') }}</label>
+                        >{{$t('field.rememberMe')}}</label>
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -47,19 +51,23 @@
                         id="submit-btn"
                         @click="signIn"
                         :disabled="signingIn"
-                    >{{ $t('button.signIn') }}</button>
+                    >
+                        {{$t('button.signIn')}}
+                    </button>
                 </div>
                 <p class="text-center">
-                    <router-link to="ForgotPassword">{{ $t('button.forgottenPassword') }}</router-link>
+                    <router-link to="ForgotPassword">{{$t('button.forgottenPassword')}}</router-link>
                 </p>
 
                 <p class="text-center" style="margin-top:30px;">
-                    <span>{{ $t('button.or') }}</span>
-                    <a>{{ $t('button.Azure') }}</a>
+                    <span>{{$t('button.or')}}</span>
+                    <a>{{$t('button.Azure')}}</a>
                 </p>
 
                 <div v-if="errorMsg">
-                    <div class="alert alert-danger">{{ errorMsg }}</div>
+                    <div class="alert alert-danger">
+                        {{errorMsg}}
+                    </div>
                 </div>
             </form>
         </div>

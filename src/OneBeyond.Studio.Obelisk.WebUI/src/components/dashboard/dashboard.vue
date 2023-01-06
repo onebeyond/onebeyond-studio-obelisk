@@ -19,8 +19,10 @@
             <div class="col-lg-6">
                 <div class="card content-panel">
                     <div class="card-body">
-                        <h2 class="card-title">My Context</h2>
-                         <p>
+                        <h2 class="card-title">
+                            My Context
+                        </h2>
+                        <p>
                             My UserName:
                             <b>{{$store.state.userContext.userName}}</b>
                         </p>
@@ -48,7 +50,9 @@
             <div class="col-lg-6">
                 <div class="card content-panel">
                     <div class="card-body">
-                        <h2 class="card-title">Data</h2>Widget 2
+                        <h2 class="card-title">
+                            Data
+                        </h2>Widget 2
                     </div>
                 </div>
             </div>
@@ -56,7 +60,9 @@
 
         <div class="card content-panel">
             <div class="card-body">
-                <h2 class="card-title">Data</h2>Widget 3
+                <h2 class="card-title">
+                    Data
+                </h2>Widget 3
             </div>
         </div>
     </div>

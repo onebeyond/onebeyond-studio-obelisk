@@ -18,5 +18,5 @@ export abstract class CustomInlineEdit {
         this.data = data;
     }
 
-    get getEditTemplate(): any { throw Error("Implement me") };
+    get getEditTemplate(): any { throw Error("Implement me") }
 }

@@ -5,8 +5,8 @@ import elEN from "element-ui/lib/locale/lang/en";
 const elementUILocale = {
     use(currentLocale: string) {
         switch (currentLocale) {
-            default:
-                locale.use(elEN);
+        default:
+            locale.use(elEN);
         }
     }
 }

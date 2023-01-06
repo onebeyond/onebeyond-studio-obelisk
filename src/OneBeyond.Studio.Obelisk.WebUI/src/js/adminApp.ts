@@ -1,4 +1,4 @@
-const Vue = require("vue");
+const Vue = require("vue"); // eslint-disable-line @typescript-eslint/no-var-requires
 import store from "@js/stores/appStore";
 import LocalSessionStorage from "@js/stores/localSessionStorage";
 import { adminRouter } from "@js/routes/adminRoutes";

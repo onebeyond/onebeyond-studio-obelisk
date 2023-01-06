@@ -1,7 +1,7 @@
 export class CommandColumnButtonOptions {
-    public static GetEditOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-edit") };
-    public static GetDeleteOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-trash-alt") };
-    public static GetDetailsOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-eye") };
+    public static GetEditOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-edit") }
+    public static GetDeleteOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-trash-alt") }
+    public static GetDetailsOptions(): CommandColumnButtonOptions { return new CommandColumnButtonOptions("e-flat", "far fa-eye") }
 
     constructor(public cssClass?: string, public iconCss?: string, public content?: string) { }
 }

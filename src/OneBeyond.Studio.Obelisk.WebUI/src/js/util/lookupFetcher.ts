@@ -7,14 +7,14 @@ import DcslApiClient from "@js/api/dcslApiClient";
  * Use it to fetch static lookups from your WebApi
  */
 export default class LookupFetcher extends DcslApiClient {
-    private idPropName: string = 'id';
-    private rootAttributeName: string = 'lookups';
-    private name: string = 'Lookup';
-    private apiEndpoint: string = '';
+    private idPropName = 'id';
+    private rootAttributeName = 'lookups';
+    private name = 'Lookup';
+    private apiEndpoint = '';
     private urlParams: any = null;
     private fields: string[] = ['id', 'name'];
-    private failureCallback: Function | null = null;
-    private afterFetchCallback: Function | null = null;
+    private failureCallback: Function | null = null; // eslint-disable-line @typescript-eslint/ban-types
+    private afterFetchCallback: Function | null = null; // eslint-disable-line @typescript-eslint/ban-types
     private vueInstance: Vue;
 
     constructor(vueInstance: Vue) {
@@ -61,12 +61,12 @@ export default class LookupFetcher extends DcslApiClient {
         return this;
     }
 
-    public setFailureCallback(callback: Function): LookupFetcher {
+    public setFailureCallback(callback: Function): LookupFetcher { // eslint-disable-line @typescript-eslint/ban-types
         this.failureCallback = callback;
         return this;
     }
 
-    public setAfterFetchCallback(callback: Function): LookupFetcher {
+    public setAfterFetchCallback(callback: Function): LookupFetcher { // eslint-disable-line @typescript-eslint/ban-types
         this.afterFetchCallback = callback;
         return this;
     }
@@ -115,9 +115,9 @@ export default class LookupFetcher extends DcslApiClient {
 
     private onReadSuccess(body: any): void {
         this.vueInstance[this.rootAttributeName][this.name] = [];
-        let data = body.data ? body.data : body;
+        const data = body.data ? body.data : body;
 
-        for (var i in data) {
+        for (const i in data) {
 
             let obj = {};
             this.fields.forEach(function (i) { obj[i] = null; });

@@ -17,7 +17,7 @@ export default class LookupMixin extends Vue {
     }
 
     public initLookups(arg: any): void {
-        let lookupsArray: any[] = Array.isArray(arg)
+        const lookupsArray: any[] = Array.isArray(arg)
             ? arg
             : [arg];
         lookupsArray.forEach((lookupName: any) => {
@@ -32,7 +32,7 @@ export default class LookupMixin extends Vue {
     }
 
     public async fetchLookups(): Promise<void> {
-        for (let lookupName of this.lookupNames) {
+        for (const lookupName of this.lookupNames) {
             await this.lookupFetchers[lookupName].executeFetch();
         }
     }

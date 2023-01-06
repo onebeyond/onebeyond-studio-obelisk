@@ -5,8 +5,8 @@ import vvEN from "vee-validate/dist/locale/en";
 const veeValidateLocale = {
     use(currentLocale: string) {
         switch (currentLocale) {
-            default:
-                VeeValidate.Validator.localize("en", vvEN);
+        default:
+            VeeValidate.Validator.localize("en", vvEN);
         }
     }
 }

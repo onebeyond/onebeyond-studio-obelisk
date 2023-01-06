@@ -15,7 +15,9 @@
                                     id="editBtn"
                                     class="btn btn-primary btn-sm"
                                     @click="selectClick(props.row)"
-                                >{{ $t('button.select') }}</button>
+                                >
+                                    {{$t('button.select')}}
+                                </button>
                             </div>
                         </v-server-table>
                     </slot>
@@ -35,7 +37,9 @@
                             id="editBtn"
                             class="btn btn-primary btn-sm"
                             @click="selectClick(props.row)"
-                        >{{ $t('button.select') }}</button>
+                        >
+                            {{$t('button.select')}}
+                        </button>
                     </div>
                 </v-server-table>
             </slot>
@@ -76,7 +80,7 @@
             var keys = Object.keys(this.schema);
             keys.push("Actions");
             return keys;
-        };
+        }
 
         get options(): any {
             return this.gridOptions ? this.gridOptions : // if gridOptions is not set, we use the default one
@@ -93,7 +97,7 @@
                     headings: this.headings,
                     requestFunction: (params) => this.dataAdaptor!.executeApi(params)
                 }
-        };
+        }
 
         get headings(): any {
             const headings = {};
@@ -108,7 +112,7 @@
         //methods
         show(): void {
             this.modalVisible = true;
-        };
+        }
 
         selectClick(rowData: any): any {
             const self = this;

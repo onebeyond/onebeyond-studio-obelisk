@@ -11,13 +11,17 @@
                     type="button"
                     id="cancelLogoutBtn"
                     class="btn btn-secondary"
-                    v-on:click="cancelLogout"
-                >{{ $t('button.keepWorking') }}</button>
+                    @click="cancelLogout"
+                >
+                    {{$t('button.keepWorking')}}
+                </button>
                 <button
                     id="logoutBtn"
                     class="btn btn-danger"
-                    v-on:click="doLogout"
-                >{{ $t('button.signOut') }} ({{ secondsLeft }})</button>
+                    @click="doLogout"
+                >
+                    {{$t('button.signOut')}} ({{secondsLeft}})
+                </button>
             </template>
         </v-modalPopup>
     </div>

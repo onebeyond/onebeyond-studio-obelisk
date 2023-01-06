@@ -34,8 +34,8 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T, TGrid extends 
             caller.onError(e);
         }
     }
-
-    public doViewDetails(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): void {
+    
+    public doViewDetails(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): void { // eslint-disable-line @typescript-eslint/no-unused-vars
         //Do nothing? Or the reaction should be the same as doEdit?
     }
 
@@ -43,7 +43,7 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T, TGrid extends 
         caller.onEntityUpdated();
     }
 
-    public doReturn(caller: EntityCrudMixin<TEntity, T, TGrid>) {
+    public doReturn(caller: EntityCrudMixin<TEntity, T, TGrid>) { // eslint-disable-line @typescript-eslint/no-unused-vars
         //Do nothing? Or should we close the add/edit modal window here?
     }
 

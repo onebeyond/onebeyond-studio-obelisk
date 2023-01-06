@@ -20,13 +20,13 @@ import WebApiClient from "@js/api/webApiClient";
 import Configuration from "@js/configuration/configuration";
 import LocalSessionStorage from "@js/stores/localSessionStorage";
 
-const Vue = require("vue");
+const Vue = require("vue"); // eslint-disable-line @typescript-eslint/no-var-requires
 
 export default class AppConfiguration {
-    private enableDebugLogging: boolean = false;
-    private readonly vueInstanceInit: Function;
+    private enableDebugLogging = false;
+    private readonly vueInstanceInit: Function; // eslint-disable-line @typescript-eslint/ban-types
 
-    constructor(enableDebugLogging: boolean, vueInstanceInit: Function) {
+    constructor(enableDebugLogging: boolean, vueInstanceInit: Function) { // eslint-disable-line @typescript-eslint/ban-types
         this.enableDebugLogging = enableDebugLogging;
         this.vueInstanceInit = vueInstanceInit;
     }

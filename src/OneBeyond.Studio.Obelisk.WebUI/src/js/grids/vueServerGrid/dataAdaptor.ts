@@ -1,18 +1,18 @@
 import DcslApiClient from "@js/api/dcslApiClient";
 
 export class DataAdaptor extends DcslApiClient {
-    private readonly errorCallback: Function;
+    private readonly errorCallback: Function; // eslint-disable-line @typescript-eslint/ban-types
 
     constructor(
         apiBaseUrl: string,
-        errorCallback: Function) {
+        errorCallback: Function) { // eslint-disable-line @typescript-eslint/ban-types
         super(apiBaseUrl);
         this.errorCallback = errorCallback;
     }
 
     public async executeApi(params: any): Promise<any> {
         const filterOrSearchParam = params["query"];
-        let filters: string[] = [];
+        const filters: string[] = [];
 
         if (filterOrSearchParam !== '') {
             // Search box
@@ -20,7 +20,7 @@ export class DataAdaptor extends DcslApiClient {
                 filters.push(`search=${filterOrSearchParam}`);
             } else {
                 // Column filter
-                for (let filter in filterOrSearchParam) {
+                for (const filter in filterOrSearchParam) {
                     filters.push(`query[${encodeURIComponent(filter)}]=${encodeURIComponent(filterOrSearchParam[filter])}`);
                 }
             }
@@ -36,11 +36,11 @@ export class DataAdaptor extends DcslApiClient {
             : "";
 
         try {
-            let response = await this.get(finalQuery);
+            const response = await this.get(finalQuery);
             return await response.json();
         }
         catch (e: any) {
-            if (!!this.errorCallback) {
+            if (this.errorCallback) {
                 this.errorCallback(e);
             }
         }

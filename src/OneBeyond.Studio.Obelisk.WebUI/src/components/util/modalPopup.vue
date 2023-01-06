@@ -1,16 +1,21 @@
 <template>
-
     <div class="modal-mask" v-if="visible">
-
-        <div class="modal" style="display:block" tabindex="-1" role="dialog" id="modalPopup">
+        <div
+            class="modal"
+            style="display:block"
+            tabindex="-1"
+            role="dialog"
+            id="modalPopup"
+        >
             <div :class="['modal-dialog', modalClass]" role="document">
                 <div class="modal-content">
-
                     <div class="modal-header">
                         <slot name="header">
                             <h5 class="modal-title">{{innerTitle}}</h5>
-                            <button type="button" class="close" aria-label="Close" v-on:click="closeClick">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="close" aria-label="Close" @click="closeClick">
+                                <span aria-hidden="true">
+                                    &times;
+                                </span>
                             </button>
                         </slot>
                     </div>
@@ -23,14 +28,15 @@
 
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button type="button" class="btn btn-secondary" v-on:click="closeClick"> {{ $t('button.close') }} </button>
+                            <button type="button" class="btn btn-secondary" @click="closeClick">
+                                {{$t('button.close')}}
+                            </button>
                         </slot>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 
@@ -66,7 +72,7 @@
             if (this.bus && this.namespace) {
                 this.bus.$on(this.namespace + "/setData", this.setData);
             }
-        };
+        }
 
         closeClick(): void {
             const self = this;
@@ -77,10 +83,10 @@
                 this.bus.$emit(this.namespace + "/close");
             }
             selfBase.$emit("close");
-        };
+        }
         setData(title: string, msg: string): void {
             this.innerTitle = title;
             this.innerMessage = msg;
-        };
+        }
     }
 </script>

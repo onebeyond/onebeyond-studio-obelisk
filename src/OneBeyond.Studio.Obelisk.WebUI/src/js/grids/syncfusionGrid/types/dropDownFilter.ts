@@ -20,7 +20,7 @@ export default class DropdownFilter extends CustomFilter {
             ui: {
                 create: (args) => {
                     args.getOptrInstance.dropOptr.element.parentElement.parentElement.style.display = "none";
-                    let inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
+                    const inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
                     args.target.appendChild(inputField);
 
                     let curVal = null;
@@ -33,7 +33,7 @@ export default class DropdownFilter extends CustomFilter {
                     }, 1)
                 },
                 //Write function is not needed for functionality, but syncfusion complains if it is not there
-                write: (args) => { },
+                write: (_) => { }, // eslint-disable-line @typescript-eslint/no-empty-function
                 read: (args) => {
                     args.fltrObj.filterByColumn(args.column.field, "equal", this.instance.value);
                 }

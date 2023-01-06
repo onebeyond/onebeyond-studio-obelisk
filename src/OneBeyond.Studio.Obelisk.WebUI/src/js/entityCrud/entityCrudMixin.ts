@@ -21,8 +21,8 @@ export default class EntityCrudMixin<TEntity extends Entity<T>, T, TGrid extends
     //(create an entity in a modal or on a sep page) using EntityUpdateStrategy class
     public entityUpdateStrategy: EntityUpdateStrategy<TEntity, T, TGrid>;
 
-    public isSaving: boolean = false;
-    public isLoading: boolean = false;
+    public isSaving = false;
+    public isLoading = false;
     public isEditingEntityInline: boolean;
     public showEntity: boolean;
     public showDeleteEntity: boolean;

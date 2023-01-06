@@ -1,4 +1,4 @@
-const Vue = require("vue");
+const Vue = require("vue"); // eslint-disable-line @typescript-eslint/no-var-requires
 import VeeValidate from "vee-validate";
 import SessionTimeoutComponent from "@components/dcslcomponents/sessiontimeout.vue";
 import UserContextSetter from "@components/dcslcomponents/usercontextsetter.vue";

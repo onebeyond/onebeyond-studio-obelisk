@@ -33,18 +33,18 @@ export class SyncfusionEntityGrid extends EntityGrid {
         operators: {
             stringOperator:
                 [new FilterOption('equal', 'Equals'),
-                new FilterOption('startswith', 'Starts With'),
-                new FilterOption('endswith', 'Ends With'),
-                new FilterOption('contains', 'Contains'),
-                new FilterOption('notequal', 'Not')],
+                    new FilterOption('startswith', 'Starts With'),
+                    new FilterOption('endswith', 'Ends With'),
+                    new FilterOption('contains', 'Contains'),
+                    new FilterOption('notequal', 'Not')],
             dateOperator:
                 [new FilterOption('equal', 'Equals'),
-                new FilterOption('greaterthanorequal', 'Greater than or equal'),
-                new FilterOption('lessthanorequal', 'Less than or equal')],
+                    new FilterOption('greaterthanorequal', 'Greater than or equal'),
+                    new FilterOption('lessthanorequal', 'Less than or equal')],
             numberOperator:
                 [new FilterOption('equal', 'Equals'),
-                new FilterOption('greaterthanorequal', 'Greater than or equal'),
-                new FilterOption('lessthanorequal', 'Less than or equal')],
+                    new FilterOption('greaterthanorequal', 'Greater than or equal'),
+                    new FilterOption('lessthanorequal', 'Less than or equal')],
         }
     }
 
@@ -110,11 +110,11 @@ export class SyncfusionEntityGrid extends EntityGrid {
         this._instance = gridRef;
     }
 
-    public initDataAdaptor(apiUrl: string, errorCallback: Function): void {
+    public initDataAdaptor(apiUrl: string, errorCallback: Function): void { // eslint-disable-line @typescript-eslint/ban-types
         this._dataAdaptor = new DataAdaptor(apiUrl, errorCallback, this._sortMaps);
     }
 
-    public init(id: string, apiUrl: string, errorCallback: Function, parentId?: string): void {
+    public init(id: string, apiUrl: string, errorCallback: Function, parentId?: string): void { // eslint-disable-line @typescript-eslint/ban-types
         this.id = id;
         this.initDataAdaptor(apiUrl, errorCallback);
 
@@ -183,7 +183,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     public setInitialFilters(): SyncfusionEntityGrid {
         const presetFilterColumns = this.columns.filter(x => x.filter && x.filter!.initialValue != undefined);
 
-        for (let column of presetFilterColumns) {
+        for (const column of presetFilterColumns) {
             column.filter!.instance.value = column.filter!.initialValue;
             column.filter!.instance.text = "";
             this.filterSettings.columns.push({ field: column.fieldName, matchCase: false, operator: 'equal', predicate: 'and', value: column.filter!.initialValue });
@@ -305,22 +305,22 @@ export class SyncfusionEntityGrid extends EntityGrid {
 
     public rememberCurrentPageBeforeGridAction(gridAction: EntityGridAction): void {
         switch (gridAction) {
-            case EntityGridAction.EntityAdd:
-                this._currentPage = 1;
-                break;
-            case EntityGridAction.EntityEdit:
-                this._currentPage = (this.instance as any).pageSettings.currentPage;
-                break;
-            case EntityGridAction.EntityDelete:
-                {
-                    let currPage = (this.instance as any).pageSettings.currentPage;
+        case EntityGridAction.EntityAdd:
+            this._currentPage = 1;
+            break;
+        case EntityGridAction.EntityEdit:
+            this._currentPage = (this.instance as any).pageSettings.currentPage;
+            break;
+        case EntityGridAction.EntityDelete:
+            {
+                let currPage = (this.instance as any).pageSettings.currentPage;
 
-                    if (this.data.length === 1 && currPage > 1) {
-                        currPage--; //if this is the only record on the page - when it is deleted we need to return to the prev page
-                    }
-                    this._currentPage = currPage;
+                if (this.data.length === 1 && currPage > 1) {
+                    currPage--; //if this is the only record on the page - when it is deleted we need to return to the prev page
                 }
-                break;
+                this._currentPage = currPage;
+            }
+            break;
         }
     }
 
@@ -357,7 +357,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     public async onDataStateChanged(state: any): Promise<void> {
         if (state.action != undefined && (state.action.requestType == 'stringfilterrequest' || state.action.requestType == 'save')) return;
         this.state = state;
-        let data = await this.dataAdaptor.execute(this.state);
+        const data = await this.dataAdaptor.execute(this.state);
         (this.instance as any).ej2Instances.dataSource = data;
         this.data = data;
     }
@@ -366,29 +366,29 @@ export class SyncfusionEntityGrid extends EntityGrid {
     public async onDataSourceChanged(state: DataSourceChangedEventArgs): Promise<void> {
         const action = state.action != undefined ? state.action : state.requestType;
         switch (action) {
-            case Action.Add:
-                try {
-                    await this.dataAdaptor.add(this.gridEntity);
-                    this.endEdit(state);
-                }
-                catch (e) {
-                    this.handleServerError(e);
-                    this.cancelEdit(state);
-                }
-                break;
-            case Action.Edit:
-                try {
-                    await this.dataAdaptor.edit(this.gridEntity);
-                    this.endEdit(state);
-                }
-                catch (e) {
-                    this.handleServerError(e);
-                    this.cancelEdit(state);
-                }
-                break;
-            default:
-                console.log('UNHANDLED ACTION', action);
-                return;
+        case Action.Add:
+            try {
+                await this.dataAdaptor.add(this.gridEntity);
+                this.endEdit(state);
+            }
+            catch (e) {
+                this.handleServerError(e);
+                this.cancelEdit(state);
+            }
+            break;
+        case Action.Edit:
+            try {
+                await this.dataAdaptor.edit(this.gridEntity);
+                this.endEdit(state);
+            }
+            catch (e) {
+                this.handleServerError(e);
+                this.cancelEdit(state);
+            }
+            break;
+        default:
+            console.log('UNHANDLED ACTION', action);
+            return;
         }
     }
 
@@ -405,15 +405,15 @@ export class SyncfusionEntityGrid extends EntityGrid {
         }
 
         switch (action) {
-            case Action.ClearFilter:
-                this.clearColumnFilter(actionArgs);
-                break;
-            case Action.Filtering:
-            case Action.Filter:
-                this.applyRangeFilter(actionArgs);
-                break;
-            case Action.Cancel:
-                this.refresh(); //Grid does not restore data correctly after modifying a row and canceling the edit, this is obviously not ideal 
+        case Action.ClearFilter:
+            this.clearColumnFilter(actionArgs);
+            break;
+        case Action.Filtering:
+        case Action.Filter:
+            this.applyRangeFilter(actionArgs);
+            break;
+        case Action.Cancel:
+            this.refresh(); //Grid does not restore data correctly after modifying a row and canceling the edit, this is obviously not ideal 
         }
     }
 
@@ -492,7 +492,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     }
 
     //Override this if any custom handling for specific rows is needed 
-    public customRowDataBoundHandler(row: RowDataBoundEventArgs): void { return };
+    public customRowDataBoundHandler(row: RowDataBoundEventArgs): void { return } // eslint-disable-line @typescript-eslint/no-unused-vars
 
     public onCheckboxChanged(event: any) {
         this.hasSelectedItems = event.selectedRowIndexes.length > 0;
@@ -502,22 +502,22 @@ export class SyncfusionEntityGrid extends EntityGrid {
     public onCommandClick(event): void {
         //entity crud mixin methods take id as parameter
         switch (event.commandColumn.type) {
-            case Command.Edit:
-                this.handleEdit(event.rowData.id);
-                break;
-            case Command.Delete:
-                this.handleDelete(event.rowData.id);
-                break;
-            case Command.Details:
-                this.handleViewDetails(event.rowData.id);
-                break;
-            default: {
-                const command = this.commands.find(x => x.type == event.commandColumn.type);
-                if (command == null || command == undefined) {
-                    throw new Error("Command does not have a handler defined");
-                }
-                command.handleCommand(event.rowData);
+        case Command.Edit:
+            this.handleEdit(event.rowData.id);
+            break;
+        case Command.Delete:
+            this.handleDelete(event.rowData.id);
+            break;
+        case Command.Details:
+            this.handleViewDetails(event.rowData.id);
+            break;
+        default: {
+            const command = this.commands.find(x => x.type == event.commandColumn.type);
+            if (command == null || command == undefined) {
+                throw new Error("Command does not have a handler defined");
             }
+            command.handleCommand(event.rowData);
+        }
         }
     }
 
@@ -576,9 +576,9 @@ export class SyncfusionEntityGrid extends EntityGrid {
         const conditionalButtons = this.commands.filter(c => c.hiddenIf);
         if (conditionalButtons.length > 0) {
             conditionalButtons.forEach(cb => {
-                let filter = cb.hiddenIf;
+                const filter = cb.hiddenIf;
                 if (row.data[filter!.fieldName] == filter!.value) {
-                    var title = cb.buttonOption.content == undefined ? cb.type : cb.buttonOption.content;
+                    const title = cb.buttonOption.content == undefined ? cb.type : cb.buttonOption.content;
                     row.row.querySelector([`[title="${title}"]`]).classList.add("e-hide");
                 }
             })
@@ -589,7 +589,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
             hideIconConditions.forEach(cb => {
                 const filter = cb.hiddenIconIf;
                 if (row.data[filter!.fieldName] == filter!.value) {
-                    var title = cb.buttonOption.content == undefined ? cb.type : cb.buttonOption.content;
+                    const title = cb.buttonOption.content == undefined ? cb.type : cb.buttonOption.content;
                     row.row.querySelector([`[title="${title}"] span.e-btn-icon`]).classList.add("e-hide");
                 }
             })
@@ -597,7 +597,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     }
 
     public hideCommand(type: string) {
-        let command = this.commands.find(c => c.type == type);
+        const command = this.commands.find(c => c.type == type);
         if (command) {
             this.commands.splice(this.commands.indexOf(command), 1);
         }
@@ -606,7 +606,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     //#endregion
 
     //#region FEATURE: EXCEL EXPORT
-    public async exportToExcel(includeHiddenColumns: boolean = true, fileName: string = "Export") {
+    public async exportToExcel(includeHiddenColumns = true, fileName = "Export") {
         try {
             const data = await this.getDataForExcel();
             (this.instance as any).excelExport({
@@ -666,7 +666,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
         this.pageSettings = gridSettings.pageSettings;
 
         const sorted: any = [];
-        for (let sorting of gridSettings.sortSettings.columns) {
+        for (const sorting of gridSettings.sortSettings.columns) {
             sorted.push({ name: sorting.field, direction: sorting.direction });
         }
 
@@ -693,30 +693,30 @@ export class SyncfusionEntityGrid extends EntityGrid {
             const gridColumn = this.getColumnByFieldName(col.field);
 
             switch (gridColumn.customFilterType) {
-                case 'CheckBox':
+            case 'CheckBox':
                     gridColumn.filter!.instance.value == null ? gridColumn.filter!.instance.value = [col.value] : gridColumn.filter!.instance.value.push(col.value);
-                    this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'or', value: col.value });
-                    break;
-                case 'DropDown':
+                this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'or', value: col.value });
+                break;
+            case 'DropDown':
                     gridColumn.filter!.instance.value = col.value;
-                    this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'and', value: col.value });
-                    break;
-                case 'NumberRange':
-                case 'DateRange':
-                    if (col.operator == 'greaterthanorequal') {
+                this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'and', value: col.value });
+                break;
+            case 'NumberRange':
+            case 'DateRange':
+                if (col.operator == 'greaterthanorequal') {
                         gridColumn.filter!.instance.value = col.value;
-                    };
-                    if (col.operator == 'lessthanorequal') {
+                }
+                if (col.operator == 'lessthanorequal') {
                         gridColumn.filter!.secondaryInstance.value = col.value;
-                    }
-                    //For some reason, for ranges, only one object should be pushed to columns, otherwise the filter will not appear "active"
-                    if (!this.filterSettings.columns.some(x => x.field == gridColumn.fieldName)) {
-                        this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'and', value: col.value });
-                    };
-                    break;
-                default:
-                    gridColumn!.filterSettings!.value = col.value;
+                }
+                //For some reason, for ranges, only one object should be pushed to columns, otherwise the filter will not appear "active"
+                if (!this.filterSettings.columns.some(x => x.field == gridColumn.fieldName)) {
                     this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'and', value: col.value });
+                }
+                break;
+            default:
+                    gridColumn!.filterSettings!.value = col.value;
+                this.filterSettings.columns.push({ field: gridColumn.fieldName, matchCase: false, operator: col.operator, predicate: 'and', value: col.value });
             }
         })
     }
@@ -791,7 +791,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
 
     private editGridEntity(args, field): void {
         let value = args.value;
-        if (args.hasOwnProperty('checked')) {
+        if (args.hasOwnProperty('checked')) { // eslint-disable-line no-prototype-builtins
             value = args.checked; // Boolean fields use checked not value
         }
         this.gridEntity[field] = value;

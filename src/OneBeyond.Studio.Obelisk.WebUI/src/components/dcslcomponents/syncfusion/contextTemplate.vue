@@ -1,17 +1,19 @@
 <template>
     <div class="dropdown context-menu" v-if="isMenuVisible">
-        <button aria-haspopup="true" 
-                aria-expanded="false"
-                class="btn btn-secondary btn-outline dropdown-toggle"
-                id="dropdownMenuButton" 
-                type="button">
-            <i class="fas fa-bars"></i>
+        <button
+            aria-haspopup="true" 
+            aria-expanded="false"
+            class="btn btn-secondary btn-outline dropdown-toggle"
+            id="dropdownMenuButton" 
+            type="button"
+        >
+            <i class="fas fa-bars" />
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <div v-for="command in commands" v-if="isCommandVisibleForRow(command.type)">
+            <div v-for="command in commands" v-if="isCommandVisibleForRow(command.type)" :key="command.type">
                 <button class="dropdown-item" @click="issueGridAction(command)">
-                    <span><i v-if="isIconShown(command)" :class="command.buttonOption.iconCss"></i></span>
-                    {{ command.buttonOption.content }}
+                    <span><i v-if="isIconShown(command)" :class="command.buttonOption.iconCss" /></span>
+                    {{command.buttonOption.content}}
                 </button>
             </div>
         </div>
@@ -80,7 +82,7 @@
         }
 
         //extended by grid class
-        public handleCommand(data: any): void { }
+        public handleCommand(_: any): void { }
 
         public isCommandVisibleForRow(type: string): boolean {
             return this.rowCommandVisibilityMap[type];

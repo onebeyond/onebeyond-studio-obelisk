@@ -1,23 +1,23 @@
 export abstract class StringUtils {
 
-    public static getInitials(input: string | null, charLimit: number = 3): string {
+    public static getInitials(input: string | null, charLimit = 3): string {
         if (!input) {
             return "";
         }
 
         const trimmedInput = input.trim();
         // 1. Try a split by space or dash symbol
-        let parts = trimmedInput.split(/[ -]/);
+        const parts = trimmedInput.split(/[ -]/);
         let initials = '';
-        for (var i = 0; i < parts.length; i++) {
+        for (let i = 0; i < parts.length; i++) {
             initials += parts[i].charAt(0);
         }
 
         // 2. try a split by Uppercase letter
         if (parts.length < 2) {
-            let partsByUppercase = trimmedInput.split(/(?=[A-Z])/);
+            const partsByUppercase = trimmedInput.split(/(?=[A-Z])/);
             // Skip the first initial that is surely already there
-            for (var i = 1; i < partsByUppercase.length; i++) {
+            for (let i = 1; i < partsByUppercase.length; i++) {
                 initials += partsByUppercase[i].charAt(0);
             }
         }
