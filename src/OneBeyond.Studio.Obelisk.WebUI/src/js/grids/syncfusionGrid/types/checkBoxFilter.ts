@@ -28,7 +28,7 @@ export default class CheckboxFilter extends CustomFilter {
                     this.instance.dataSource = data;
                     this.instance.appendTo(inputField);
                 },
-                write: (args) => { },
+                write: (_) => { }, // eslint-disable-line @typescript-eslint/no-empty-function
                 read: (args) => {
                     //Required to reset the predicate otherwise it contains previous filter value as well as new one
                     //Filters out stored filtering info for the column we are currently filtering

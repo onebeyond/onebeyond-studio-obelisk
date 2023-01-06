@@ -5,9 +5,9 @@ import InterceptorResponse from "@js/api/interceptors/interceptorResponse";
  * Interceptor to perform logout and redirect to Login page in case of 401
  */
 export default class RedirectToLoginResponseInterceptor implements IResponseInterceptor {
-    private readonly logoutCallback: Function;
+    private readonly logoutCallback: Function; // eslint-disable-line @typescript-eslint/ban-types
 
-    constructor(logoutCallback: Function) {
+    constructor(logoutCallback: Function) { // eslint-disable-line @typescript-eslint/ban-types
         this.logoutCallback = logoutCallback;
     }
 

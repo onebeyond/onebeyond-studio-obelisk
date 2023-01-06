@@ -1,3 +1,4 @@
+/* eslint no-undef: 0 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
@@ -63,7 +64,7 @@
     function createLogger (ref) {
         if ( ref === void 0 ) ref = {};
         var collapsed = ref.collapsed; if ( collapsed === void 0 ) collapsed = true;
-        var filter = ref.filter; if ( filter === void 0 ) filter = function (mutation, stateBefore, stateAfter) { return true; };
+        var filter = ref.filter; if ( filter === void 0 ) filter = function (mutation, stateBefore, stateAfter) { return true; }; // eslint-disable-line no-unused-vars
         var transformer = ref.transformer; if ( transformer === void 0 ) transformer = function (state) { return state; };
         var mutationTransformer = ref.mutationTransformer; if ( mutationTransformer === void 0 ) mutationTransformer = function (mut) { return mut; };
         var logger = ref.logger; if ( logger === void 0 ) logger = console;

@@ -22,7 +22,7 @@ export default class TextBoxEdit extends CustomInlineEdit {
             read: (args) => {
                 return args.value;
             },
-            write: (args) => {
+            write: (_) => {
                 this.instance.appendTo(this.element);
             }
         };

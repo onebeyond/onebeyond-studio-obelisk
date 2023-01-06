@@ -1,4 +1,4 @@
-const Vue = require("vue");
+const Vue = require("vue"); // eslint-disable-line @typescript-eslint/no-var-requires
 import { i18n } from '@js/localizations/lang';
 import { indexRouter } from "@js/routes/indexRoutes";
 import AppConfiguration from "./vueConfig/appConfiguration";

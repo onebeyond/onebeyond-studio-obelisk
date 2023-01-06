@@ -108,7 +108,7 @@ export default {
                 groupDropArea: 'Drag a column header here to group its column',
                 unGroup: 'Click here to ungroup',
                 groupDisable: 'Grouping is disabled for this column',
-                filterbarTitle: '\s filter bar cell',
+                filterbarTitle: '\s filter bar cell', // eslint-disable-line no-useless-escape
                 emptyDataSourceError: 'DataSource must not be empty at initial load since columns are generated from dataSource in AutoGenerate Column Grid',
                 add: 'Add',
                 edit: 'Edit',

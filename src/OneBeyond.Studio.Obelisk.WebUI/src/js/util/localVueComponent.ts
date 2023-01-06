@@ -7,9 +7,9 @@ export interface LocalVueComponent
 {
     name?: string,
     template?: string,
-    data: () => {},
-    methods?: {},
-    computed?: {},
-    components?: {},
+    data: () => any,
+    methods?: any,
+    computed?: any,
+    components?: any,
     extends?: VueConstructor<Vue>
 }

@@ -42,16 +42,16 @@ function sizeInKb(value) {
 }
 
 function currency(value, symbol, decimals, options) {
-    let thousandsSeparator, symbolOnLeft, spaceBetweenAmountAndSymbol;
+    
     const digitsRE = /(\d{3})(?=\d)/g;
     options = options || {};
     value = parseFloat(value);
     if (!isFinite(value) || (!value && value !== 0)) return '';
     symbol = symbol != null ? symbol : '$';
     decimals = decimals != null ? decimals : 2;
-    thousandsSeparator = options.thousandsSeparator != null ? options.thousandsSeparator : ',';
-    symbolOnLeft = options.symbolOnLeft != null ? options.symbolOnLeft : true;
-    spaceBetweenAmountAndSymbol = options.spaceBetweenAmountAndSymbol != null ? options.spaceBetweenAmountAndSymbol : false;
+    const thousandsSeparator = options.thousandsSeparator != null ? options.thousandsSeparator : ',';
+    const symbolOnLeft = options.symbolOnLeft != null ? options.symbolOnLeft : true;
+    const spaceBetweenAmountAndSymbol = options.spaceBetweenAmountAndSymbol != null ? options.spaceBetweenAmountAndSymbol : false;
     let stringified = Math.abs(value).toFixed(decimals);
     stringified = options.decimalSeparator
         ? stringified.replace('.', options.decimalSeparator)

@@ -1,11 +1,11 @@
 import DcslApiClient from "@js/api/dcslApiClient";
 
 export class DataAdaptor extends DcslApiClient {
-    private readonly errorCallback: Function;
+    private readonly errorCallback: Function; // eslint-disable-line @typescript-eslint/ban-types
 
     constructor(
         apiBaseUrl: string,
-        errorCallback: Function) {
+        errorCallback: Function) { // eslint-disable-line @typescript-eslint/ban-types
         super(apiBaseUrl);
         this.errorCallback = errorCallback;
     }

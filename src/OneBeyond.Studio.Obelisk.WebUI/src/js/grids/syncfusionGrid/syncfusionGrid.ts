@@ -110,11 +110,11 @@ export class SyncfusionEntityGrid extends EntityGrid {
         this._instance = gridRef;
     }
 
-    public initDataAdaptor(apiUrl: string, errorCallback: Function): void {
+    public initDataAdaptor(apiUrl: string, errorCallback: Function): void { // eslint-disable-line @typescript-eslint/ban-types
         this._dataAdaptor = new DataAdaptor(apiUrl, errorCallback, this._sortMaps);
     }
 
-    public init(id: string, apiUrl: string, errorCallback: Function, parentId?: string): void {
+    public init(id: string, apiUrl: string, errorCallback: Function, parentId?: string): void { // eslint-disable-line @typescript-eslint/ban-types
         this.id = id;
         this.initDataAdaptor(apiUrl, errorCallback);
 
@@ -492,7 +492,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
     }
 
     //Override this if any custom handling for specific rows is needed 
-    public customRowDataBoundHandler(row: RowDataBoundEventArgs): void { return }
+    public customRowDataBoundHandler(row: RowDataBoundEventArgs): void { return } // eslint-disable-line @typescript-eslint/no-unused-vars
 
     public onCheckboxChanged(event: any) {
         this.hasSelectedItems = event.selectedRowIndexes.length > 0;
@@ -791,7 +791,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
 
     private editGridEntity(args, field): void {
         let value = args.value;
-        if (args.hasOwnProperty('checked')) {
+        if (args.hasOwnProperty('checked')) { // eslint-disable-line no-prototype-builtins
             value = args.checked; // Boolean fields use checked not value
         }
         this.gridEntity[field] = value;

@@ -46,7 +46,7 @@ export class VueEntityGrid extends EntityGrid {
         this._instance = instance;
     }
 
-    public initDataAdaptor(apiUrl: string, errorCallback: Function): void {
+    public initDataAdaptor(apiUrl: string, errorCallback: Function): void { // eslint-disable-line @typescript-eslint/ban-types
         const dataAdaptor = new DataAdaptor(apiUrl, errorCallback);
         this.options.requestFunction = (params) => dataAdaptor.executeApi(params);
     }

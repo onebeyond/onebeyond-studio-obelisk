@@ -56,7 +56,7 @@ export default class RangeFilter extends CustomFilter {
                     this.instance.appendTo(firstInputField);
                     this.secondaryInstance.appendTo(secondInputField);
                 },
-                write: (args) => { },
+                write: (_) => { }, // eslint-disable-line @typescript-eslint/no-empty-function
                 read: (args) => {
 
                     args.fltrObj.filterSettings.columns = args.fltrObj.filterSettings.columns.filter(x => x.field != args.column.field);

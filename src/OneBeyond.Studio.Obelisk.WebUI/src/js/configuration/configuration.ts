@@ -8,7 +8,7 @@ export default abstract class Configuration {
 
     public static load(
         environment: string,
-        onSettingsLoaded: Function | null = null): Promise<any> {
+        onSettingsLoaded: Function | null = null): Promise<any> { // eslint-disable-line @typescript-eslint/ban-types
         this._appSettings = new AppSettings();
 
         const envSettingsFile = `settings.${(environment || "dev").toLowerCase()}.json`;

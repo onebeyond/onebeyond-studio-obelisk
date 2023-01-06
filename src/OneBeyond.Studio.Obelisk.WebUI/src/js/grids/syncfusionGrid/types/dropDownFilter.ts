@@ -33,7 +33,7 @@ export default class DropdownFilter extends CustomFilter {
                     }, 1)
                 },
                 //Write function is not needed for functionality, but syncfusion complains if it is not there
-                write: (args) => { },
+                write: (_) => { }, // eslint-disable-line @typescript-eslint/no-empty-function
                 read: (args) => {
                     args.fltrObj.filterByColumn(args.column.field, "equal", this.instance.value);
                 }

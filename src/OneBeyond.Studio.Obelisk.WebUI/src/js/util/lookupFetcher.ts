@@ -13,8 +13,8 @@ export default class LookupFetcher extends DcslApiClient {
     private apiEndpoint = '';
     private urlParams: any = null;
     private fields: string[] = ['id', 'name'];
-    private failureCallback: Function | null = null;
-    private afterFetchCallback: Function | null = null;
+    private failureCallback: Function | null = null; // eslint-disable-line @typescript-eslint/ban-types
+    private afterFetchCallback: Function | null = null; // eslint-disable-line @typescript-eslint/ban-types
     private vueInstance: Vue;
 
     constructor(vueInstance: Vue) {
@@ -61,12 +61,12 @@ export default class LookupFetcher extends DcslApiClient {
         return this;
     }
 
-    public setFailureCallback(callback: Function): LookupFetcher {
+    public setFailureCallback(callback: Function): LookupFetcher { // eslint-disable-line @typescript-eslint/ban-types
         this.failureCallback = callback;
         return this;
     }
 
-    public setAfterFetchCallback(callback: Function): LookupFetcher {
+    public setAfterFetchCallback(callback: Function): LookupFetcher { // eslint-disable-line @typescript-eslint/ban-types
         this.afterFetchCallback = callback;
         return this;
     }

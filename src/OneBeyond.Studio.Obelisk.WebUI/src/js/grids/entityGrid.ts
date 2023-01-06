@@ -1,7 +1,5 @@
 export abstract class EntityGrid {
-    constructor() {
-    }
-    abstract initDataAdaptor(apiUrl: string, errorCallback: Function);
+    abstract initDataAdaptor(apiUrl: string, errorCallback: Function); // eslint-disable-line @typescript-eslint/ban-types
     abstract rememberCurrentPageBeforeGridAction(action: any);
     abstract restoreCurrentPage();
     abstract setInstance(gridRef: any);

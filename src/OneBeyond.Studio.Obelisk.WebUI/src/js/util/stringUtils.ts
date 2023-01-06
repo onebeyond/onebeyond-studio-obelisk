@@ -9,7 +9,7 @@ export abstract class StringUtils {
         // 1. Try a split by space or dash symbol
         const parts = trimmedInput.split(/[ -]/);
         let initials = '';
-        for (var i = 0; i < parts.length; i++) {
+        for (let i = 0; i < parts.length; i++) {
             initials += parts[i].charAt(0);
         }
 
@@ -17,7 +17,7 @@ export abstract class StringUtils {
         if (parts.length < 2) {
             const partsByUppercase = trimmedInput.split(/(?=[A-Z])/);
             // Skip the first initial that is surely already there
-            for (var i = 1; i < partsByUppercase.length; i++) {
+            for (let i = 1; i < partsByUppercase.length; i++) {
                 initials += partsByUppercase[i].charAt(0);
             }
         }

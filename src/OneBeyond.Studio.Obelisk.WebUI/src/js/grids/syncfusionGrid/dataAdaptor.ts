@@ -24,9 +24,9 @@ export class DataAdaptor extends DcslApiClient {
     private additionalParameters: any = {};
     private activeHttpGetRequests: AbortController[] = [];
     private sortMaps: any = {};
-    private readonly errorCallback: Function;
+    private readonly errorCallback: Function; // eslint-disable-line @typescript-eslint/ban-types
 
-    constructor(apiUrl: string, errorCallback: Function, sortMaps: any, additionalParameters: any = {}) {
+    constructor(apiUrl: string, errorCallback: Function, sortMaps: any, additionalParameters: any = {}) { // eslint-disable-line @typescript-eslint/ban-types
         super(apiUrl);
         this.additionalParameters = additionalParameters;
         this.errorCallback = errorCallback;
