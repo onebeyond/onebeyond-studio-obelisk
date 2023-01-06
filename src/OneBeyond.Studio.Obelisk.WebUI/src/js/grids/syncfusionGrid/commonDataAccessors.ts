@@ -1,7 +1,5 @@
 import { showYesNo, currency, sizeInKb } from "@js/util/filters";
 
-// TODO: From Sligo - there's definitely a good chance this code is redundant. Did it get copied from somewhere.
-// TODO: I don't know where to log code issues - so have left them in TODOs. If there's a better place, please let me know.
 export default class CommonDataAccessors {
     static showYesNo(field: string, data: any, column: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return showYesNo(data[field]);
