@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Workers", "src\OneBeyond.Studio.Obelisk.Workers\OneBeyond.Studio.Obelisk.Workers.csproj", "{3826B005-74AD-48CA-9CF1-C9BFED6A1196}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "OneBeyond.Studio.Obelisk.WebUI", "src\OneBeyond.Studio.Obelisk.WebUI\OneBeyond.Studio.Obelisk.WebUI.esproj", "{0DAE7742-89CC-440D-B95D-CE4F6F91D624}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,12 +67,6 @@ Global
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0DAE7742-89CC-440D-B95D-CE4F6F91D624}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
