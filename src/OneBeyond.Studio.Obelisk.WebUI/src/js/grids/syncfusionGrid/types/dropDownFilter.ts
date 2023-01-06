@@ -20,7 +20,7 @@ export default class DropdownFilter extends CustomFilter {
             ui: {
                 create: (args) => {
                     args.getOptrInstance.dropOptr.element.parentElement.parentElement.style.display = "none";
-                    let inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
+                    const inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
                     args.target.appendChild(inputField);
 
                     let curVal = null;

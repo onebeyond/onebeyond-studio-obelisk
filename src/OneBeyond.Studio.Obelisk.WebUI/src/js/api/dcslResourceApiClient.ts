@@ -5,7 +5,7 @@ export default abstract class DcslResourceApiClient extends DcslApiClient {
         resource: string,
         version: string | null,
     ) {
-        const sanitizedVersion = !!version ? `${version}/` : "";
+        const sanitizedVersion = version ? `${version}/` : "";
         const apiUrl = `${DcslResourceApiClient.WebApiRoot}api/${resource}/${sanitizedVersion}`;
 
         super(apiUrl);

@@ -7,7 +7,7 @@ const syncfusionLocale = {
         // Set Syncfusion grid locale
         setCulture(currentLocale);
 
-        let currentArray = {};
+        const currentArray = {};
         currentArray[currentLocale] = {
             'grid': {
                 'EmptyRecord': i18n.t('syncfusion.grid.emptyRecord'),

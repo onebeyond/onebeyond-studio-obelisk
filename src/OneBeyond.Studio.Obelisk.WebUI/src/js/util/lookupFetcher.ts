@@ -7,10 +7,10 @@ import DcslApiClient from "@js/api/dcslApiClient";
  * Use it to fetch static lookups from your WebApi
  */
 export default class LookupFetcher extends DcslApiClient {
-    private idPropName: string = 'id';
-    private rootAttributeName: string = 'lookups';
-    private name: string = 'Lookup';
-    private apiEndpoint: string = '';
+    private idPropName = 'id';
+    private rootAttributeName = 'lookups';
+    private name = 'Lookup';
+    private apiEndpoint = '';
     private urlParams: any = null;
     private fields: string[] = ['id', 'name'];
     private failureCallback: Function | null = null;
@@ -115,9 +115,9 @@ export default class LookupFetcher extends DcslApiClient {
 
     private onReadSuccess(body: any): void {
         this.vueInstance[this.rootAttributeName][this.name] = [];
-        let data = body.data ? body.data : body;
+        const data = body.data ? body.data : body;
 
-        for (var i in data) {
+        for (const i in data) {
 
             let obj = {};
             this.fields.forEach(function (i) { obj[i] = null; });

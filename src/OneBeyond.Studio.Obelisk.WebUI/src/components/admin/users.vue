@@ -3,7 +3,7 @@
         <div class="title-bar">
             <div class="row">
                 <div class="col-5">
-                    <h1 class="page-title">{{ $t('entityName.plural') }}</h1>
+                    <h1 class="page-title">{{$t('entityName.plural')}}</h1>
                 </div>
 
                 <div class="col-7 d-flex justify-content-end">
@@ -12,10 +12,10 @@
                             id="createNewBtn"
                             class="btn btn-primary btn-sm"
                             v-if="isAdmin"
-                            v-on:click="onAddEntityButtonClicked"
+                            @click="onAddEntityButtonClicked"
                         >
-                            <i class="fas fa-plus"></i>
-                            {{ $t('button.createNew') }}
+                            <i class="fas fa-plus" />
+                            {{$t('button.createNew')}}
                         </button>
                     </div>
                 </div>
@@ -30,49 +30,55 @@
                     :options="entityGrid.options"
                     ref="entityGrid"
                 >
-                    <div slot="isActive" slot-scope="props">{{props.row.isActive | showYesNo}}</div>
+                    <div slot="isActive" slot-scope="props">
+                        {{props.row.isActive | showYesNo}}
+                    </div>
                     <div
                         slot="isLockedOut"
                         slot-scope="props"
                         style="width:100%;text-align:center; color:red;"
                     >
-                        <span v-if="props.row.isLockedOut">{{ $t('message.lockedOut') }}</span>
+                        <span v-if="props.row.isLockedOut">
+                            {{$t('message.lockedOut')}}
+                        </span>
                     </div>
                     <div slot="edit" slot-scope="props" class="actions-cell">
                         <button
                             class="btn btn-link btn-sm"
                             @click="onEditEntityButtonClicked(props.row.id)"
                         >
-                            <i class="far fa-edit"></i>
-                            {{ $t('button.edit') }}
+                            <i class="far fa-edit" />
+                            {{$t('button.edit')}}
                         </button>
                     </div>
 
                     <div slot="mobile" slot-scope="props">
                         <p>
-                            <b>{{ $t('entityColumn.name') }}</b>
+                            <b>{{$t('entityColumn.name')}}</b>
                             {{props.row.name}}
                         </p>
                         <p>
-                            <b>{{ $t('entityColumn.emailAddress') }}</b>
+                            <b>{{$t('entityColumn.emailAddress')}}</b>
                             {{props.row.email}}
                         </p>
                         <p>
-                            <b>{{ $t('entityColumn.userName') }}</b>
+                            <b>{{$t('entityColumn.userName')}}</b>
                             {{props.row.userName}}
                         </p>
                         <p>
-                            <b>{{ $t('entityColumn.roleId') }}</b>
+                            <b>{{$t('entityColumn.roleId')}}</b>
                             {{props.row.roleId}}
                         </p>
                         <p>
-                            <b>{{ $t('entityColumn.isActive') }}</b>
+                            <b>{{$t('entityColumn.isActive')}}</b>
                             {{props.row.isActive}}
                         </p>
                         <button
                             class="btn btn-primary btn-sm"
                             @click="onEditEntityButtonClicked(props.row.id)"
-                        >{{ $t('button.edit') }}</button>
+                        >
+                            {{$t('button.edit')}}
+                        </button>
                     </div>
                 </v-server-table>
             </div>
@@ -89,7 +95,7 @@
                     <label
                         for="emailInput"
                         class="col-sm-3 col-form-label"
-                    >{{ $t('entityColumn.emailAddress') }}</label>
+                    >{{$t('entityColumn.emailAddress')}}</label>
                     <div class="col-sm-9">
                         <input
                             id="emailInput"
@@ -99,11 +105,13 @@
                             v-validate="'required|email|max:150'"
                             :class="{'form-control': true, 'is-invalid': errors.has('email') }"
                             :data-vv-as="$t('entityColumn.emailAddress')"
-                        />
+                        >
                         <div
                             class="invalid-feedback"
                             v-show="errors.has('email')"
-                        >{{ errors.first('email') }}</div>
+                        >
+                            {{errors.first('email')}}
+                        </div>
                     </div>
                 </div>
 
@@ -111,7 +119,7 @@
                     <label
                         for="userNameInput"
                         class="col-sm-3 col-form-label"
-                    >{{ $t('entityColumn.userName') }}</label>
+                    >{{$t('entityColumn.userName')}}</label>
                     <div class="col-sm-9">
                         <input
                             id="userNameInput"
@@ -121,11 +129,13 @@
                             v-validate="'required|max:150'"
                             :class="{'form-control': true, 'is-invalid': errors.has('userName') }"
                             :data-vv-as="$t('entityColumn.userName')"
-                        />
+                        >
                         <div
                             class="invalid-feedback"
                             v-show="errors.has('userName')"
-                        >{{ errors.first('userName') }}</div>
+                        >
+                            {{errors.first('userName')}}
+                        </div>
                     </div>
                 </div>
 
@@ -133,7 +143,7 @@
                     <label
                         for="roleSelect"
                         class="col-sm-3 col-form-label"
-                    >{{ $t('entityColumn.roleId') }}</label>
+                    >{{$t('entityColumn.roleId')}}</label>
                     <div class="col-sm-9">
                         <select
                             id="roleSelect"
@@ -143,17 +153,21 @@
                             :class="{'form-control': true, 'is-invalid': errors.has('roleID') }"
                             :data-vv-as="$t('entityColumn.roleId')"
                         >
-                            <option :value="null">{{ $t('placeholder.select') }}</option>
+                            <option :value="null">{{$t('placeholder.select')}}</option>
                             <option
                                 v-for="role in roles"
-                                v-bind:value="role"
-                                v-bind:key="role"
-                            >{{ role }}</option>
+                                :value="role"
+                                :key="role"
+                            >
+                                {{role}}
+                            </option>
                         </select>
                         <div
                             class="invalid-feedback"
                             v-show="errors.has('roleID')"
-                        >{{ errors.first('roleID') }}</div>
+                        >
+                            {{errors.first('roleID')}}
+                        </div>
                     </div>
                 </div>
 
@@ -167,11 +181,11 @@
                                 name="active"
                                 class="form-check-input"
                                 :data-vv-as="$t('entityColumn.isActive')"
-                            />
+                            >
                             <label
                                 class="form-check-label"
                                 for="activeCheck"
-                            >{{ $t('entityColumn.isActive') }}?</label>
+                            >{{$t('entityColumn.isActive')}}?</label>
                         </div>
                     </div>
                 </div>
@@ -183,29 +197,37 @@
                     id="unlockBtn"
                     type="button"
                     class="btn btn-secondary"
-                    v-on:click="unlock"
-                >{{ $t('button.unlock') }}</button>
+                    @click="unlock"
+                >
+                    {{$t('button.unlock')}}
+                </button>
                 <button
                     v-if="!entity.isNew"
                     id="resetPasswordBtn"
                     type="button"
                     class="btn btn-secondary"
-                    v-on:click="resetPassword"
-                >{{ $t('button.resetPassword') }}</button>
+                    @click="resetPassword"
+                >
+                    {{$t('button.resetPassword')}}
+                </button>
                 <button
                     id="closePopupBtn"
                     type="button"
                     class="btn btn-secondary"
-                    v-on:click="closeEntityModal"
-                >{{ $t('button.close') }}</button>
+                    @click="closeEntityModal"
+                >
+                    {{$t('button.close')}}
+                </button>
                 <el-button
                     id="confirmSaveBtn"
                     type="button"
                     class="btn btn-primary"
                     :disabled="errors.any()"
-                    v-on:click="saveEntity"
+                    @click="saveEntity"
                     :loading="isSaving"
-                >{{ $t('button.save') }}</el-button>
+                >
+                    {{$t('button.save')}}
+                </el-button>
             </template>
         </v-modalPopup>
 
@@ -215,7 +237,7 @@
             :namespace="'alertModal'"
             :visible="alertVisible"
             @close="hideAlert"
-        ></v-modalPopup>
+        />
     </div>
 </template>
 

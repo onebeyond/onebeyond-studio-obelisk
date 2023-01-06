@@ -13,14 +13,14 @@ export default abstract class CustomFilter {
         this.initialValue = initialValue;
     }
 
-    public clear(): any { throw Error("Implement me") };
+    public clear(): any { throw Error("Implement me") }
 
     public setData(data: any): CustomFilter {
         this.instance.dataSource = new DataManager(data);
         return this;
     }
 
-    public getSecondFilter(): any { throw Error("Not implemented.") };
+    public getSecondFilter(): any { throw Error("Not implemented.") }
 
-    get getFilterTemplate(): any { throw Error("Implement me") };
+    get getFilterTemplate(): any { throw Error("Implement me") }
 }

@@ -64,22 +64,22 @@ export class VueEntityGrid extends EntityGrid {
 
     public rememberCurrentPageBeforeGridAction(gridAction: EntityGridAction): void {
         switch (gridAction) {
-            case EntityGridAction.EntityAdd:
-                this._currentPage = 1;
-                break;
-            case EntityGridAction.EntityEdit:
-                this._currentPage = this.instance.Page;
-                break;
-            case EntityGridAction.EntityDelete:
-                {
-                    let currPage = this.instance.Page;
+        case EntityGridAction.EntityAdd:
+            this._currentPage = 1;
+            break;
+        case EntityGridAction.EntityEdit:
+            this._currentPage = this.instance.Page;
+            break;
+        case EntityGridAction.EntityDelete:
+            {
+                let currPage = this.instance.Page;
 
-                    if (this.instance.data.length === 1 && currPage > 1) {
-                        currPage--; //if this is the only record on the page - when it is deleted we need to return to the prev page
-                    }
-                    this._currentPage = currPage;
+                if (this.instance.data.length === 1 && currPage > 1) {
+                    currPage--; //if this is the only record on the page - when it is deleted we need to return to the prev page
                 }
-                break;
+                this._currentPage = currPage;
+            }
+            break;
         }
     }
 

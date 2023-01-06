@@ -47,10 +47,10 @@ export class DataAdaptor extends DcslApiClient {
     }
 
     private getData(state: DataStateChangeEventArgs): Promise<DataResult> {
-        let page: number = (state.take == null || state.skip == null || state.skip == 0) ? 1 : (state.skip / state.take) + 1;
-        let pageQuery: string = `&limit=${state.take}&page=${page}`;
+        const page: number = (state.take == null || state.skip == null || state.skip == 0) ? 1 : (state.skip / state.take) + 1;
+        const pageQuery = `&limit=${state.take}&page=${page}`;
 
-        let sortQuery: string = '';
+        let sortQuery = '';
 
         if (state.sorted != null && state.sorted.length > 0) {
             sortQuery = this.constructSortQuery(state.sorted);
@@ -59,55 +59,55 @@ export class DataAdaptor extends DcslApiClient {
         if (sortQuery != '') sortQuery = '&' + sortQuery;
 
         //search version
-        let searchQuery: string = '';
+        let searchQuery = '';
         if (state.search != null && state.search.length > 0) {
-            let search: any = state.search[0];
+            const search: any = state.search[0];
             searchQuery = `&search=${search.key}`;
         }
 
         //by column version
-        let appliedFilters = this.extractFiltersApplied(state)
-        let filterQuery = this.constructSearchQuery(appliedFilters);
+        const appliedFilters = this.extractFiltersApplied(state)
+        const filterQuery = this.constructSearchQuery(appliedFilters);
 
         return this.executeApi(pageQuery, sortQuery, searchQuery, filterQuery)
     }
 
     public constructSortQuery(columns: Array<any>): string {
-        var sortQuery = "&orderBy=";
+        let sortQuery = "&orderBy=";
         //first col sorted is last in array
-        let reversedCols = [...columns].reverse();
+        const reversedCols = [...columns].reverse();
         sortQuery += reversedCols.map(x => {
-            let dir = x.direction.toLowerCase() == "ascending" ? "asc" : "desc";
-            let field = this.sortMaps[x.name] ? this.sortMaps[x.name] : x.name;
+            const dir = x.direction.toLowerCase() == "ascending" ? "asc" : "desc";
+            const field = this.sortMaps[x.name] ? this.sortMaps[x.name] : x.name;
             return `${field}:${dir}`;
         }).join(',');
         return sortQuery;
     }
 
     public constructSearchQuery(appliedFilters: Array<GridFilterApplied>): string {
-        let searchQuery: string = '';
-        for (let filter of appliedFilters) {
+        let searchQuery = '';
+        for (const filter of appliedFilters) {
             searchQuery += (searchQuery == '' ? '' : '&');
 
             switch (filter.operator) {
-                case 'equal':
-                    searchQuery += `${filter.field}=equals(${filter.value})`;
-                    break;
-                case 'greaterthanorequal':
-                    searchQuery += `${filter.field}=${filter.value}%26`;
-                    break;
-                case 'lessthanorequal':
-                    searchQuery += `${filter.field}=%26${filter.value}`;
-                    break;
-                case 'list':
-                    searchQuery += `${filter.field}[${filter.listIndex}]=${filter.value}`;
-                    break;
-                case 'range':
-                    searchQuery += `${filter.field}=${filter.value}`;
-                    break;
-                default:
-                    searchQuery += `${filter.field}=${filter.operator}(${filter.value})`;
-                    break;
+            case 'equal':
+                searchQuery += `${filter.field}=equals(${filter.value})`;
+                break;
+            case 'greaterthanorequal':
+                searchQuery += `${filter.field}=${filter.value}%26`;
+                break;
+            case 'lessthanorequal':
+                searchQuery += `${filter.field}=%26${filter.value}`;
+                break;
+            case 'list':
+                searchQuery += `${filter.field}[${filter.listIndex}]=${filter.value}`;
+                break;
+            case 'range':
+                searchQuery += `${filter.field}=${filter.value}`;
+                break;
+            default:
+                searchQuery += `${filter.field}=${filter.operator}(${filter.value})`;
+                break;
             }
         }
 
@@ -129,9 +129,9 @@ export class DataAdaptor extends DcslApiClient {
     //TODO: Add logging if in dev
     public extractFiltersApplied(state: DataStateChangeEventArgs): Array<GridFilterApplied> {
         console.log("FILTER STATE", state);
-        let filtersApplied: Array<GridFilterApplied> = [];
+        const filtersApplied: Array<GridFilterApplied> = [];
         if (state.where != null && state.where.length > 0) {
-            for (let predicate of (state.where[0] as any).predicates) {
+            for (const predicate of (state.where[0] as any).predicates) {
                 if (!predicate.isComplex) {
                     if (predicate.value != null) {
                         filtersApplied.push(this.getAppliedFilter(predicate))
@@ -178,13 +178,13 @@ export class DataAdaptor extends DcslApiClient {
     }
 
     private getAppliedFilter(predicate: any): GridFilterApplied {
-        let operator = predicate.operator == "notequal" ? "not" : predicate.operator;
+        const operator = predicate.operator == "notequal" ? "not" : predicate.operator;
         return new GridFilterApplied(predicate.field, predicate.value, operator);
     }
 
     public async executeApi(
-        pageQuery: string = "",
-        sortQuery: string = "",
+        pageQuery = "",
+        sortQuery = "",
         searchQuery = "",
         filterQuery = "",
         useErrorCallback = true): Promise<DataResult> {
@@ -192,7 +192,7 @@ export class DataAdaptor extends DcslApiClient {
 
         const controller = new AbortController();
         this.activeHttpGetRequests.push(controller);
-        let request = DcslApiClient.buildRequest('GET');
+        const request = DcslApiClient.buildRequest('GET');
         request.signal = controller.signal;
 
         try {
@@ -219,7 +219,7 @@ export class DataAdaptor extends DcslApiClient {
 
     // Add or replace a single parameter of the form { param: value }
     public addSingleParameter(newParameter: any): void {
-        var key = Object.keys(newParameter)[0];
+        const key = Object.keys(newParameter)[0];
 
         this.additionalParameters == null
             ? this.additionalParameters = newParameter

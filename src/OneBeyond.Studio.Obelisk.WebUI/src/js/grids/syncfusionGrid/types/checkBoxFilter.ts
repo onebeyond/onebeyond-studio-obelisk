@@ -15,7 +15,7 @@ export default class CheckboxFilter extends CustomFilter {
             ui: {
                 create: (args) => {
                     args.getOptrInstance.dropOptr.element.parentElement.parentElement.style.display = "none";
-                    let inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
+                    const inputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
                     args.target.appendChild(inputField);
                     //Set the value for the filter
                     let curVal = new Array<any>();

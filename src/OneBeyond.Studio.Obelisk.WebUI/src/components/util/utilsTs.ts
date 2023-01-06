@@ -24,9 +24,9 @@ export default class Utils {
     * @returns returns an object with column names and related css classes;
     */
     static getColumnsClasses(columns: string[]): any {
-        var newObj = {};
-        for (var i = 0; i < columns.length; i++) {
-            var columnName = columns[i];
+        const newObj = {};
+        for (let i = 0; i < columns.length; i++) {
+            const columnName = columns[i];
             if (columnName === "mobile") {
                 newObj[columnName] = "hide-on-desktop";
             } else {
@@ -44,13 +44,13 @@ export default class Utils {
     * @returns returns an object with column names and related heading descriptions;
     */
     static getColumnHeadings(columns: string[], colsToOverride?: any) {
-        var newObj = {};
-        for (var i = 0; i < columns.length; i++) {
-            var columnName = columns[i];
+        const newObj = {};
+        for (let i = 0; i < columns.length; i++) {
+            const columnName = columns[i];
             if (colsToOverride && columnName in colsToOverride) {
                 newObj[columnName] = colsToOverride[columnName];
             } else if (columnName !== "mobile" && columnName !== "actions") {
-                var colNameWithSpaces = columnName.removeEndingIds().fillWithSpaces().trim().capitalize();
+                const colNameWithSpaces = columnName.removeEndingIds().fillWithSpaces().trim().capitalize();
                 newObj[columnName] = colNameWithSpaces;
             } else {
                 newObj[columnName] = "";

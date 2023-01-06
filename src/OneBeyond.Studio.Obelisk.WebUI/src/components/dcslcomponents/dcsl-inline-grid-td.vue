@@ -1,7 +1,7 @@
 <template>
     <td class="hide-on-mobile">
         <div>
-            <slot></slot>
+            <slot />
         </div>
     </td>
 </template>

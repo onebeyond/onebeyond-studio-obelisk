@@ -23,7 +23,7 @@ import LocalSessionStorage from "@js/stores/localSessionStorage";
 const Vue = require("vue");
 
 export default class AppConfiguration {
-    private enableDebugLogging: boolean = false;
+    private enableDebugLogging = false;
     private readonly vueInstanceInit: Function;
 
     constructor(enableDebugLogging: boolean, vueInstanceInit: Function) {

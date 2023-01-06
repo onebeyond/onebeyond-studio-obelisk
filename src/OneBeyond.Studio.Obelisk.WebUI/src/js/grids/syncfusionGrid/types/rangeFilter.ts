@@ -8,28 +8,28 @@ export default class RangeFilter extends CustomFilter {
         super(field);
 
         switch (rangeType) {
-            case 'NumberRange':
-                this.instance = new NumericTextBox({
-                    placeholder: "Greater than or equal to",
-                    popupHeight: '200px',
-                } as any);
-                this.secondaryInstance = new NumericTextBox({
-                    placeholder: "Less than or equal to...",
-                    popupHeight: '200px',
-                } as any);
-                break;
-            case "DateRange":
-                this.instance = new DatePicker({
-                    placeholder: "Greater than or equal to...",
-                    format: dateFormat
-                });
-                this.secondaryInstance = new DatePicker({
-                    placeholder: "Less than or equal to...",
-                    format: dateFormat
-                });
-                break;
-            default:
-                throw new Error("Filter not initialised correctly");
+        case 'NumberRange':
+            this.instance = new NumericTextBox({
+                placeholder: "Greater than or equal to",
+                popupHeight: '200px',
+            } as any);
+            this.secondaryInstance = new NumericTextBox({
+                placeholder: "Less than or equal to...",
+                popupHeight: '200px',
+            } as any);
+            break;
+        case "DateRange":
+            this.instance = new DatePicker({
+                placeholder: "Greater than or equal to...",
+                format: dateFormat
+            });
+            this.secondaryInstance = new DatePicker({
+                placeholder: "Less than or equal to...",
+                format: dateFormat
+            });
+            break;
+        default:
+            throw new Error("Filter not initialised correctly");
         }
     }
 
@@ -39,12 +39,12 @@ export default class RangeFilter extends CustomFilter {
                 create: (args) => {
                     args.getOptrInstance.dropOptr.element.parentElement.parentElement.style.display = "none";
 
-                    let firstInputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
-                    let secondInputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
+                    const firstInputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
+                    const secondInputField = document.createElement('input', { className: 'flm-input' } as ElementCreationOptions);
                     args.target.appendChild(firstInputField);
                     args.target.appendChild(secondInputField);
 
-                    let currentValues = new Array<any>();
+                    const currentValues = new Array<any>();
                     if (this.instance.value != null
                         || this.secondaryInstance.value != null) {
                         currentValues.push(this.instance.value);
