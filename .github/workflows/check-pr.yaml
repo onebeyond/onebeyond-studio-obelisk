@@ -52,11 +52,11 @@ jobs:
       - name: "Lint Web.UI"
         run: |
           cd src/OneBeyond.Studio.Obelisk.WebUI
-          npm install --legacy-peer-deps
+          npm install
           npm run lint          
           
       - name: "Build Web.UI"
         run: |
           cd src/OneBeyond.Studio.Obelisk.WebUI
-          npm install --legacy-peer-deps          
+          npm install    
           npm run build
