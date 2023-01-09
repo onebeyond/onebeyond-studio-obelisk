@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EnsureThat;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
-using OneBeyond.Studio.Domain.SharedKernel.Entities.Queries;
+using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.Models;
 

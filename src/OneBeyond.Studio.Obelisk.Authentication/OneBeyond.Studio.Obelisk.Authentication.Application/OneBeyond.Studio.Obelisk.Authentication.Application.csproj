@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -14,8 +14,9 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
+    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.0.0.1-alpha.11" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
-    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.0.0.1-alpha.7" />
+    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.0.0.1-alpha.11" />
   </ItemGroup>
 
   <ItemGroup>

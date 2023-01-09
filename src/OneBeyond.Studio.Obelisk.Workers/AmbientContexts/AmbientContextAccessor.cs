@@ -1,4 +1,4 @@
-using OneBeyond.Studio.Domain.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 
 namespace OneBeyond.Studio.Obelisk.Workers.AmbientContexts;

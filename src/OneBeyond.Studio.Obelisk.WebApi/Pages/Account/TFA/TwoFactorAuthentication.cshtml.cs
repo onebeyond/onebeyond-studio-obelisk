@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OneBeyond.Studio.Domain.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.AuthenticationFlows;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;

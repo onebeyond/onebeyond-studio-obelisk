@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Domain.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Exceptions;

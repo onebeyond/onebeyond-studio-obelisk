@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
-using OneBeyond.Studio.Domain.SharedKernel.Repositories;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Domain.Exceptions;

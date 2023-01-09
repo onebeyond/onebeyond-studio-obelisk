@@ -2,7 +2,7 @@ using System;
 using System.Security.Claims;
 using EnsureThat;
 using Microsoft.AspNetCore.Http;
-using OneBeyond.Studio.Domain.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Hosting.AspNet.Http;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;

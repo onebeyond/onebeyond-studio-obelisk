@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using OneBeyond.Studio.Domain.SharedKernel.Exceptions;
+using OneBeyond.Studio.Application.SharedKernel.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Exceptions;
