@@ -1,5 +1,4 @@
 using MediatR;
-using OneBeyond.Studio.Obelisk.Authentication.Domain;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 

@@ -4,7 +4,7 @@ using EnsureThat;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using OneBeyond.Studio.Domain.SharedKernel.UnitsOfWork;
+using OneBeyond.Studio.Application.SharedKernel.UnitsOfWork;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Middlewares.UnitOfWork;
 

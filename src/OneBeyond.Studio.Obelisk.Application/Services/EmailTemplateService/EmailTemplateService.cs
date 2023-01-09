@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EnsureThat;
-using OneBeyond.Studio.Domain.SharedKernel.Repositories;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 

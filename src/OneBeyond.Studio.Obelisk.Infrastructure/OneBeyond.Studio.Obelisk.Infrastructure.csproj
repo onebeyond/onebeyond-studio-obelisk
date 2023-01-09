@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -13,7 +13,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.0.0.1-alpha.7" />
+    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.0.0.1-alpha.11" />
+    <PackageReference Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.0.0.1-alpha.11" />
   </ItemGroup>
 
   <ItemGroup>

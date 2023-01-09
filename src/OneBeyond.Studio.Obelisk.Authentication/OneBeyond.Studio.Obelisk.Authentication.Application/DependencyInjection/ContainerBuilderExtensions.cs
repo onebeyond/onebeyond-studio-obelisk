@@ -1,7 +1,7 @@
 using System.Reflection;
 using Autofac;
 using EnsureThat;
-using OneBeyond.Studio.Domain.SharedKernel.DependencyInjection;
+using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.DependencyInjection;
 

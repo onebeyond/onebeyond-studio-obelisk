@@ -25,8 +25,7 @@ using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
 using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
-using OneBeyond.Studio.Domain.SharedKernel.DependencyInjection;
-using OneBeyond.Studio.Domain.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
 using OneBeyond.Studio.FileStorage.Azure.DependencyInjection;
@@ -58,6 +57,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using SmtpEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 

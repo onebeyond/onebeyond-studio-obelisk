@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.0.0.1-alpha.11" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Domain" Version="6.0.0.1-alpha.1" />
   </ItemGroup>
 

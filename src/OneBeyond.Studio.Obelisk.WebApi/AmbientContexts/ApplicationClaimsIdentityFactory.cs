@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using OneBeyond.Studio.Domain.SharedKernel.Repositories;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationClaims;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;

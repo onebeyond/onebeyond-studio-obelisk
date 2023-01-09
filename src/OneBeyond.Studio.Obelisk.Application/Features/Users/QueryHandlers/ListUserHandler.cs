@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
-using OneBeyond.Studio.Domain.SharedKernel.QueryHandlers;
-using OneBeyond.Studio.Domain.SharedKernel.Repositories;
+using OneBeyond.Studio.Application.SharedKernel.QueryHandlers;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 

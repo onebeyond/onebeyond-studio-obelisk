@@ -3,8 +3,8 @@ using System.Transactions;
 using EnsureThat;
 using Microsoft.Extensions.DependencyInjection;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
-using OneBeyond.Studio.Domain.SharedKernel.DataAccessPolicies;
-using OneBeyond.Studio.Domain.SharedKernel.Repositories;
+using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;

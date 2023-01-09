@@ -41,10 +41,10 @@
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Folder" Version="6.0.0.1-alpha.1" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="6.0.0.1-alpha.1" />
-    <PackageReference Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.1-alpha.7" />
-    <PackageReference Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.1-alpha.7" />
-    <PackageReference Include="OneBeyond.Studio.Hosting.AspNet" Version="7.0.0.1-alpha.7" />
-    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.0.0.1-alpha.7" />
+    <PackageReference Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.1-alpha.11" />
+    <PackageReference Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.1-alpha.11" />
+    <PackageReference Include="OneBeyond.Studio.Hosting.AspNet" Version="7.0.0.1-alpha.11" />
+    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.0.0.1-alpha.11" />
   </ItemGroup>
 
   <ItemGroup>

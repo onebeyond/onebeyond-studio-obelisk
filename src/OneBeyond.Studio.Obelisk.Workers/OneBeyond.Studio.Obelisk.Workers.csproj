@@ -21,7 +21,7 @@
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.0.0.1-alpha.7" />
+    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.0.0.1-alpha.11" />
   </ItemGroup>
 
   <ItemGroup>

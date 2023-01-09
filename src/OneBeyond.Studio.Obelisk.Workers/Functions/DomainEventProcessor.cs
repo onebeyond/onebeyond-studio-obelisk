@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Domain.SharedKernel.DomainEvents;
 
 namespace OneBeyond.Studio.Obelisk.Workers.Functions;
 
