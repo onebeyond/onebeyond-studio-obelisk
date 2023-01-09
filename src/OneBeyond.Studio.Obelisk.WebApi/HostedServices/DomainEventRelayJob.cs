@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.MessageQueues;
-using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.HostedServices;
 
