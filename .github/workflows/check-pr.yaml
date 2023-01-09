@@ -48,3 +48,15 @@ jobs:
         with:
           name: "test-results"
           path: "src/**/TestResults/*.trx"
+         
+      - name: "Lint Web.UI"
+        run: |
+          cd src/OneBeyond.Studio.Obelisk.WebUI
+          npm install --legacy-peer-deps
+          npm run lint          
+          
+      - name: "Build Web.UI"
+        run: |
+          cd src/OneBeyond.Studio.Obelisk.WebUI
+          npm install --legacy-peer-deps          
+          npm run build
