@@ -30,7 +30,7 @@ resource "azurerm_linux_function_app" "function" {
   }
 
   site_config {
-    always_on                              = false
+    always_on                              = true # required to be true for non-HTTP triggers to always work
     ftps_state                             = "Disabled"
     http2_enabled                          = true
     managed_pipeline_mode                  = "Integrated"
