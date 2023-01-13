@@ -31,4 +31,4 @@ Any feature implementation is comprised of a set of commands and queries which c
     <img src="CQS.png" width="700" alt="High level write sides" />
 </p>
 
-Even though the entire concept outlines some layers it does not mean that it makes sense to have all of them all the time. One of the adavnatges of using `Vertical Slices` is that for implementing one feature you can go with all the layers in place, whereas for implementing the other you can go just with some of them due to the independent nature of the features.
+Even though the entire concept outlines some layers it does not mean that it makes sense to have all of them all the time. One of the advantages of using `Vertical Slices` is that for implementing one feature you can go with all the layers in place, whereas for implementing the other you can go just with some of them due to the independent nature of the features.
