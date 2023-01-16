@@ -63,7 +63,8 @@ export default abstract class WebApiClient {
     protected static buildRequest(method: string, body?: any | null, headers?: any | null): RequestInit {
         const defaultHeaders = {
             'Accept': "application/json, text/plain, */*",
-            'Content-Type': "application/json;charset=utf-8"
+            // Content-Type is not required for GET requests as they do not provide any body
+            'Content-Type': method !== "GET" ? "application/json;charset=utf-8" : null,
         };
 
         return {
