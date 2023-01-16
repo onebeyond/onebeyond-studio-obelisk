@@ -58,8 +58,8 @@ export default abstract class WebApiClient {
     protected static buildRequest(method: string, body?: any | null, headers?: any | null): RequestInit {
         const defaultHeaders = {
             'Accept': "application/json, text/plain, */*",
-            'Content-Type': "application/json;charset=utf-8",
-            'X-Requested-With': 'XMLHttpRequest' // force server to return a 401 in case of authorization errors
+            'Content-Type': method !== "GET" ? "application/json;charset=utf-8" : null, // Content-Type is not required for GET requests as they do not provide any body
+            'X-Requested-With': "XMLHttpRequest" // force server to return a 401 in case of authorization errors
         };
 
         return {
