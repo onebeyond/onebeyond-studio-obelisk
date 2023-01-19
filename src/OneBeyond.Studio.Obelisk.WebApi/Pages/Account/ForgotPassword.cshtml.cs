@@ -63,12 +63,12 @@ public class ForgotPasswordModel : PageModel
                 new GenerateResetPasswordTokenByEmail(Input.Email), cancellationToken)
                 .ConfigureAwait(false);
 
-            await _mediator.Send(
-                new SendResetPasswordEmail(
-                    resetPasswordTokenResult.LoginId,
-                    _linkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value)),
-                cancellationToken)
-                .ConfigureAwait(false);
+            //await _mediator.Send(
+            //    new SendResetPasswordEmail(
+            //        resetPasswordTokenResult.LoginId,
+            //        _linkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value)),
+            //    cancellationToken)
+            //    .ConfigureAwait(false);
 
             return RedirectToPage("./ForgotPasswordConfirmation");
         }

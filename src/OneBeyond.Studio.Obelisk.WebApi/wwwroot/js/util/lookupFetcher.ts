@@ -89,7 +89,7 @@ export default class LookupFetcher extends DcslApiClient {
             this.vueInstance.$set(this.vueInstance[this.rootAttributeName], this.name, []);
             this.onReadSuccess(body);
         }
-        catch(error: any) {
+        catch(error) {
             this.onReadFailure(error);
         }
 

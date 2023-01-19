@@ -39,7 +39,7 @@ export class DataAdaptor extends DcslApiClient {
             let response = await this.get(finalQuery);
             return await response.json();
         }
-        catch (e: any) {
+        catch (e) {
             if (!!this.errorCallback) {
                 this.errorCallback(e);
             }

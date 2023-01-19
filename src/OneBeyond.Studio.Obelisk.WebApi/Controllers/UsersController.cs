@@ -96,17 +96,15 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("{loginId}/ResetPassword")]
     public async Task ResetPassword(
-        string loginId,
+        [FromBody] RequestResetPasswordDto resetPassword,
         CancellationToken cancellationToken)
     {
-        EnsureArg.IsNotNullOrWhiteSpace(loginId, nameof(loginId));
-
-        var resetPasswordToken = await Mediator.Send(new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken).ConfigureAwait(false);
+        var resetPasswordToken = await Mediator.Send(new GenerateResetPasswordTokenByLoginId(resetPassword.loginId!), cancellationToken).ConfigureAwait(false);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
-                loginId,
-                _linkGenerator.GetResetPasswordUrl(resetPasswordToken)),
+                resetPassword.loginId!,
+                _linkGenerator.GetResetPasswordUrl(resetPasswordToken, resetPassword.ResetPasswordPageUrl!)),
             cancellationToken)
             .ConfigureAwait(false);
     }

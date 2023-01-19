@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Crosscuts.Utilities.Identities;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
@@ -83,11 +84,11 @@ public sealed class ChangePasswordModel : PageModel
 
         try
         {
+            var changePassword = new ChangePassword(Input.OldPassword, Input.NewPassword);
+            changePassword.AttachLoginId(HttpContext.User?.Identity?.TryGetLoginId() ?? string.Empty);
+
             await _mediator.Send(
-                    new ChangePassword(
-                        _userContext.UserAuthId,
-                        Input.OldPassword,
-                        Input.NewPassword),
+                    changePassword,
                     cancellationToken)
                 .ConfigureAwait(false);
         }

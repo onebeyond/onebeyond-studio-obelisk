@@ -1,10 +1,15 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
+using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
+using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
+using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using SignInResult = OneBeyond.Studio.Obelisk.Authentication.Domain.SignInResult;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
@@ -14,12 +19,14 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 public sealed class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly AppLinkGenerator _linkGenerator;
 
-    public AuthController(IMediator mediator)
+    public AuthController(IMediator mediator, AppLinkGenerator linkGenerator)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
 
         _mediator = mediator;
+        _linkGenerator = linkGenerator;
     }
 
     [HttpPost("Basic/SignIn")]
@@ -32,6 +39,49 @@ public sealed class AuthController : ControllerBase
     [HttpPost("SignOut")]
     public Task SignOut(CancellationToken cancellationToken)
         => _mediator.Send(new SignOut(), cancellationToken);
+
+
+    [HttpPost("ForgotPassword")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPassword, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var resetPasswordTokenResult = await _mediator.Send(
+                new GenerateResetPasswordTokenByEmail(forgotPassword.Email!), cancellationToken)
+            .ConfigureAwait(false);
+
+            await _mediator.Send(
+                new SendResetPasswordEmail(
+                        resetPasswordTokenResult.LoginId,
+                        _linkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value, forgotPassword.ResetPasswordPageUrl!)),
+                    cancellationToken).ConfigureAwait(false);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest();
+        }
+    }
+
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPassword, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _mediator.Send(new ResetPassword(
+                   resetPassword.UserName!,
+                   resetPassword.Code!,
+                   resetPassword.Password!),
+               cancellationToken).ConfigureAwait(false);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest();
+        }
+    }
 
     /// <summary>
     /// Empty action used for keeping session alive when user pressed cancel logout.

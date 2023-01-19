@@ -201,7 +201,7 @@ export class DataAdaptor extends DcslApiClient {
             const responseBody = await response.json();
             return <DataResult>{ result: responseBody.data, count: responseBody.count };
         }
-        catch (e: any) {
+        catch (e) {
             this.activeHttpGetRequests.pop();
             if (useErrorCallback && !!this.errorCallback) {
                 this.errorCallback(e);

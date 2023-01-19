@@ -628,7 +628,7 @@ export class SyncfusionEntityGrid extends EntityGrid {
             const data = await this.dataAdaptor.executeApi("&limit=&page=1", "", searchQuery, "", false);
             return data.result;
         }
-        catch (e: any) {
+        catch (e) {
             throw new Error("Failed to retrieve data for Excel: " + (e as Error).message);
         }
     }

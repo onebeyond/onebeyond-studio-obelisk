@@ -79,7 +79,7 @@ export default abstract class WebApiClient {
         for (let interceptor of this.requestInterceptors) {
             if (!!interceptor) {
                 const result = await interceptor.run(url, request);
-                suppressResponseError ||= result.suppressResponseError;
+                suppressResponseError || result.suppressResponseError;
                 if (!result.canContinue) {
                     if (!!result.errorMessage) {
                         throw new WebApiError(result.errorMessage, 0, request);
@@ -98,7 +98,7 @@ export default abstract class WebApiClient {
         for (let interceptor of this.responseInterceptors) {
             if (!!interceptor) {
                 const result = await interceptor.run(response, request);
-                suppressResponseError ||= result.suppressResponseError;
+                suppressResponseError || result.suppressResponseError;
                 if (!result.canContinue) {
                     if (!!result.errorMessage) {
                         throw new WebApiError(result.errorMessage, 0);

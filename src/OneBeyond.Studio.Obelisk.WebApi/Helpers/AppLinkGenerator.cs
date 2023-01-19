@@ -2,6 +2,7 @@ using System;
 using EnsureThat;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Helpers;
 
@@ -36,15 +37,17 @@ public sealed class AppLinkGenerator
         return new Uri(url);
     }
 
-    public Uri GetResetPasswordUrl(string resetPasswordToken)
+    public Uri GetResetPasswordUrl(string resetPasswordToken, string resetPasswordPageUrl)
     {
         EnsureArg.IsNotNullOrWhiteSpace(resetPasswordToken, nameof(resetPasswordToken));
 
-        var url = _linkGenerator.GetUriByPage(
-            httpContext: _httpContextAccessor.HttpContext!,
-            page: "/Account/ResetPassword",
-            values: new { code = resetPasswordToken })
-            ?? throw new Exception("Failed to generate reset user password url.");
+        //var url = _linkGenerator.GetPathByPage(
+        //    page: resetPasswordPageUrl,
+        //    values: new { code = resetPasswordToken })
+        //    ?? throw new Exception("Failed to generate reset user password url.");
+
+        resetPasswordPageUrl = resetPasswordPageUrl.TrimEnd('/');
+        var url = $"{resetPasswordPageUrl}?code={Uri.EscapeDataString(resetPasswordToken)}";
 
         return new Uri(url);
     }
