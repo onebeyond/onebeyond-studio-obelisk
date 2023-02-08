@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env, options) => {
-
+    const isDevelopment = env.NODE_ENV == 'development';
 
     const webpackConfig = {
         entry: {
@@ -23,7 +23,7 @@ module.exports = (env, options) => {
         output: {
             publicPath: "/",
             path: path.join(__dirname, '/dist/'),
-            filename: '[name].[contenthash].bundle.js',
+            filename: isDevelopment ? '[name].bundle.js' : '[name].[contenthash].bundle.js',
             clean: true,
             devtoolModuleFilenameTemplate: info => {
                 var $filename = "sources://" + info.resourcePath;
@@ -76,7 +76,7 @@ module.exports = (env, options) => {
                 vuex: 'vuex'
             }),
             new MiniCssExtractPlugin({
-                filename: "[name].[contenthash].bundle.css",
+                filename: isDevelopment ? "[name].bundle.css" : "[name].[contenthash].bundle.css",
                 ignoreOrder: true
             }),
             new webpack.EnvironmentPlugin({
@@ -97,7 +97,7 @@ module.exports = (env, options) => {
                         test: "/[\\/]node_modules[\\/]|vendor[\\/]analytics_provider|vendor[\\/]other_lib/",
                         priority: -10,
                         reuseExistingChunk: true,
-                        filename: "[name].[contenthash].bundle.js"
+                        filename: isDevelopment ? "[name].bundle.js" : "[name].[contenthash].bundle.js"
                     },
                     default: {
                         minChunks: 2,
