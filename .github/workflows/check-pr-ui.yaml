@@ -1,0 +1,33 @@
+name: "Check PR - Web UI"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "src/OneBeyond.Studio.Obelisk.WebUI/**"
+  workflow_dispatch:
+
+concurrency:
+  group: "${{github.workflow}}-${{github.head_ref}}"
+  cancel-in-progress: true
+
+jobs:
+  lint_and_build:
+    name: "Lint & Build Web.UI"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Lint Web.UI"
+        run: |
+          cd src/OneBeyond.Studio.Obelisk.WebUI
+          npm install
+          npm run lint          
+          
+      - name: "Build Web.UI"
+        run: |
+          cd src/OneBeyond.Studio.Obelisk.WebUI
+          npm install    
+          npm run build

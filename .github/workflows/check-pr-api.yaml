@@ -1,0 +1,51 @@
+name: "Check PR - Web API"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "src/**"
+      - "!src/OneBeyond.Studio.Obelisk.WebUI/**"
+  workflow_dispatch:
+
+concurrency:
+  group: "${{github.workflow}}-${{github.head_ref}}"
+  cancel-in-progress: true
+
+jobs:
+  build_and_test:
+    name: "Build & Run Tests"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Setup .NET CLI"
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.x"
+
+      - name: "Restore Solution NuGets"
+        run: dotnet restore
+
+      - name: "Build Solution"
+        run: dotnet build
+          --no-restore
+          --configuration "Release"
+          -p:CompileMigrationDesignerFiles=false
+
+      - name: "Run Solution Tests"
+        run: dotnet test
+          --no-restore --no-build
+          --configuration "Release"
+          --settings "src/CodeCoverage.runsettings"
+          --collect "XPlat Code Coverage"
+          --logger "trx;logfileprefix=tr"
+
+      - name: "Publish Solution Test Results"
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: "test-results"
+          path: "src/**/TestResults/*.trx"

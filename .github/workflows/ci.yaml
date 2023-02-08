@@ -1,7 +1,7 @@
-name: "Check PR"
+name: "CI - Web API + Web UI"
 
 on:
-  pull_request:
+  push:
     branches:
       - "main"
     paths:
@@ -48,7 +48,7 @@ jobs:
         with:
           name: "test-results"
           path: "src/**/TestResults/*.trx"
-         
+          
       - name: "Lint Web.UI"
         run: |
           cd src/OneBeyond.Studio.Obelisk.WebUI
