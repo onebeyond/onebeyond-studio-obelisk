@@ -2,7 +2,7 @@ name: "Report Test Results"
 
 on:
   workflow_run:
-    workflows: ["Check PR"]
+    workflows: ["Check PR - Web API"]
     types: [completed]
 
 jobs:
