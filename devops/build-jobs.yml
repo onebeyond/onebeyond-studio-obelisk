@@ -201,7 +201,7 @@ jobs:
             install
             --global
             dotnet-ef
-            --version 6.0.*
+            --version 7.0.*
 
       - task: DotNetCoreCLI@2
         displayName: "Build EF Bundle"
