@@ -48,6 +48,7 @@ using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.WebApi;
 using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
+using OneBeyond.Studio.Obelisk.WebApi.Dapr;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.HostedServices;
@@ -87,7 +88,7 @@ public static class Program
 
             builder.Host.ConfigureServices(
                 (hostBuilerContext, serviceCollection) =>
-                    ConfigureServices(hostBuilerContext, serviceCollection));
+                    ConfigureServices(hostBuilerContext, serviceCollection, Log.Logger));
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -130,7 +131,10 @@ public static class Program
         => builder.UseSerilog(
             (context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
 
-    private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection services)
+    private static void ConfigureServices(
+        HostBuilderContext hostBuilderContext, 
+        IServiceCollection services,
+        Serilog.ILogger logger)
     {
         var configuration = hostBuilderContext.Configuration;
         var environment = hostBuilderContext.HostingEnvironment;
@@ -267,6 +271,8 @@ public static class Program
         services.AddMixedSourceBinder(); //Mixed source binder used to gather commands, queries and dtos in controllers from mixed sources: body and route
 
         services.AddLocalization(options => options.ResourcesPath = "Localizations/Resources");
+
+        services.AddDapr(configuration.GetOptions<DaprOptions>("Dapr"), configuration, logger);
 
         services.AddHealthChecks(environment, configuration);
     }
