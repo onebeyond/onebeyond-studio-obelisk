@@ -11,6 +11,6 @@ steps:
     parameters:
       stageCode: 'qa'
       azServiceConnection: '$(serviceConnection)'
-      tfWorkingDirectory: '$(Build.SourcesDirectory)/WaterlooTemplate.DevOps/Terraform'
+      tfWorkingDirectory: '$(Build.SourcesDirectory)/Obelisk.DevOps/Terraform'
       tfBackendResourceGroupName: 'dcslgs-wt-infra-rg'
       tfBackendStorageAccountName: 'dcslgswtinfrastorage'
