@@ -1,6 +1,6 @@
 namespace OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 
-public sealed record AmbientContext : Studio.Application.SharedKernel.AmbientContexts.AmbientContext
+public sealed record AmbientContext : OneBeyond.Studio.Application.SharedKernel.AmbientContexts.AmbientContext
 {
     public AmbientContext(UserContext? userContext)
     {

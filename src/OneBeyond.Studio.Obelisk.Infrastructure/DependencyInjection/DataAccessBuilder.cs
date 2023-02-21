@@ -12,11 +12,11 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 internal sealed class DataAccessBuilder : IDataAccessBuilder
 {
     private readonly IServiceCollection _services;
-    private readonly DataAccess.EFCore.DependencyInjection.IDataAccessBuilder _dataAccessBuilder;
+    private readonly OneBeyond.Studio.DataAccess.EFCore.DependencyInjection.IDataAccessBuilder _dataAccessBuilder;
 
     public DataAccessBuilder(
         IServiceCollection services,
-        DataAccess.EFCore.DependencyInjection.IDataAccessBuilder dataAccessBuilder)
+        OneBeyond.Studio.DataAccess.EFCore.DependencyInjection.IDataAccessBuilder dataAccessBuilder)
     {
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(dataAccessBuilder, nameof(dataAccessBuilder));
