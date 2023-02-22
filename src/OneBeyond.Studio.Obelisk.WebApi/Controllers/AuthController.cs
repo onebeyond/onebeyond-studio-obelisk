@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
+using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
+using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using SignInResult = OneBeyond.Studio.Obelisk.Authentication.Domain.SignInResult;
@@ -34,6 +36,18 @@ public sealed class AuthController : ControllerBase
         [FromBody] SignInViaPassword signInViaPassword,
         CancellationToken cancellationToken)
         => _mediator.Send(signInViaPassword, cancellationToken);
+
+    [HttpPost("Basic/SignInWithTwoFA")]
+        public Task<SignInResult> SignInWithTwoFA(
+        [FromBody] SignInTfa signInViaTfa,
+        CancellationToken cancellationToken)
+        => _mediator.Send(signInViaTfa, cancellationToken);
+
+    [HttpPost("Basic/SignInWithRecoveryCode")]
+    public Task<SignInWithRecoveryCodeResult> SignInWithRecoveryCode(
+    [FromBody] SignInTfaWithRecoveryCode signInViaRecoveryCode,
+    CancellationToken cancellationToken)
+    => _mediator.Send(signInViaRecoveryCode, cancellationToken);
 
     [Authorize]
     [HttpPost("SignOut")]
