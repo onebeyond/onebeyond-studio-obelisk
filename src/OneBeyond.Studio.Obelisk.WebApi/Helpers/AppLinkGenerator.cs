@@ -41,13 +41,8 @@ public sealed class AppLinkGenerator
     {
         EnsureArg.IsNotNullOrWhiteSpace(resetPasswordToken, nameof(resetPasswordToken));
 
-        //var url = _linkGenerator.GetPathByPage(
-        //    page: resetPasswordPageUrl,
-        //    values: new { code = resetPasswordToken })
-        //    ?? throw new Exception("Failed to generate reset user password url.");
-
         resetPasswordPageUrl = resetPasswordPageUrl.TrimEnd('/');
-        var url = $"{resetPasswordPageUrl}?code={Uri.EscapeDataString(resetPasswordToken)}";
+        var url = $"{resetPasswordPageUrl}/auth/resetPassword?code={Uri.EscapeDataString(resetPasswordToken)}";
 
         return new Uri(url);
     }

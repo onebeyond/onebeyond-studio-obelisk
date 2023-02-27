@@ -6,9 +6,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
@@ -22,15 +24,20 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
     private readonly AppLinkGenerator _linkGenerator;
+    private readonly WebAppBaseUrlSetting _emailAuthSettings;
 
     public UsersController(
         IMediator mediator,
-        AppLinkGenerator linkGenerator)
+        AppLinkGenerator linkGenerator, 
+        IOptions<WebAppBaseUrlSetting> options)
         : base(mediator)
     {
+        EnsureArg.IsNotNull(mediator, nameof(mediator));
         EnsureArg.IsNotNull(linkGenerator, nameof(linkGenerator));
+        EnsureArg.IsNotNull(options, nameof(options));
 
         _linkGenerator = linkGenerator;
+        _emailAuthSettings = options.Value;
     }
 
     /// <summary>
@@ -88,6 +95,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     /// <summary>
     /// Generates a reset password token for a specified login ID.
     /// </summary>
+    /// <param name="resetPassword"></param>
     /// <param name="loginId">The login ID of the user</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">If the token is generated successfully</response>
@@ -104,7 +112,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         await Mediator.Send(
             new SendResetPasswordEmail(
                 resetPassword.loginId!,
-                _linkGenerator.GetResetPasswordUrl(resetPasswordToken, resetPassword.ResetPasswordPageUrl!)),
+                _linkGenerator.GetResetPasswordUrl(resetPasswordToken, _emailAuthSettings.Url!)),
             cancellationToken)
             .ConfigureAwait(false);
     }

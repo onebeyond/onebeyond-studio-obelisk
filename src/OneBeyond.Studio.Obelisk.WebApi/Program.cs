@@ -43,6 +43,7 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationClaims;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
@@ -154,6 +155,8 @@ public static class Program
             services.AddEmailSender(
                 configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>("EmailSender:SendGrid"));
         }
+
+        services.Configure<WebAppBaseUrlSetting>(configuration.GetSection("WebAppBaseUrl"));
 
         services.AddHttpContextAccessor();
 
