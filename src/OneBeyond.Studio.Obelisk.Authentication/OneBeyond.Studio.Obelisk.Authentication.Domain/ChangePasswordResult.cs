@@ -1,35 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain;
 
-public record ChangePasswordResult
+public sealed record ChangePasswordResult
 {
-    public ChangePasswordResult(
-        ChangePasswordStatus status)
-        : this(status, string.Empty)
+    private ChangePasswordResult()
     {
+        Success = true;
     }
 
-    public ChangePasswordResult(
-        ChangePasswordStatus status,
+    private ChangePasswordResult(
         string message)
     {
-        Status = status;
-        StatusMessage = message;
+        Success = false;
+        ErrorMessage = message;
     }
 
-    public ChangePasswordStatus Status { get; }
-    public string StatusMessage { get; }
-}
+    public string? ErrorMessage { get; }
 
-public enum ChangePasswordStatus
-{
-    Success = 0,
-    UnknownUser = 1,
-    UserDoesNotHaveAPasswordYet = 2,
-    OperationFailure = 3
+    public bool Success { get; }
+
+    public static ChangePasswordResult SuccessResult()
+        => new();
+
+    public static ChangePasswordResult UnkownUserResult(string loginId) 
+        => new($"Login with id {loginId} not found");
+
+    public static ChangePasswordResult UserWithNoPasswordResult()
+        => new($"Login has no a password yet, use SetPassword to set it");
+
+    public static ChangePasswordResult OperationFailureResult(string message)
+        => new(message);
 }
