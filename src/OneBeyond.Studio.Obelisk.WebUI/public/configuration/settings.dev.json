@@ -1,7 +1,7 @@
 {
     "appSettings": 
     {
-        "apiUrl": "https://localhost:53895/",
+        "apiUrl": "https://localhost:63333/",
         "allowApiUrlOverrideFromDevTools": true,
         "sessionTimeoutInMinutes": 60
     },
