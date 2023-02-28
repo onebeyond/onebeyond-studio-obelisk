@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -6,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OneBeyond.Studio.Application.SharedKernel.Entities.Dto;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
@@ -13,6 +15,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+using OneBeyond.Studio.Obelisk.WebApi.Models;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -31,6 +34,27 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         EnsureArg.IsNotNull(linkGenerator, nameof(linkGenerator));
 
         _linkGenerator = linkGenerator;
+    }
+
+    /// <summary>
+    /// Gets a list of entities.
+    /// </summary>
+    /// <param name="queryParameters"></param>
+    /// <param name="query"></param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">If the list of entities returned</response>
+    /// <response code="400">If the request is invalid</response>
+    [ProducesResponseType(typeof(PagedList<ListUsersDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<IActionResult> Get(
+        [FromQuery] ListQueryParameters queryParameters,
+        Dictionary<string, IReadOnlyCollection<string>> query,
+        CancellationToken cancellationToken)
+    {
+        query = ControllerHelpers.CleanQuery(query);
+        var result = await ListAsync(queryParameters, query, cancellationToken);
+        return Json(result);
     }
 
     /// <summary>

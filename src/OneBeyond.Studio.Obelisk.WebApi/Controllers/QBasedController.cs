@@ -29,26 +29,6 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
 
     protected IMediator Mediator { get; }
 
-    /// <summary>
-    /// Gets a list of entities.
-    /// </summary>
-    /// <param name="queryParameters"></param>
-    /// <param name="query"></param>
-    /// <param name="cancellationToken"></param>
-    /// <response code="200">If the list of entities returned</response>
-    /// <response code="400">If the request is invalid</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpGet]
-    public virtual async Task<IActionResult> Get(
-        [FromQuery] ListQueryParameters queryParameters,
-        Dictionary<string, IReadOnlyCollection<string>> query,
-        CancellationToken cancellationToken)
-    {
-        query = ControllerHelpers.CleanQuery(query);
-        var result = await ListAsync(queryParameters, query, cancellationToken);
-        return Json(result);
-    }
 
     /// <summary>
     /// Gets a specified entity.
