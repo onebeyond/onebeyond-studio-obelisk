@@ -43,14 +43,6 @@ public sealed class TFAController : ControllerBase
         _urlEncoder = urlEncoder;
     }
 
-    [HttpGet("disable2fa")]
-    public Task Disable2FA(CancellationToken cancellationToken) 
-        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken);
-
-    [HttpGet("resetAuth")]
-    public Task Reset(CancellationToken cancellationToken) 
-        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken);
-
     [HttpGet("tfaSettings")]
     public Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
         => _mediator.Send(new GetTfaSettings(_userContext.UserAuthId), cancellationToken);
@@ -69,7 +61,15 @@ public sealed class TFAController : ControllerBase
         };
     }
 
-    [HttpGet("forgetBrowser")]
+    [HttpPost("disable2fa")]
+    public Task Disable2FA(CancellationToken cancellationToken) 
+        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken);
+
+    [HttpPost("resetAuth")]
+    public Task Reset(CancellationToken cancellationToken) 
+        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken);
+
+    [HttpPost("forgetBrowser")]
     public Task ForgetBrowser(CancellationToken cancellationToken)
         => _mediator.Send(new ForgetTfaClient(_userContext.UserAuthId), cancellationToken);
 
