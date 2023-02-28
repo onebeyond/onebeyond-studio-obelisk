@@ -65,35 +65,11 @@
     <Content Include="robots.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="webpack.Debug.config.js">
-      <DependentUpon>webpack.config.js</DependentUpon>
-    </None>
-    <None Include="webpack.Analyse.config.js">
-      <DependentUpon>webpack.config.js</DependentUpon>
-    </None>
-    <None Include="webpack.Release.config.js">
-      <DependentUpon>webpack.config.js</DependentUpon>
-    </None>
-  </ItemGroup>
-
   <Target Name="Date" BeforeTargets="CoreCompile">
     <WriteLinesToFile File="$(IntermediateOutputPath)gen.cs" Lines="public static partial class Builtin { public static long CompileTime = $([System.DateTime]::UtcNow.Ticks) %3B }" Overwrite="true" />
     <ItemGroup>
       <Compile Include="$(IntermediateOutputPath)gen.cs" />
     </ItemGroup>
-  </Target>
-
-  <!--
-    This target is executed for Debug build only. If it needs to be executed from a pipeline a dedicated pwsh (PowerShell@2 with pwsh: true)
-    task is required due to the fact the pipeline is running under Linux.
-    NB: At this point in time (2022-09-27), this stuff is not used at all (There is no a single reference to it on the UI side).
-  -->
-  <Target Name="LicenseInfo" BeforeTargets="CoreCompile" Condition=" '$(Configuration)'=='Debug' And '$(OS)' == 'Windows_NT' ">
-    <PropertyGroup>
-      <PowerShellExe Condition=" '$(PowerShellExe)'=='' ">%WINDIR%\System32\WindowsPowerShell\v1.0\powershell.exe</PowerShellExe>
-    </PropertyGroup>
-    <Exec Command="$(PowerShellExe) -NonInteractive -ExecutionPolicy Bypass -File .\NPMLicenceInfo.ps1 -OutputPath $(OutDir)LicenceInfo.json" />
   </Target>
 
 </Project>

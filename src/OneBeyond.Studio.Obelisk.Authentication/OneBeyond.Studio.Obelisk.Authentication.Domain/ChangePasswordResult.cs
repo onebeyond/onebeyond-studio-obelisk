@@ -22,10 +22,10 @@ public sealed record ChangePasswordResult
         => new();
 
     public static ChangePasswordResult UnkownUserResult(string loginId) 
-        => new($"Login with id {loginId} not found");
+        => new($"Login with id {loginId} not found.");
 
     public static ChangePasswordResult UserWithNoPasswordResult()
-        => new($"Login has no a password yet, use SetPassword to set it");
+        => new("Login has no a password yet, use SetPassword to set it.");
 
     public static ChangePasswordResult OperationFailureResult(string message)
         => new(message);
