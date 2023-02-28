@@ -69,7 +69,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("ForgotPassword")]
     public async Task ForgotPassword(
-        [FromBody] ForgotPasswordDto forgotPassword, 
+        [FromBody] ForgotPasswordModel forgotPassword, 
         CancellationToken cancellationToken)
     {
         try
@@ -92,7 +92,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("ResetPassword")]
     public async Task ResetPassword(
-        [FromBody] ResetPasswordDto resetPassword, 
+        [FromBody] ResetPasswordModel resetPassword, 
         CancellationToken cancellationToken)
     {
         try
@@ -112,7 +112,7 @@ public sealed class AuthController : ControllerBase
     [Authorize]
     [HttpPost("ChangePassword")]
     public Task<ChangePasswordResult> ChangePassword(
-        [FromBody] ChangePasswordDto changePassword, 
+        [FromBody] ChangePasswordModel changePassword, 
         CancellationToken cancellationToken)
         => _mediator.Send(new ChangePassword(
             HttpContext.User?.Identity?.TryGetLoginId() ?? throw new ObeliskApplicationException("Failed to retrieve the ID of a logged in user"),

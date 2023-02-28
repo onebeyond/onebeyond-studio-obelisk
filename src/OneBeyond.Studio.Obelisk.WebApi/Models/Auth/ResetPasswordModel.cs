@@ -1,6 +1,6 @@
 namespace OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
 
-public sealed record ResetPasswordDto
+public sealed record ResetPasswordModel
 {
     public string UserName { get; init; } = default!;
 

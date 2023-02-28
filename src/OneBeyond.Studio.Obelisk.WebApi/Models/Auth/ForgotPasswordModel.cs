@@ -1,6 +1,6 @@
 namespace OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
 
-public sealed record ForgotPasswordDto
+public sealed record ForgotPasswordModel
 {
     public string Email { get; init; } = default!;
 }
