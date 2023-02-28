@@ -22,7 +22,7 @@ services:
       - ${WEB_APP_HTTPS_HOST_PORT}:443
     environment:
       - ASPNETCORE_URLS=http://*:80
-      - ConnectionStrings__ApplicationConnectionString=Server=tcp:wt_mssql,1433; Database=WaterlooTemplateDev; User ID=sa;Password=${MSSQL_SA_PASSWORD};MultipleActiveResultSets=true;
+      - ConnectionStrings__ApplicationConnectionString=Server=tcp:wt_mssql,1433; Database=ObeliskDev; User ID=sa;Password=${MSSQL_SA_PASSWORD};MultipleActiveResultSets=true;
       - DomainEvents__Queue__ConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;QueueEndpoint=http://wt_azurite:10001/devstoreaccount1;
 
   func_app:
