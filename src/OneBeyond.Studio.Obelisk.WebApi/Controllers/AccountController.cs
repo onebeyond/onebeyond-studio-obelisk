@@ -22,12 +22,8 @@ public sealed class AccountController : Controller
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
-    {
-        await _mediator.Send(new SignOut(), cancellationToken).ConfigureAwait(false);
-
-        return RedirectToPage("/Account/SignedOut");
-    }
+    public Task Logout(CancellationToken cancellationToken)
+        => _mediator.Send(new SignOut(), cancellationToken);
 
     /// <summary>
     /// Empty action used for keeping session alive when user pressed cancel logout.
