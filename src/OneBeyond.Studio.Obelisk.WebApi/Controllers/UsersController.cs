@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
-using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
@@ -122,9 +121,4 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [HttpPut("{userId}/Unlock")]
     public Task UnlockUser(Guid userId, CancellationToken cancellationToken)
         => Mediator.Send(new UnlockUser(userId), cancellationToken);
-
-    [Authorize]
-    [HttpGet("WhoAmI")]
-    public Task<WhoAmIDto> WhoAmI(CancellationToken cancellationToken)
-        => Mediator.Send(new WhoAmI(), cancellationToken);
 }

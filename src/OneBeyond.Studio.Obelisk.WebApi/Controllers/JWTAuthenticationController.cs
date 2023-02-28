@@ -14,9 +14,9 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [Route("api/account/jwt")]
 public sealed class JWTAuthenticationController : Controller
 {
-    public sealed class SignInJWTDTO
+    public sealed record SignInJwtDto
     {
-        public SignInJWTDTO(
+        public SignInJwtDto(
             string username,
             string password)
         {
@@ -27,8 +27,8 @@ public sealed class JWTAuthenticationController : Controller
             Password = password;
         }
 
-        public string Username { get; private set; }
-        public string Password { get; private set; }
+        public string Username { get; private init; }
+        public string Password { get; private init; }
     }
 
     private readonly IMediator _mediator;
@@ -48,7 +48,7 @@ public sealed class JWTAuthenticationController : Controller
     /// </remarks>
     [HttpPost("signIn")]
     public Task<JwtToken> Authenticate(
-        [FromBody] SignInJWTDTO credentials,
+        [FromBody] SignInJwtDto credentials,
         CancellationToken cancellationToken)
         => _mediator.Send(
                 new SignInJwtToken(
