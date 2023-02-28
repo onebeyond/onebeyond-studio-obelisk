@@ -1,4 +1,4 @@
-namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
+namespace OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
 
 public sealed record ForgotPasswordDto
 {

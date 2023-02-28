@@ -12,6 +12,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
+using OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
