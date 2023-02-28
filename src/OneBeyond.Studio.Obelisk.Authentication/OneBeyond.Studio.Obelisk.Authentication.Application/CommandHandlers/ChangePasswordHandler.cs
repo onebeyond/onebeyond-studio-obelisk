@@ -32,12 +32,12 @@ internal sealed class ChangePasswordHandler : IRequestHandler<ChangePassword, Ch
         EnsureArg.IsNotNull(command, nameof(command));
 
         var identityUser = await _userManager
-            .FindByIdAsync(command.LoginId!)
+            .FindByIdAsync(command.LoginId)
             .ConfigureAwait(false);
 
         if (identityUser == null)
         {
-            return ChangePasswordResult.UnkownUserResult(command.LoginId!);
+            return ChangePasswordResult.UnkownUserResult(command.LoginId);
         }
 
         var hasPassword = await _userManager

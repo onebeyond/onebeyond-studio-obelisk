@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
-public class ResetPasswordDto
+
+public sealed record ResetPasswordDto
 {
-    public string? UserName { get; set; }
+    public string UserName { get; init; } = default!;
 
-    public string? Password { get; set; }
+    public string Password { get; init; } = default!;
 
-    public string? Code { get; set; }
+    public string Code { get; init; } = default!;
 }

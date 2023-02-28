@@ -1,5 +1,6 @@
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
-public class RequestResetPasswordDto
+
+public sealed record RequestResetPasswordDto
 {
-    public string? loginId { get; set; }
+    public string loginId { get; init; } = default!;
 }

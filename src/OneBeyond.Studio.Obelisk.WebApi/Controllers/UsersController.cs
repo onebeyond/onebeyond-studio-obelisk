@@ -99,7 +99,8 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         [FromBody] RequestResetPasswordDto resetPassword,
         CancellationToken cancellationToken)
     {
-        var resetPasswordToken = await Mediator.Send(new GenerateResetPasswordTokenByLoginId(resetPassword.loginId!), cancellationToken).ConfigureAwait(false);
+        var resetPasswordToken = await Mediator.Send(
+            new GenerateResetPasswordTokenByLoginId(resetPassword.loginId), cancellationToken).ConfigureAwait(false);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
