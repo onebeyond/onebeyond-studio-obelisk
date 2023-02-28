@@ -92,6 +92,7 @@ public static class Program
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
             builder.Host.ConfigureContainer<ContainerBuilder>(
                 (hostBuilderContext, containerBuilder) =>
                     ConfigureAutofacServices(hostBuilderContext, containerBuilder));
@@ -171,8 +172,6 @@ public static class Program
         }
 
         services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
-
-        services.AddTransient<AppLinkGenerator, AppLinkGenerator>();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 

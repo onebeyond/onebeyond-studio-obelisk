@@ -1,43 +1,24 @@
 using System;
 using EnsureThat;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Helpers;
 
-public sealed class AppLinkGenerator
+public static class AppLinkGenerator
 {
-    private readonly LinkGenerator _linkGenerator;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public AppLinkGenerator(
-        LinkGenerator linkGenerator,
-        IHttpContextAccessor httpContextAccessor)
+    public static Uri GetSetPasswordUrl(
+        string loginId, 
+        string resetPasswordToken,
+        string setPasswordPageUrl)
     {
-        EnsureArg.IsNotNull(linkGenerator, nameof(linkGenerator));
-        EnsureArg.IsNotNull(httpContextAccessor, nameof(httpContextAccessor));
-        EnsureArg.IsNotNull(httpContextAccessor.HttpContext, nameof(httpContextAccessor.HttpContext));
+        EnsureArg.IsNotNullOrWhiteSpace(setPasswordPageUrl, nameof(setPasswordPageUrl));
 
-        _linkGenerator = linkGenerator;
-        _httpContextAccessor = httpContextAccessor;
-    }
-
-    public Uri GetSetPasswordUrl(string loginId, string resetPasswordToken)
-    {
-        EnsureArg.IsNotNullOrWhiteSpace(loginId, nameof(loginId));
-        EnsureArg.IsNotNullOrWhiteSpace(resetPasswordToken, nameof(resetPasswordToken));
-
-        var url = _linkGenerator.GetUriByPage(
-            httpContext: _httpContextAccessor.HttpContext!,
-            page: "/Account/SetPassword",
-            values: new { loginId, code = resetPasswordToken })
-            ?? throw new Exception("Failed to generate set user password url.");
+        setPasswordPageUrl = setPasswordPageUrl.TrimEnd('/');
+        var url = $"{setPasswordPageUrl}/auth/setPassword?loginId={Uri.EscapeDataString(loginId)}&code={Uri.EscapeDataString(resetPasswordToken)}";
 
         return new Uri(url);
     }
 
-    public Uri GetResetPasswordUrl(string resetPasswordToken, string resetPasswordPageUrl)
+    public static Uri GetResetPasswordUrl(string resetPasswordToken, string resetPasswordPageUrl)
     {
         EnsureArg.IsNotNullOrWhiteSpace(resetPasswordToken, nameof(resetPasswordToken));
 

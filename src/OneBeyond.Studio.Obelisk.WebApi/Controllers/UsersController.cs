@@ -23,20 +23,16 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [ApiVersion("1.0")]
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
-    private readonly AppLinkGenerator _linkGenerator;
     private readonly WebAppBaseUrlSetting _emailAuthSettings;
 
     public UsersController(
         IMediator mediator,
-        AppLinkGenerator linkGenerator, 
         IOptions<WebAppBaseUrlSetting> options)
         : base(mediator)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
-        EnsureArg.IsNotNull(linkGenerator, nameof(linkGenerator));
         EnsureArg.IsNotNull(options, nameof(options));
 
-        _linkGenerator = linkGenerator;
         _emailAuthSettings = options.Value;
     }
 
@@ -67,7 +63,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
                 dto.UserName,
                 dto.Email,
                 dto.RoleId,
-                _linkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value)
+                AppLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value, _emailAuthSettings.Url) //TODO
         );
 
         return await Mediator.Send(createCommand, cancellationToken).ConfigureAwait(false);
@@ -96,7 +92,6 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     /// Generates a reset password token for a specified login ID.
     /// </summary>
     /// <param name="resetPassword"></param>
-    /// <param name="loginId">The login ID of the user</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">If the token is generated successfully</response>
     /// <response code="400">If the login ID does not exist</response>
@@ -112,7 +107,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         await Mediator.Send(
             new SendResetPasswordEmail(
                 resetPassword.loginId!,
-                _linkGenerator.GetResetPasswordUrl(resetPasswordToken, _emailAuthSettings.Url!)),
+                AppLinkGenerator.GetResetPasswordUrl(resetPasswordToken, _emailAuthSettings.Url)),
             cancellationToken)
             .ConfigureAwait(false);
     }
