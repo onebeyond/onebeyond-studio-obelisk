@@ -5,8 +5,6 @@ using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
@@ -21,15 +19,17 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 public sealed class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly WebAppBaseUrlSetting _emailAuthSettings;
+    private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
-    public AuthController(IMediator mediator,IOptions<WebAppBaseUrlSetting> options)
+    public AuthController(
+        IMediator mediator,
+        ClientApplicationLinkGenerator clientApplicationLinkGenerator)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
-        EnsureArg.IsNotNull(options, nameof(options));
+        EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
 
         _mediator = mediator;
-        _emailAuthSettings = options.Value;
+        _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
     }
 
     [HttpPost("Basic/SignIn")]
@@ -68,7 +68,7 @@ public sealed class AuthController : ControllerBase
             await _mediator.Send(
                 new SendResetPasswordEmail(
                         resetPasswordTokenResult.LoginId,
-                        AppLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value, _emailAuthSettings.Url)),
+                        _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value)),
                     cancellationToken).ConfigureAwait(false);
 
             return Ok();

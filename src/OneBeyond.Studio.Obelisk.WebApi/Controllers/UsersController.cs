@@ -6,11 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
-using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
@@ -23,17 +21,17 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [ApiVersion("1.0")]
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
-    private readonly WebAppBaseUrlSetting _emailAuthSettings;
+    private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
     public UsersController(
         IMediator mediator,
-        IOptions<WebAppBaseUrlSetting> options)
+        ClientApplicationLinkGenerator clientApplicationLinkGenerator)
         : base(mediator)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
-        EnsureArg.IsNotNull(options, nameof(options));
+        EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
 
-        _emailAuthSettings = options.Value;
+        _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
     }
 
     /// <summary>
@@ -63,7 +61,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
                 dto.UserName,
                 dto.Email,
                 dto.RoleId,
-                AppLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value, _emailAuthSettings.Url) //TODO
+                _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value)
         );
 
         return await Mediator.Send(createCommand, cancellationToken).ConfigureAwait(false);
@@ -107,7 +105,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         await Mediator.Send(
             new SendResetPasswordEmail(
                 resetPassword.loginId!,
-                AppLinkGenerator.GetResetPasswordUrl(resetPasswordToken, _emailAuthSettings.Url)),
+                _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);
     }

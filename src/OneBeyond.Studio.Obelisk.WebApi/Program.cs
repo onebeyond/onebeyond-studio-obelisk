@@ -157,8 +157,6 @@ public static class Program
                 configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>("EmailSender:SendGrid"));
         }
 
-        services.Configure<WebAppBaseUrlSetting>(configuration.GetSection("WebAppBaseUrl"));
-
         services.AddHttpContextAccessor();
 
         if (!environment.IsDevelopment())
@@ -170,6 +168,10 @@ public static class Program
                     options.HttpsPort = 443;
                 });
         }
+
+        services.Configure<ClientApplicationOptions>(configuration.GetSection("ClientApplication"));
+
+        services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
         services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
