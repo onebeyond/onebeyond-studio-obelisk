@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -10,7 +12,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Exception
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class EnableTfaHandler : IRequestHandler<EnableTfa, Unit>
+internal sealed class EnableTfaHandler : IRequestHandler<EnableTfa, IEnumerable<string>>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -23,7 +25,7 @@ internal sealed class EnableTfaHandler : IRequestHandler<EnableTfa, Unit>
         _userManager = userManager;
     }
 
-    public async Task<Unit> Handle(EnableTfa command, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> Handle(EnableTfa command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -42,6 +44,10 @@ internal sealed class EnableTfaHandler : IRequestHandler<EnableTfa, Unit>
 
         await _userManager.SetTwoFactorEnabledAsync(identityUser, true).ConfigureAwait(false);
 
-        return Unit.Value;
+        var recoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(identityUser);
+
+        return recoveryCodesLeft == 0
+            ? (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(identityUser, 10).ConfigureAwait(false))!
+            : Enumerable.Empty<string>(); 
     }
 }
