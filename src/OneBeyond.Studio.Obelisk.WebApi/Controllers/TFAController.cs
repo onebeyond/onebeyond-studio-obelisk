@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -13,7 +13,6 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Queries;
-using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Models.TFA;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 
@@ -24,15 +23,14 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [ApiVersion("1.0")]
 public sealed class TFAController : ControllerBase
 {
+    private const string AUTHENTICATOR_URI_FORMAT = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+
     private readonly IMediator _mediator;
     private readonly UserContext _userContext;
     private readonly UrlEncoder _urlEncoder;
-    private const string AUTHENTICATOR_URI_FORMAT = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
-    [TempData]
-    public string[] RecoveryCodes { get; set; }
-
-    public TFAController(IMediator mediator,
+    public TFAController(
+        IMediator mediator,
         IAmbientContextAccessor<AmbientContext> ambientContextAccessor,
         UrlEncoder urlEncoder)
     {
@@ -43,52 +41,41 @@ public sealed class TFAController : ControllerBase
         _mediator = mediator;
         _userContext = ambientContextAccessor.AmbientContext.GetUserContext();
         _urlEncoder = urlEncoder;
-
-        RecoveryCodes = Array.Empty<string>();
     }
 
     [HttpGet("disable2fa")]
-    public async Task<Unit> Disable2FA(
-        CancellationToken cancellationToken
-        ) => await _mediator.Send(
-                            new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken)
-                            .ConfigureAwait(false);
+    public Task Disable2FA(CancellationToken cancellationToken) 
+        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken);
+
+    [HttpGet("resetAuth")]
+    public Task Reset(CancellationToken cancellationToken) 
+        => _mediator.Send(new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken);
 
     [HttpGet("tfaSettings")]
-    public async Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
-        => await _mediator.Send(
-                new GetTfaSettings(_userContext.UserAuthId),
-                cancellationToken)
-            .ConfigureAwait(false);
+    public Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
+        => _mediator.Send(new GetTfaSettings(_userContext.UserAuthId), cancellationToken);
 
     [HttpGet("tfaKey")]
-    public async Task<IActionResult> GetTfaKey(CancellationToken cancellationToken)
+    public async Task<EnableAuthenticatorSettings> GetTfaKey(CancellationToken cancellationToken)
     {
         var authenticatorKey = await _mediator.Send(
                  new GenerateTfaKey(_userContext.UserAuthId), cancellationToken)
              .ConfigureAwait(false);
 
-        return Ok(new EnableAuthenticatorSettings()
+        return new EnableAuthenticatorSettings
         {
             AuthenticationUri = GenerateQrCodeUri(authenticatorKey.Email, authenticatorKey.RawKey),
             SharedKey = authenticatorKey.SharedKey
-        });
+        };
     }
 
-    [HttpGet("resetAuth")]
-    public async Task<Unit> Reset(
-        CancellationToken cancellationToken
-        ) => await _mediator.Send(
-                new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken)
-            .ConfigureAwait(false);
-
     [HttpGet("forgetBrowser")]
-    public async Task<Unit> ForgetBrowser(
-        CancellationToken cancellationToken
-        )
-        => await _mediator.Send(
-                new ForgetTfaClient(_userContext.UserAuthId), cancellationToken)
-            .ConfigureAwait(false);
+    public Task ForgetBrowser(CancellationToken cancellationToken)
+        => _mediator.Send(new ForgetTfaClient(_userContext.UserAuthId), cancellationToken);
+
+    [HttpPost("generateRecoveryCodes")]
+    public Task<IEnumerable<string>> GenerateRecoveryCodes(CancellationToken cancellationToken)
+        => _mediator.Send(new GenerateTfaRecoveryCodes(_userContext.UserAuthId), cancellationToken);
 
     [HttpPost("verify")]
     public async Task<IActionResult> Verify(
@@ -103,18 +90,16 @@ public sealed class TFAController : ControllerBase
                     new EnableTfa(_userContext.UserAuthId, verificationCode), cancellationToken)
                 .ConfigureAwait(false);
 
-            var loginTFASettings = await _mediator.Send(
-                    new GetTfaSettings(_userContext.UserAuthId))
-                .ConfigureAwait(false);
+            var loginTFASettings = await _mediator.Send(new GetTfaSettings(_userContext.UserAuthId)).ConfigureAwait(false);
 
             if (loginTFASettings.RecoveryCodesLeft == 0)
             {
-                RecoveryCodes = (await _mediator.Send(
+                var recoveryCodes = (await _mediator.Send(
                         new GenerateTfaRecoveryCodes(_userContext.UserAuthId))
                     .ConfigureAwait(false))
                     .ToArray();
 
-                return Ok(RecoveryCodes);
+                return Ok(recoveryCodes);
             }
             else
             {
@@ -128,34 +113,9 @@ public sealed class TFAController : ControllerBase
 
     }
 
-    [HttpPost("generateRecoveryCodes")]
-    public async Task<IActionResult> GenerateRecoveryCodes(
-      CancellationToken cancellationToken)
-    {
-        try
-        {
-            RecoveryCodes = (await _mediator.Send(
-                new GenerateTfaRecoveryCodes(_userContext.UserAuthId), cancellationToken)
-            .ConfigureAwait(false))
-            .ToArray();
-
-            return Ok();
-        }
-        catch (InvalidTfaTokenException)
-        {
-            return BadRequest("error");
-        }
-    }
-
-    [HttpGet("getRecoveryCodes")]
-    public IActionResult GetRecoveryCodes()
-    {
-        return Ok(RecoveryCodes);
-    }
-
     private string GenerateQrCodeUri(string email, string unformattedKey)
         => string.Format(
-    AUTHENTICATOR_URI_FORMAT,
+            AUTHENTICATOR_URI_FORMAT,
             _urlEncoder.Encode("Obelisk"),
             _urlEncoder.Encode(email),
             unformattedKey);

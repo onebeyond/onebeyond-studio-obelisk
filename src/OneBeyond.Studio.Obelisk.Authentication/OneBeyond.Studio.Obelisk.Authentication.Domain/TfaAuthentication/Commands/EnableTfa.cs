@@ -3,7 +3,7 @@ using MediatR;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
-public sealed class EnableTfa : LoginRequest<Unit>
+public sealed record EnableTfa : LoginRequest<Unit>
 {
     public EnableTfa(
         string loginId,

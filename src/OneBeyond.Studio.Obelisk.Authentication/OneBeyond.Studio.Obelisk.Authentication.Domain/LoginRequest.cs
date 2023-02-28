@@ -3,7 +3,7 @@ using MediatR;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain;
 
-public abstract class LoginRequest<TResult> : IRequest<TResult>
+public abstract record LoginRequest<TResult> : IRequest<TResult>
 {
     protected LoginRequest(string loginId)
     {
