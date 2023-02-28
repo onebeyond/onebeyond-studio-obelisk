@@ -47,14 +47,13 @@ public sealed class TFAController : ControllerBase
     public Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
         => _mediator.Send(new GetTfaSettings(_userContext.UserAuthId), cancellationToken);
 
-    [HttpGet("tfaKey")]
-    public async Task<EnableAuthenticatorSettings> GetTfaKey(CancellationToken cancellationToken)
+    [HttpPost("generateTfaKey")]
+    public async Task<TfaAuthenticatorSettings> GenerateTfaKey(CancellationToken cancellationToken)
     {
         var authenticatorKey = await _mediator.Send(
-                 new GenerateTfaKey(_userContext.UserAuthId), cancellationToken)
-             .ConfigureAwait(false);
+            new GenerateTfaKey(_userContext.UserAuthId), cancellationToken).ConfigureAwait(false);
 
-        return new EnableAuthenticatorSettings
+        return new TfaAuthenticatorSettings
         {
             AuthenticationUri = GenerateQrCodeUri(authenticatorKey.Email, authenticatorKey.RawKey),
             SharedKey = authenticatorKey.SharedKey
