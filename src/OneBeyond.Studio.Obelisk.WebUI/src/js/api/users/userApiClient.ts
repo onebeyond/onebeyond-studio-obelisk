@@ -23,4 +23,9 @@ export default class UserApiClient extends EntityApiClient<User, string>{
         const data = await this.get("WhoAmI");
         return plainToInstance(UserContext, await data.json());
     }
+
+    public async search(query: string): Promise<any> {
+        const response = await this.get(`?query=${query}`);
+        return await response.json();
+    }
 }
