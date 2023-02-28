@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
@@ -12,14 +13,16 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Queries;
+using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Models.TFA;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
+[Authorize]
 [Produces("application/json")]
 [ApiVersion("1.0")]
-public class TFAController : ControllerBase
+public sealed class TFAController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly UserContext _userContext;
