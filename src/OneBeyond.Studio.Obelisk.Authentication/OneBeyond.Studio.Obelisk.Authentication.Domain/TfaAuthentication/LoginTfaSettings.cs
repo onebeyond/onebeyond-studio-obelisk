@@ -1,6 +1,6 @@
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 
-public struct LoginTfaSettings
+public sealed record LoginTfaSettings
 {
     public LoginTfaSettings(
         bool hasAuthenticator,

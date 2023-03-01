@@ -43,6 +43,7 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationClaims;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
@@ -91,6 +92,7 @@ public static class Program
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
             builder.Host.ConfigureContainer<ContainerBuilder>(
                 (hostBuilderContext, containerBuilder) =>
                     ConfigureAutofacServices(hostBuilderContext, containerBuilder));
@@ -167,9 +169,11 @@ public static class Program
                 });
         }
 
-        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        services.Configure<ClientApplicationOptions>(configuration.GetSection("ClientApplication"));
 
-        services.AddTransient<AppLinkGenerator, AppLinkGenerator>();
+        services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
+
+        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 

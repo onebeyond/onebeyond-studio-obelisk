@@ -32,6 +32,7 @@ internal sealed class GenerateTfaKeyHandler : IRequestHandler<GenerateTfaKey, Tf
             ?? throw new AuthLoginNotFoundException($"Login with id {command.LoginId} not found");
 
         var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(identityUser).ConfigureAwait(false);
+
         if (unformattedKey.IsNullOrEmpty())
         {
             await _userManager.ResetAuthenticatorKeyAsync(identityUser);

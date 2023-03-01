@@ -10,7 +10,7 @@ using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -41,7 +41,7 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet]
     public virtual async Task<IActionResult> Get(
-        [FromQuery] ListQueryParameters queryParameters,
+        [FromQuery] ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
     {
@@ -71,7 +71,7 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
     }
 
     protected virtual Task<PagedList<TAggregateRootListDTO>> ListAsync(
-        ListQueryParameters queryParameters,
+        ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
         => Mediator.Send(
