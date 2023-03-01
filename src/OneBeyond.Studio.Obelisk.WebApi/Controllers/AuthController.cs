@@ -15,7 +15,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
+using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
 using SignInResult = OneBeyond.Studio.Obelisk.Authentication.Domain.SignInResult;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
@@ -69,7 +69,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("ForgotPassword")]
     public async Task ForgotPassword(
-        [FromBody] ForgotPasswordModel forgotPassword, 
+        [FromBody] ForgotPasswordRequest forgotPassword, 
         CancellationToken cancellationToken)
     {
         try
@@ -92,7 +92,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("ResetPassword")]
     public async Task ResetPassword(
-        [FromBody] ResetPasswordModel resetPassword, 
+        [FromBody] ResetPasswordRequest resetPassword, 
         CancellationToken cancellationToken)
     {
         try
@@ -112,7 +112,7 @@ public sealed class AuthController : ControllerBase
     [Authorize]
     [HttpPost("ChangePassword")]
     public Task<ChangePasswordResult> ChangePassword(
-        [FromBody] ChangePasswordModel changePassword, 
+        [FromBody] ChangePasswordRequest changePassword, 
         CancellationToken cancellationToken)
         => _mediator.Send(new ChangePassword(
             HttpContext.User?.Identity?.TryGetLoginId() ?? throw new ObeliskApplicationException("Failed to retrieve the ID of a logged in user"),

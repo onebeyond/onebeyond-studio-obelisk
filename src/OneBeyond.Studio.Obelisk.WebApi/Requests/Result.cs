@@ -1,4 +1,4 @@
-namespace OneBeyond.Studio.Obelisk.WebApi.Models;
+namespace OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 public sealed class Result
 {

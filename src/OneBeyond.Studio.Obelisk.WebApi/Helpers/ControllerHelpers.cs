@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using EnsureThat;
 using OneBeyond.Studio.Crosscuts.Strings;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Helpers;
 
@@ -27,11 +27,11 @@ internal static class ControllerHelpers
 
         var caseInvariantDictionary = new Dictionary<string, IReadOnlyCollection<string>>(query, StringComparer.OrdinalIgnoreCase);
 
-        caseInvariantDictionary.Remove(nameof(BaseQueryParameters.Limit));
-        caseInvariantDictionary.Remove(nameof(BaseQueryParameters.Page));
-        caseInvariantDictionary.Remove(nameof(BaseQueryParameters.OrderBy));
-        caseInvariantDictionary.Remove(nameof(BaseQueryParameters.Ascending));
-        caseInvariantDictionary.Remove(nameof(BaseQueryParameters.ParentId));
+        caseInvariantDictionary.Remove(nameof(BaseListRequest.Limit));
+        caseInvariantDictionary.Remove(nameof(BaseListRequest.Page));
+        caseInvariantDictionary.Remove(nameof(BaseListRequest.OrderBy));
+        caseInvariantDictionary.Remove(nameof(BaseListRequest.Ascending));
+        caseInvariantDictionary.Remove(nameof(BaseListRequest.ParentId));
 
         var keysToRemove = caseInvariantDictionary
             .Where((item) => !(item.Value?.Count > 0))

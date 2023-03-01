@@ -12,7 +12,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models.Auth;
+using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -97,15 +97,15 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("{loginId}/ResetPassword")]
     public async Task ResetPassword(
-        [FromBody] RequestResetPasswordModel resetPassword,
+        [FromBody] RequestResetPasswordRequest resetPassword,
         CancellationToken cancellationToken)
     {
         var resetPasswordToken = await Mediator.Send(
-            new GenerateResetPasswordTokenByLoginId(resetPassword.loginId), cancellationToken).ConfigureAwait(false);
+            new GenerateResetPasswordTokenByLoginId(resetPassword.LoginId), cancellationToken).ConfigureAwait(false);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
-                resetPassword.loginId!,
+                resetPassword.LoginId,
                 _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);

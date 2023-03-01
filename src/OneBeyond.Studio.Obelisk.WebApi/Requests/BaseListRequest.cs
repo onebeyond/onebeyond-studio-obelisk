@@ -1,6 +1,6 @@
-namespace OneBeyond.Studio.Obelisk.WebApi.Models;
+namespace OneBeyond.Studio.Obelisk.WebApi.Requests;
 
-public abstract record BaseQueryParameters
+public abstract record BaseListRequest
 {
     public int? Limit { get; init; }
     public int Page { get; init; }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Queries;
-using OneBeyond.Studio.Obelisk.WebApi.Models.TFA;
+using OneBeyond.Studio.Obelisk.WebApi.Requests.TFA;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;

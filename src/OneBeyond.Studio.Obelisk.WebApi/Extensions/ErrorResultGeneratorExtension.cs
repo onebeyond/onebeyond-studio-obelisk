@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Extensions;
 

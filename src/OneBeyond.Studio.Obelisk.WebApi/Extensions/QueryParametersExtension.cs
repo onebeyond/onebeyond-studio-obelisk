@@ -3,14 +3,14 @@ using EnsureThat;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Extensions;
 
 internal static class QueryParametersExtension
 {
     public static List<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId> ToListQuery<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>(
-        this ListQueryParameters queryParameters,
+        this ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query)
         where TAggregateRoot : DomainEntity<TAggregateRootId>
     {
