@@ -61,7 +61,7 @@ public sealed class TFAController : ControllerBase
 
     [HttpPost("enableTfa")]
     public Task<IEnumerable<string>> EnableTfa(
-        [FromBody] EnableTfaModel enableTfaDto,
+        [FromBody] EnableTfaRequest enableTfaDto,
         CancellationToken cancellationToken)
     => _mediator.Send(
         new EnableTfa(_userContext.UserAuthId, enableTfaDto.Code), cancellationToken);
