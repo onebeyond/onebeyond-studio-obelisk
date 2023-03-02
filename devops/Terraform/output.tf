@@ -2,11 +2,6 @@ output "rg_name" {
   value = azurerm_resource_group.stage.name
 }
 
-output "static_ui_deployment_token" {
-  value     = azurerm_static_site.ui.api_key
-  sensitive = true
-}
-
 output "web_api_app_service_name" {
   value = azurerm_linux_web_app.web_api.name
 }

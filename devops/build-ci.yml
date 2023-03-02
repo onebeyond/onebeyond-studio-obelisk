@@ -6,8 +6,8 @@ trigger:
       - hotfix/*
   # paths:
   #   exclude:
-  #     - Obelisk.DevOps/Terraform
-  #     - Obelisk.DevOps/infra-*
+  #     - devops/Terraform
+  #     - devops/infra-*
 
 pr: none
 
