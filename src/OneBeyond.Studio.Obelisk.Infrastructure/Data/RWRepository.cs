@@ -7,7 +7,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
 public class RWRepository<TAggregateRoot, TAggregateRootId>
     : BaseRWRepository<DomainContext, TAggregateRoot, TAggregateRootId>
-    where TAggregateRoot : DomainEntity<TAggregateRootId>, IAggregateRoot
+    where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {
     public RWRepository(

@@ -16,7 +16,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
 public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
     : ControllerBase
-    where TAggregateRoot : DomainEntity<TAggregateRootId>, IAggregateRoot
+    where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootGetDTO : new()
     where TAggregateRootListDTO : new()
 {
@@ -88,7 +88,7 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
 
 public abstract class QBasedController<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
     : QBasedController<TAggregateRootListDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
-    where TAggregateRoot : DomainEntity<TAggregateRootId>, IAggregateRoot
+    where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootListDTO : new()
 {
     protected QBasedController(
