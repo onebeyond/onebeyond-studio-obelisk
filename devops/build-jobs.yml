@@ -85,22 +85,6 @@ jobs:
         displayName: "Analyze SonarCloud"
         condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
 
-      - task: Npm@1
-        displayName: "Install NPMs"
-        inputs:
-          command: "custom"
-          customCommand: "ci"
-          workingDir: "$(projects.workingFolders.webApi)"
-
-      #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/9
-      - task: Npm@1
-        displayName: "Run Webpack"
-        inputs:
-          command: custom
-          workingDir: "$(projects.workingFolders.webApi)"
-          verbose: false
-          customCommand: "run $(webpackNpmCommand)" #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
-
       - ${{ if eq(parameters.publishArtifacts, true) }}:
           - task: DotNetCoreCLI@2
             displayName: "Publish Web App"
@@ -143,41 +127,6 @@ jobs:
           - publish: "$(projects.workingFolders.workers)/Dockerfile"
             displayName: "Publish Workers Dockerfile"
             artifact: Workers-Dockerfile
-
-  - job: Build_Publish_Web_UI_SPA
-    displayName: "Build & Publish Web UI SPA"
-    variables:
-      webpackNpmCommand: "build -- --env BUILD_NUMBER=$(Build.BuildNumber)"
-      projects.workingFolders.WebUI: "src/OneBeyond.Studio.Obelisk.WebUI"
-    steps:
-      - task: Npm@1
-        displayName: "Install NPMs"
-        inputs:
-          command: "custom"
-          customCommand: "ci"
-          workingDir: "$(projects.workingFolders.WebUI)"
-
-      - task: Npm@1
-        displayName: "Build Web UI SPA"
-        inputs:
-          command: custom
-          workingDir: "$(projects.workingFolders.webUI)"
-          verbose: false
-          customCommand: "run $(webpackNpmCommand)" #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
-
-      - ${{ if eq(parameters.publishArtifacts, true) }}:
-          - task: ArchiveFiles@2
-            displayName: "Archive Web UI SPA"
-            inputs:
-              includeRootFolder: false
-              rootFolderOrFile: "$(projects.workingFolders.WebUI)/dist"
-              archiveFile: "$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip"
-
-          - task: PublishPipelineArtifact@1
-            displayName: "Publish Web UI SPA Artifact"
-            inputs:
-              targetPath: "$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip"
-              artifact: WebUISpa
 
   - job: Build_Publish_EF_Bundle
     displayName: "Build & Publish EF Bundle"
