@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -43,7 +42,6 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationClaims;
-using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
@@ -177,7 +175,7 @@ public static class Program
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 
-        services.AddApplicationAuthentication(environment, configuration, "/Account/Login")
+        services.AddApplicationAuthentication(environment, configuration)
             .AddUserStore<AuthUserStore>() //Used for JWT authentication
             .AddClaimsPrincipalFactory<ApplicationClaimsIdentityFactory>()
             .AddEntityFrameworkStores<DomainContext>();
@@ -229,15 +227,6 @@ public static class Program
             {
                 options.SuppressInferBindingSourcesForParameters = true;
             });
-
-        services.AddRazorPages()
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddRazorPagesOptions(
-                (options) =>
-                {
-                    options.Conventions.AuthorizeFolder("/Account/Manage");
-                    options.Conventions.AuthorizePage("/Account/Logout");
-                });
 
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -396,7 +385,6 @@ public static class Program
         app.UseEndpoints(
             (endpoints) =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
                 {
