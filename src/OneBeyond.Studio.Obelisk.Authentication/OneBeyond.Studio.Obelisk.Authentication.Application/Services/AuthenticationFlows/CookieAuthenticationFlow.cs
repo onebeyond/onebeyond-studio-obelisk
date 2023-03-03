@@ -71,24 +71,13 @@ internal sealed class CookieAuthenticationFlow : CookieAuthenticationEvents
 
     public override Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
     {
-        EnsureArg.IsNotNull(context, nameof(context));
-
-        if (_options.DisableAuthNRedirects)
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
-        }
-        return base.RedirectToLogin(context);
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
     }
 
     public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
     {
-        EnsureArg.IsNotNull(context, nameof(context));
-
-        if (_options.DisableAuthNRedirects)
-        {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-        }
-        return base.RedirectToAccessDenied(context);
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
     }
 }
