@@ -13,7 +13,7 @@ variable "name_prefix" {
 
 variable "sku_name" {
   type        = string
-  default     = "Y1"
+  default     = "B1" # Note, we use a paid B1 plan by default, because we configure the function as always_on (always_on is not supported for free Y1 plan)
   description = "SKU name of the function."
 }
 
