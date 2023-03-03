@@ -71,12 +71,16 @@ internal sealed class CookieAuthenticationFlow : CookieAuthenticationEvents
 
     public override Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
     {
+        //The default Cookie authentication logic redirects to login page in case if a request is not authorized.
+        //As we no longer have a login page in Web API, we just return Http status code Status401Unauthorized
         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
         return Task.CompletedTask;
     }
 
     public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
     {
+        //The default Cookie authentication logic redirects to login page in case if access denied.
+        //As we no longer have a login page in Web API, we just return Http status code Status401Unauthorized
         context.Response.StatusCode = StatusCodes.Status403Forbidden;
         return Task.CompletedTask;
     }
