@@ -36,16 +36,9 @@ internal sealed class UnlockUserHandler : IRequestHandler<UnlockUser>
 
         var user = await _userRWRepository.GetByIdAsync(command.UserId, cancellationToken).ConfigureAwait(false);
 
-        try
-        {
-            await _mediator.Send(
-                new UnlockLogin(user.LoginId),
-                cancellationToken).ConfigureAwait(false);
-        }
-        catch (AuthException authException)
-        {
-            throw new ObeliskDomainException(authException.Message);
-        }
+        await _mediator.Send(
+            new UnlockLogin(user.LoginId),
+            cancellationToken).ConfigureAwait(false);
 
         user.Unlock();
 
