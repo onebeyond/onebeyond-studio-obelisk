@@ -2,7 +2,7 @@ parameters:
   - name: buildArtifactPipelineId
     displayName: 'ID of pipeline used for building artifacts'
   - name: projectCode
-    displayName: 'Proejct code'
+    displayName: 'Project code'
   - name: stageCode
     displayName: 'Stage code'
     values:
