@@ -89,7 +89,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     /// <summary>
     /// Generates a reset password token for a specified login ID.
     /// </summary>
-    /// <param name="resetPassword"></param>
+    /// <param name="loginId">The login Id of the user</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">If the token is generated successfully</response>
     /// <response code="400">If the login ID does not exist</response>
@@ -97,15 +97,15 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("{loginId}/ResetPassword")]
     public async Task ResetPassword(
-        [FromBody] RequestResetPasswordRequest resetPassword,
+        string loginId,
         CancellationToken cancellationToken)
     {
         var resetPasswordToken = await Mediator.Send(
-            new GenerateResetPasswordTokenByLoginId(resetPassword.LoginId), cancellationToken).ConfigureAwait(false);
+            new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken).ConfigureAwait(false);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
-                resetPassword.LoginId,
+                loginId,
                 _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);

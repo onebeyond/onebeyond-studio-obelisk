@@ -43,6 +43,7 @@ internal sealed class CreateLoginHandler : IRequestHandler<CreateLogin, ResetPas
                 ",",
                 res.Errors.Select(x => x.Description));
 
+            // TODO: change this as it returns 401. Same for other AuthException raised in situations where it shouldn't be!
             throw new AuthException(errorMessage);
         }
 
