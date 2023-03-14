@@ -34,24 +34,17 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
 
         var user = await _userRWRepository.GetByIdAsync(command.UserId, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        try
-        {
-            //Please note! The reason we use mediator within a command handler
-            //is because we consider Authentication project as an external for us (for our Domain).
-            //In case if you want to use mediator to execute commands or your Domain - that most likely would be considered as a code smell.
-            await _mediator.Send(
-                new UpdateLogin(
-                    user.LoginId,
-                    command.UserName,
-                    command.Email,
-                    command.RoleId
-                ),
-                cancellationToken).ConfigureAwait(false);
-        }
-        catch (AuthException authException)
-        {
-            throw new ObeliskDomainException(authException.Message);
-        }
+        //Please note! The reason we use mediator within a command handler
+        //is because we consider Authentication project as an external for us (for our Domain).
+        //In case if you want to use mediator to execute commands or your Domain - that most likely would be considered as a code smell.
+        await _mediator.Send(
+            new UpdateLogin(
+                user.LoginId,
+                command.UserName,
+                command.Email,
+                command.RoleId
+            ),
+            cancellationToken).ConfigureAwait(false);
 
         user.Apply(command);
 
