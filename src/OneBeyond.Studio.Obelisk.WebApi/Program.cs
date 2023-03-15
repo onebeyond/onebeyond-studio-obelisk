@@ -379,6 +379,9 @@ public static class Program
                     options.SwaggerEndpoint(
                         $"/swagger/{description.GroupName}/swagger.json",
                         $"{SwaggerConstants.APITitle} {description.GroupName.ToUpperInvariant()}");
+
+                    // Set Swagger UI as the homepage
+                    options.RoutePrefix = string.Empty;
                 }
             });
 

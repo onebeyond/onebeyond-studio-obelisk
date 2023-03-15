@@ -37,6 +37,7 @@ internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOpti
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         options.IncludeXmlComments(xmlPath);
         options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+        options.OperationFilter<FromMixedSourceOperationFilter>();
     }
 
     private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
