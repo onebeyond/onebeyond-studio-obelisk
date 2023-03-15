@@ -11,7 +11,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Swagger;
 /// This operation filter is required to make sure that when the [FromMixedSource]
 /// attribute is used, it gets translated in Swagger as a Body request and not as a Query string
 /// </summary>
-public class FromMixedSourceOperationFilter : IOperationFilter
+internal sealed class FromMixedSourceOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
