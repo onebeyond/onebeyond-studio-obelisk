@@ -11,7 +11,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Dummies.Entities;
 
-public class Dummy : DomainEntity<Guid>, IAggregateRoot
+public class Dummy : AggregateRoot<Guid>
 {
     protected Dummy(
         string? stringValue,

@@ -2,7 +2,7 @@ parameters:
   - name: buildArtifactPipelineId
     displayName: 'ID of pipeline used for building artifacts'
   - name: projectCode
-    displayName: 'Proejct code'
+    displayName: 'Project code'
   - name: stageCode
     displayName: 'Stage code'
     values:
@@ -72,8 +72,6 @@ jobs:
     variables:
       - name: tf.workingDirectory
         value: '$(Agent.TempDirectory)/TFPlan'
-      - name: spa.workingDirectory
-        value: '$(Agent.TempDirectory)/WebUISpa'
       - name: ef.workingDirectory
         value: '$(Pipeline.Workspace)/EFBundle'
     strategy:
@@ -91,12 +89,6 @@ jobs:
               inputs:
                 archiveFilePatterns:  '$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}/TF-Plan-${{parameters.stageCode}}.zip'
                 destinationFolder: '$(tf.workingDirectory)'
-
-            - task: ExtractFiles@1
-              displayName: 'Extract Web UI SPA'
-              inputs:
-                archiveFilePatterns: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebUISpa/*.zip'
-                destinationFolder: '$(spa.workingDirectory)'
 
             - task: ExtractFiles@1
               displayName: 'Extract EF Bundle'
@@ -136,22 +128,6 @@ jobs:
               workingDirectory: '$(tf.workingDirectory)'
 
             - bash: |
-                echo "##vso[task.setvariable variable=appSettings.apiUrl;isreadonly=true]$(Terraform_Output.web_api_url)"
-              displayName: 'Bind Variables for Web UI SPA Settings'
-
-            - task: FileTransform@2
-              displayName: 'Transform Web UI SPA Settings'
-              inputs:
-                folderPath: '$(spa.workingDirectory)'
-                jsonTargetFiles: 'configuration/*.json'
-                xmlTargetFiles: ''
-                xmlTransformationRules: ''
-
-            - bash: |
-                sed -i 's/\/\*\* @preserve ENVIRONMENT_SETUP_PLACEHOLDER \*\//window.env = '\'${{parameters.runtimeEnvironment}}\''/g' $(spa.workingDirectory)/*.html
-              displayName: 'Set up Web UI SPA Runtime Environment'
-
-            - bash: |
                 chmod a+x ./efbundle
                 ./efbundle --connection "$(Terraform_Output.web_api_sqldb_connection_string)"
               displayName: 'Apply EF Bundle'
@@ -182,14 +158,3 @@ jobs:
                 deploymentMethod: runFromPackage
                 appSettings: >
                   -AZURE_FUNCTIONS_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
-
-            - task: AzureStaticWebApp@0
-              displayName: 'Deploy Azure Static Web App'
-              inputs:
-                cwd: '$(spa.workingDirectory)'
-                app_location: '/'
-                output_location: ''
-                skip_app_build: true
-                api_location: ''
-                skip_api_build: true
-                azure_static_web_apps_api_token: '$(Terraform_Output.static_ui_deployment_token)'

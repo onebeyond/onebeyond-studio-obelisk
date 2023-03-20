@@ -12,8 +12,7 @@ using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Domain.Features.Dummies.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Dummies.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -39,7 +38,7 @@ public sealed class DummiesController : QBasedController<DummyDto, DummyDto, Dum
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] ListQueryParameters queryParameters,
+        [FromQuery] ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
     {

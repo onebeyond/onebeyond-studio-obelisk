@@ -50,7 +50,7 @@ internal sealed class SignInTfaHandler : IRequestHandler<SignInTfa, SignInResult
         }
         catch (AuthLoginNotFoundException)
         {
-            return new SignInResult(SignInStatus.UnknownUser, "Invalid username or password");
+            return new SignInResult(SignInStatus.Failure, "Invalid username or password");
         }
     }
 }

@@ -6,7 +6,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.DomainEvents;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
-public abstract class UserBase : DomainEntity<Guid>, IAggregateRoot
+public abstract class UserBase : AggregateRoot<Guid> 
 {
     protected UserBase(
         string loginId,

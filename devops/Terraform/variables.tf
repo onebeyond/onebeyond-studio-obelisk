@@ -29,31 +29,6 @@ variable "sql_allowed_ips" {
   }
 }
 
-variable "static_ui_location" {
-  type        = string
-  description = "Moniker of location which is used for placing static UI in. Only limited number of locations are allowed. Defaults to West Europe."
-  default     = "westeurope"
-  validation {
-    condition     = contains(["westus2", "centralus", "eastus2", "westeurope", "eastasia", "eastasiastage"], var.static_ui_location)
-    error_message = "Allowed values for the static UI location are \"westus2\", \"centralus\", \"eastus2\", \"westeurope\", \"eastasia\", \"eastasiastage\"."
-  }
-}
-
-variable "static_ui_sku_size" {
-  type        = string
-  description = "SKU for static UI."
-  validation {
-    condition     = contains(["Free", "Standard"], var.static_ui_sku_size)
-    error_message = "Allowed values for the static UI sku size are \"Free\", \"Standard\"."
-  }
-}
-
-variable "static_ui_custom_domain" {
-  type        = string
-  description = "Custom domain name for static UI. Null value results in Static UI default hostname."
-  nullable    = true
-}
-
 variable "web_api_sku_size" {
   type        = string
   description = "SKU for Web API app service plan."

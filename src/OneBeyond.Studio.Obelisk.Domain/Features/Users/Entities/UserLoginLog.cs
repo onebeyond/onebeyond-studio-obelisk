@@ -4,7 +4,7 @@ using OneBeyond.Studio.Domain.SharedKernel.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
-public sealed class UserLoginLog : DomainEntity<int>, IAggregateRoot
+public sealed class UserLoginLog : AggregateRoot<int>
 {
     public UserLoginLog(string username, bool success, string? status)
     {

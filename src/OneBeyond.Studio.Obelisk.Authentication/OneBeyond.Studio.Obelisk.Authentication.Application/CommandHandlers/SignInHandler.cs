@@ -45,8 +45,8 @@ internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain
         {
             Logger.LogInformation("User attempted to login with unrecognised account");
             return new Domain.SignInResult(
-                SignInStatus.UnknownUser,
-                "User account is not registered in the system.");
+                SignInStatus.Failure,
+                "Invalid username or password");
         }
 
         try

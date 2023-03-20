@@ -10,12 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using OneBeyond.Studio.Application.SharedKernel.Entities.Dto;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
-using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -24,16 +23,17 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [ApiVersion("1.0")]
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
-    private readonly AppLinkGenerator _linkGenerator;
+    private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
     public UsersController(
         IMediator mediator,
-        AppLinkGenerator linkGenerator)
+        ClientApplicationLinkGenerator clientApplicationLinkGenerator)
         : base(mediator)
     {
-        EnsureArg.IsNotNull(linkGenerator, nameof(linkGenerator));
+        EnsureArg.IsNotNull(mediator, nameof(mediator));
+        EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
 
-        _linkGenerator = linkGenerator;
+        _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] ListQueryParameters queryParameters,
+        [FromQuery] ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
     {
@@ -84,7 +84,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
                 dto.UserName,
                 dto.Email,
                 dto.RoleId,
-                _linkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value)
+                _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value)
         );
 
         return await Mediator.Send(createCommand, cancellationToken).ConfigureAwait(false);
@@ -112,7 +112,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     /// <summary>
     /// Generates a reset password token for a specified login ID.
     /// </summary>
-    /// <param name="loginId">The login ID of the user</param>
+    /// <param name="loginId">The login Id of the user</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">If the token is generated successfully</response>
     /// <response code="400">If the login ID does not exist</response>
@@ -123,14 +123,13 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         string loginId,
         CancellationToken cancellationToken)
     {
-        EnsureArg.IsNotNullOrWhiteSpace(loginId, nameof(loginId));
-
-        var resetPasswordToken = await Mediator.Send(new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken).ConfigureAwait(false);
+        var resetPasswordToken = await Mediator.Send(
+            new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken).ConfigureAwait(false);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
                 loginId,
-                _linkGenerator.GetResetPasswordUrl(resetPasswordToken)),
+                _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);
     }
@@ -147,9 +146,4 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [HttpPut("{userId}/Unlock")]
     public Task UnlockUser(Guid userId, CancellationToken cancellationToken)
         => Mediator.Send(new UnlockUser(userId), cancellationToken);
-
-    [Authorize]
-    [HttpGet("WhoAmI")]
-    public Task<WhoAmIDto> WhoAmI(CancellationToken cancellationToken)
-        => Mediator.Send(new WhoAmI(), cancellationToken);
 }

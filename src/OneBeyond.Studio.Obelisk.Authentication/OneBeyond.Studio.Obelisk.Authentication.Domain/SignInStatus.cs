@@ -6,6 +6,5 @@ public enum SignInStatus
     LockedOut,
     RequiresVerification,
     Failure,
-    UnknownUser,
     ConfigureTFA
 }

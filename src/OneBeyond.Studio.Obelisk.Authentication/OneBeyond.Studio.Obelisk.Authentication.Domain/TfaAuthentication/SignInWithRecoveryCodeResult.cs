@@ -2,7 +2,7 @@ using EnsureThat;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 
-public struct SignInWithRecoveryCodeResult
+public sealed record SignInWithRecoveryCodeResult
 {
     public SignInWithRecoveryCodeResult(
         string loginId,

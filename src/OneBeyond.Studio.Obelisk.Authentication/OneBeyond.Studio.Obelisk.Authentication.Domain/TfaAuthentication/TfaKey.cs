@@ -2,7 +2,7 @@ using EnsureThat;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 
-public struct TfaKey
+public sealed record TfaKey
 {
     public TfaKey(
         string loginId,

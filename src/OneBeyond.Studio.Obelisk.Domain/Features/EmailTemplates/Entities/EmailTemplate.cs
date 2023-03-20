@@ -3,7 +3,7 @@ using OneBeyond.Studio.Domain.SharedKernel.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 
-public sealed class EmailTemplate : DomainEntity<string>, IAggregateRoot
+public sealed class EmailTemplate : AggregateRoot<string>
 {
     public EmailTemplate(
         string id, //Note! For EmailTemplate Id is the Tag!

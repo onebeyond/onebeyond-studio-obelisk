@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using EnsureThat;
-using MediatR;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
-public sealed class EnableTfa : LoginRequest<Unit>
+public sealed record EnableTfa : LoginRequest<IEnumerable<string>>
 {
     public EnableTfa(
         string loginId,
@@ -12,7 +12,7 @@ public sealed class EnableTfa : LoginRequest<Unit>
     {
         EnsureArg.IsNotNullOrWhiteSpace(verificationCode, nameof(verificationCode));
 
-        VerificationCode = verificationCode;
+        VerificationCode = verificationCode.Replace(" ", string.Empty).Replace("-", string.Empty);
     }
 
     public string VerificationCode { get; }

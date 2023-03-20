@@ -10,13 +10,13 @@ using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Models;
+using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
 public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
     : ControllerBase
-    where TAggregateRoot : DomainEntity<TAggregateRootId>, IAggregateRoot
+    where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootGetDTO : new()
     where TAggregateRootListDTO : new()
 {
@@ -51,7 +51,7 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
     }
 
     protected virtual Task<PagedList<TAggregateRootListDTO>> ListAsync(
-        ListQueryParameters queryParameters,
+        ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
         => Mediator.Send(
@@ -68,7 +68,7 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
 
 public abstract class QBasedController<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
     : QBasedController<TAggregateRootListDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
-    where TAggregateRoot : DomainEntity<TAggregateRootId>, IAggregateRoot
+    where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootListDTO : new()
 {
     protected QBasedController(

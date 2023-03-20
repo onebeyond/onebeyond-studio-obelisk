@@ -6,7 +6,6 @@ on:
       - "main"
     paths:
       - "src/**"
-      - "!src/OneBeyond.Studio.Obelisk.WebUI/**"
   workflow_dispatch:
 
 concurrency:

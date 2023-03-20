@@ -22,13 +22,11 @@ public static class ServiceCollectionExtensions
     public static IdentityBuilder AddApplicationAuthentication(
         this IServiceCollection services,
         IHostEnvironment hostEnvironment,
-        IConfiguration configuration,
-        string loginPath)
+        IConfiguration configuration)
     {
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(hostEnvironment, nameof(hostEnvironment));
         EnsureArg.IsNotNull(configuration, nameof(configuration));
-        EnsureArg.IsNotNullOrWhiteSpace(loginPath, nameof(loginPath));
 
         services.Configure<IdentityOptions>(
             (options) =>
@@ -64,8 +62,6 @@ public static class ServiceCollectionExtensions
                 {
                     options.Cookie.SameSite = SameSiteMode.None;
                 }
-                options.AccessDeniedPath = new PathString(loginPath);
-                options.LoginPath = new PathString(loginPath);
                 options.ExpireTimeSpan = SessionConstants.SessionDuration;
                 options.SlidingExpiration = true;
                 options.EventsType = typeof(CookieAuthenticationFlow);

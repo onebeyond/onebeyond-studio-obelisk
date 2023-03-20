@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -91,6 +90,7 @@ public static class Program
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
             builder.Host.ConfigureContainer<ContainerBuilder>(
                 (hostBuilderContext, containerBuilder) =>
                     ConfigureAutofacServices(hostBuilderContext, containerBuilder));
@@ -167,13 +167,15 @@ public static class Program
                 });
         }
 
-        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        services.Configure<ClientApplicationOptions>(configuration.GetSection("ClientApplication"));
 
-        services.AddTransient<AppLinkGenerator, AppLinkGenerator>();
+        services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
+
+        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 
-        services.AddApplicationAuthentication(environment, configuration, "/Account/Login")
+        services.AddApplicationAuthentication(environment, configuration)
             .AddUserStore<AuthUserStore>() //Used for JWT authentication
             .AddClaimsPrincipalFactory<ApplicationClaimsIdentityFactory>()
             .AddEntityFrameworkStores<DomainContext>();
@@ -225,15 +227,6 @@ public static class Program
             {
                 options.SuppressInferBindingSourcesForParameters = true;
             });
-
-        services.AddRazorPages()
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddRazorPagesOptions(
-                (options) =>
-                {
-                    options.Conventions.AuthorizeFolder("/Account/Manage");
-                    options.Conventions.AuthorizePage("/Account/Logout");
-                });
 
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -386,13 +379,15 @@ public static class Program
                     options.SwaggerEndpoint(
                         $"/swagger/{description.GroupName}/swagger.json",
                         $"{SwaggerConstants.APITitle} {description.GroupName.ToUpperInvariant()}");
+
+                    // Set Swagger UI as the homepage
+                    options.RoutePrefix = string.Empty;
                 }
             });
 
         app.UseEndpoints(
             (endpoints) =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
                 {
