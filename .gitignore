@@ -338,3 +338,9 @@ license-error-*.md
 .terraform/
 .terraform.lock.hcl
 *.tfplan
+
+dist
+/src/OneBeyond.Studio.Obelisk.WebUI/ca.crt
+/src/OneBeyond.Studio.Obelisk.WebUI/ca.key
+/src/OneBeyond.Studio.Obelisk.WebUI/cert.crt
+/src/OneBeyond.Studio.Obelisk.WebUI/cert.key
