@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -46,15 +45,15 @@ internal static class ExceptionHandlingExtension
             httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(authnException.Message));
         }
+        catch (ArgumentException argumentException) 
+        {
+            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(argumentException.Message));
+        }
         catch (AuthorizationPolicyFailedException authzException)
         {
             httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
             await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(authzException.Message));
-        }
-        catch (Exception exception)
-        {
-            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(exception.Message));
         }
     }
 }
