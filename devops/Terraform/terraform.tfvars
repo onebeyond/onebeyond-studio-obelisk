@@ -10,7 +10,7 @@ key_vault_admins = [
 
 sql_allowed_ips = {
   London      = "193.117.231.251"
-  Farnborough = "167.98.118.42"
+  Farnborough = "20.68.179.247"
   Bucharest   = "84.239.24.46"
 }
 
