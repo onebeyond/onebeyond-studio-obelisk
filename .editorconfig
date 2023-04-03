@@ -294,21 +294,19 @@ dotnet_style_null_propagation=true:error
 
 dotnet_sort_system_directives_first=true
 
-# Constants in C style, all-caps
+# Constants in title case
 dotnet_naming_rule.constant_fields_caps.symbols = constant_fields
 dotnet_naming_rule.constant_fields_caps.severity = suggestion
-dotnet_naming_rule.constant_fields_caps.style = caps_style
+dotnet_naming_rule.constant_fields_caps.style = title_case
 dotnet_naming_symbols.constant_fields.applicable_kinds = field
 dotnet_naming_symbols.constant_fields.required_modifiers = const
-dotnet_naming_style.caps_style.capitalization = all_upper
 
-# Static readonly fields in PascalCase
+# Static readonly fields in title case
 dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
 dotnet_naming_symbols.static_readonly_fields.required_modifiers = readonly, static
 dotnet_naming_rule.static_readonly_fields_title_case.symbols = static_readonly_fields
 dotnet_naming_rule.static_readonly_fields_title_case.severity = suggestion
-dotnet_naming_rule.static_readonly_fields_title_case.style = pascal_case_static_readonly_fields
-dotnet_naming_style.pascal_case_static_readonly_fields.capitalization = pascal_case
+dotnet_naming_rule.static_readonly_fields_title_case.style = title_case
 
 # interfaces should be prefixed with I
 dotnet_naming_rule.pascal_case_for_interface.severity = error
