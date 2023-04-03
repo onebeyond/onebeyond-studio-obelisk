@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -7,9 +8,9 @@ using OneBeyond.Studio.Crosscuts.Logging;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Extensions;
 
-internal static class UnhandledExceptionLoggingExtension
+internal static class UnhandledExceptionExtension
 {
-    private static readonly ILogger Logger = LogManager.CreateLogger(nameof(UnhandledExceptionLoggingExtension));
+    private static readonly ILogger Logger = LogManager.CreateLogger(nameof(UnhandledExceptionExtension));
 
     public static void UseUnhandledExceptionLogging(this IApplicationBuilder applicationBuilder)
         => applicationBuilder.Use(LogUnhandledException);
@@ -23,6 +24,10 @@ internal static class UnhandledExceptionLoggingExtension
         catch (Exception exception)
         {
             Logger.LogError(exception, "An unhandled exception has occured while processing HTTP request");
+
+            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(exception.Message));
+
             throw;
         }
     }
