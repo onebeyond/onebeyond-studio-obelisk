@@ -33,7 +33,7 @@ resource "azurerm_mssql_firewall_rule" "azure_resources" {
 
 resource "azurerm_mssql_firewall_rule" "allowed_ips" {
   count            = length(var.sql_allowed_ips)
-  name             = "DCSL.${keys(var.sql_allowed_ips)[count.index]}"
+  name             = "OneBeyond.${keys(var.sql_allowed_ips)[count.index]}"
   server_id        = azurerm_mssql_server.stage.id
   start_ip_address = values(var.sql_allowed_ips)[count.index]
   end_ip_address   = values(var.sql_allowed_ips)[count.index]
