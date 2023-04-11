@@ -15,7 +15,7 @@ parameters:
     default: "src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj"
 
 jobs:
-  - job: Build_Publish_Web_App
+  - job: Build_Analyse_Web_App
     displayName: "Build & Analyse Web App"
     variables:
       buildConfiguration: "Release"
