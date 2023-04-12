@@ -1,9 +1,6 @@
 schedules:
 - cron: "0 0 * * *"
   displayName: "Run evey day"
-  branches:
-    include: 
-    - main
 
 pool:
   vmImage: 'ubuntu-latest' 
