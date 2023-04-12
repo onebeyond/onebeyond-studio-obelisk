@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Utilities.Templating;
-using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.EmailProviders.Domain;
 using OneBeyond.Studio.Obelisk.Application.Services.EmailTemplateService;
 using OneBeyond.Studio.Obelisk.Domain.Exceptions;
@@ -18,7 +18,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.CommandHandlers;
 
-internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetPasswordEmail, Unit>
+internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetPasswordEmail>
 {
     private static readonly ILogger Logger = LogManager.CreateLogger<SendResetPasswordEmailHandler>();
 
@@ -45,7 +45,7 @@ internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetP
         _emailTemplateLoader = emailTemplateLoader;
     }
 
-    public async Task<Unit> Handle(SendResetPasswordEmail command, CancellationToken cancellationToken)
+    public async Task Handle(SendResetPasswordEmail command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -73,7 +73,5 @@ internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetP
         {
             Logger.LogError(exception, "Unable to send password reset email");
         }
-
-        return Unit.Value;
     }
 }

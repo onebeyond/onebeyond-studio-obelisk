@@ -5,8 +5,6 @@ using EnsureThat;
 using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
-using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
-using OneBeyond.Studio.Obelisk.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
@@ -28,7 +26,7 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
         _mediator = mediator;
     }
 
-    public async Task<Unit> Handle(UpdateUser command, CancellationToken cancellationToken)
+    public async Task Handle(UpdateUser command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -49,7 +47,5 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
         user.Apply(command);
 
         await _userRWRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
-
-        return Unit.Value;
     }
 }
