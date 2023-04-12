@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -60,7 +59,7 @@ internal static class Program
     {
         var configuration = hostBuilderContext.Configuration;
 
-        serviceCollection.AddMediatR(Assembly.GetExecutingAssembly());
+        serviceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         serviceCollection.AddDataAccess(
                 configuration,

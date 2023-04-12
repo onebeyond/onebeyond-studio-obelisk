@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.0.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.1" />
   </ItemGroup>
 
