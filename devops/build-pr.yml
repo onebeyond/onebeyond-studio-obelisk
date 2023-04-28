@@ -7,7 +7,7 @@ variables:
   run.sonar: true
   run.tests: true
   build.compileMigrationDesignerFiles: false        # Skip compilation of EF designer files
-  sonarCloud.endpoint: 'WaterlooTemplateSonarCloud' # Service connection as it stands in Azure DevOps
+  sonarCloud.endpoint: 'ObeliskSonarCloud' # Service connection as it stands in Azure DevOps
 
 stages:
   - stage: Build
