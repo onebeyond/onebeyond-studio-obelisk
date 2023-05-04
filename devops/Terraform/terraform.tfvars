@@ -1,4 +1,4 @@
-project = "dcslgs-wt"
+project = "obelisk-backend"
 
 resource_location = "uksouth"
 
