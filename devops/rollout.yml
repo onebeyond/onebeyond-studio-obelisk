@@ -8,7 +8,7 @@ variables:
 resources:
   pipelines:
     - pipeline: build-ci
-      source: "Obelisk CI"
+      source: "Obelisk Backend Build CI"
       trigger:
         branches:
           include:

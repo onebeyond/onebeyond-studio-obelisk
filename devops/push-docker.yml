@@ -3,7 +3,7 @@ trigger: none
 resources:
   pipelines:
     - pipeline: build_pipeline
-      source: "Obelisk CI"
+      source: "Obelisk Backend Build CI"
       # trigger:
       #   branches:
       #     include:
