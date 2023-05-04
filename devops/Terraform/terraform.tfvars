@@ -13,3 +13,5 @@ sql_allowed_ips = {
 }
 
 web_api_sku_size = "B1"
+
+web_api_custom_domain = null
