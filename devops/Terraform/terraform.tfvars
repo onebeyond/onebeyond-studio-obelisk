@@ -12,6 +12,4 @@ sql_allowed_ips = {
   Farnborough   = "167.98.118.42"
 }
 
-static_ui_sku_size = "Free"
-
 web_api_sku_size = "B1"
