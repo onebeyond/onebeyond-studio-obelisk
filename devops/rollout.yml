@@ -32,7 +32,7 @@ stages:
       - template: "rollout-deploy-stage-jobs.yml"
         parameters:
           buildArtifactPipelineId: build-ci
-          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          projectCode: "obelisk" # It has to be passed as a literal or parameter value
           stageCode: "qa"
           devOpsEnvironment: "WT QA"
           devOpsServiceConnection: $(devOpsServiceConnection)
@@ -45,7 +45,7 @@ stages:
       - template: "rollout-deploy-stage-jobs.yml"
         parameters:
           buildArtifactPipelineId: build-ci
-          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          projectCode: "obelisk" # It has to be passed as a literal or parameter value
           stageCode: "uat"
           devOpsEnvironment: "WT UAT"
           devOpsServiceConnection: $(devOpsServiceConnection)
