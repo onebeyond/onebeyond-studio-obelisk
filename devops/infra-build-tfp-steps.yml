@@ -30,8 +30,8 @@ steps:
       backendServiceArm: '${{parameters.azServiceConnection}}'
       backendAzureRmResourceGroupName: '${{parameters.tfBackendResourceGroupName}}'
       backendAzureRmStorageAccountName: '${{parameters.tfBackendStorageAccountName}}' # It has to exist before running, i.e. it should be created manually
-      backendAzureRmContainerName: 'terraform'
-      backendAzureRmKey: 'terraform.tfstate'
+      backendAzureRmContainerName: 'obelisk-backend'
+      backendAzureRmKey: 'obelisk-backend.tfstate'
 
   - bash: |
       if [ $(terraform workspace list | grep -c "${{parameters.stageCode}}") -eq 0 ] ; then
