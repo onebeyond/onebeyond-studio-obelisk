@@ -20,7 +20,7 @@ variables:
   run.sonar: true
   run.tests: true
   build.compileMigrationDesignerFiles: true # Compilation of EF designer files
-  sonarCloud.endpoint: "ObeliskSonarCloud" # Service connection as it stands in Azure DevOps
+  sonarCloud.endpoint: "ObeliskBackendSonarCloud" # Service connection as it stands in Azure DevOps
 
 stages:
   - stage: Set_Build_Number # There is no much reason to make it as a stage. It could also be a first job of the BuildAndPublishArtifacts stage

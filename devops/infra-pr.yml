@@ -4,7 +4,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  serviceConnection: 'Microsoft Azure Sponsorship (5c41ba40-6ca2-4e8a-9646-d3585df38b5a)' # As it stands in Azure DevOps
+  serviceConnection: 'Obelisk Backend Subscription' # As it stands in Azure DevOps
 
 steps:
   - template: 'infra-build-tfp-steps.yml'
