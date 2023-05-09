@@ -9,7 +9,7 @@ public static class ContainerBuilderExtensions
     {
         EnsureArg.IsNotNull(containerBuilder, nameof(containerBuilder));
 
-        //It does not do anything at the moment, but if you need any additional IoC setup for Authentication applicaiton, please do it here
+        //It does not do anything at the moment, but if you need any additional IoC setup for Authentication application, please do it here
 
         return containerBuilder;
     }
