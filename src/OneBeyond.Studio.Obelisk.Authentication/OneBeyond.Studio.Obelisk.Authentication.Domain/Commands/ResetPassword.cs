@@ -3,7 +3,7 @@ using MediatR;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record ResetPassword : IRequest<Unit>
+public sealed record ResetPassword : IRequest
 {
     public ResetPassword(
         string userName,
