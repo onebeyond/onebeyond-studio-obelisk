@@ -3,7 +3,7 @@ using MediatR;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record UnlockLogin : IRequest<Unit>
+public sealed record UnlockLogin : IRequest
 {
     public UnlockLogin(
         string loginId)

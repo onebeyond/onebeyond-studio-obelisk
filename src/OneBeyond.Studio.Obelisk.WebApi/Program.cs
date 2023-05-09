@@ -227,7 +227,9 @@ public static class Program
                 options.SuppressInferBindingSourcesForParameters = true;
             });
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+            Assembly.GetExecutingAssembly(), 
+            typeof(Authentication.Application.AssemblyMark).Assembly));
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -304,7 +306,7 @@ public static class Program
 
         containerBuilder.AddApplication();
 
-        containerBuilder.AddAuthDomain();
+        containerBuilder.AddAuthApplication();
 
         containerBuilder.AddAzureMessageQueue<RaisedDomainEvent>(
             configuration.GetOptions<AzureMessageQueueOptions>("DomainEvents:Queue"));
