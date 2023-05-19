@@ -27,15 +27,16 @@ public class DomainContext : IdentityDbContext<AuthUser, AuthRole, string>
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder
+        base.OnModelCreating(builder);
+        builder
             .ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly())
             .SetQueryFilterOnEntities<ISoftDeletable>((entity) => !entity.IsDeleted);
         if (_areDomainEventsEnabled)
         {
-            modelBuilder
+            builder
                 .ApplyConfiguration(new RaisedDomainEventConfiguration());
         }
     }
