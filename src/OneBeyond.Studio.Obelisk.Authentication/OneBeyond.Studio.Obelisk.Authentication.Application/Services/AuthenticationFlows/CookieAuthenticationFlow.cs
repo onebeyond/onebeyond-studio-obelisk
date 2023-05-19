@@ -10,7 +10,6 @@ using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Strings;
 using OneBeyond.Studio.Crosscuts.Utilities.Identities;
-using OneBeyond.Studio.Obelisk.Authentication.Application.Options;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.AuthenticationFlows;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.Services.AuthenticationFlows;
@@ -20,17 +19,13 @@ internal sealed class CookieAuthenticationFlow : CookieAuthenticationEvents
     private static readonly ILogger Logger = LogManager.CreateLogger<CookieAuthenticationFlow>();
 
     private readonly IAuthenticationFlowHandler _authFlowHandler;
-    private readonly CookieAuthNOptions _options;
 
     public CookieAuthenticationFlow(
-        IAuthenticationFlowHandler authFlowHandler,
-        CookieAuthNOptions options)
+        IAuthenticationFlowHandler authFlowHandler)
     {
         EnsureArg.IsNotNull(authFlowHandler, nameof(authFlowHandler));
-        EnsureArg.IsNotNull(options, nameof(options));
 
         _authFlowHandler = authFlowHandler;
-        _options = options;
     }
 
     public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
