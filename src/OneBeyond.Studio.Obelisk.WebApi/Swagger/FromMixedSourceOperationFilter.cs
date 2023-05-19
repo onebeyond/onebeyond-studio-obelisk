@@ -29,7 +29,7 @@ internal sealed class FromMixedSourceOperationFilter : IOperationFilter
             if (ProcessContollerActionParameter(operation, context, parameter))
             {
                 break;
-            };
+            }
         }
     }
 
