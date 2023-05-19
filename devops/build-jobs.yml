@@ -24,8 +24,8 @@ jobs:
       projects.webApp: "${{parameters.projects_webApi}}"
       projects.workers: "${{parameters.projects_workers}}"
       projects.tests: "**/*.Tests.csproj"
-      sonarCloud.projectKey: "dcslsoftwareltd_Waterloo-Template" # Comes from project setup in SonarCloud
-      sonarCloud.projectName: "Waterloo Template" # Comes from project setup in SonarCloud
+      sonarCloud.projectKey: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
+      sonarCloud.projectName: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
     steps:
       - task: SonarCloudPrepare@1
         displayName: "Prepare SonarCloud Analysis"
