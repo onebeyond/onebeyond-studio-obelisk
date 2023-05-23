@@ -15,4 +15,4 @@ stages:
     jobs:
       - template: 'build-jobs.yml'
         parameters:
-          publishArtefacts: false
+          publishArtifacts: false
