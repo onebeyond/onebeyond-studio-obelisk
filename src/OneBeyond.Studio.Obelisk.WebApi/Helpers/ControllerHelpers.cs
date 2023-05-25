@@ -34,7 +34,8 @@ internal static class ControllerHelpers
         caseInvariantDictionary.Remove(nameof(BaseListRequest.ParentId));
 
         var keysToRemove = caseInvariantDictionary
-            .Where((item) => !(item.Value?.Count > 0))
+            .Where((item) => !(item.Value?.Count > 0) ||
+                item.Value.Any(value => value is null))
             .Select((item) => item.Key)
             .ToList();
 

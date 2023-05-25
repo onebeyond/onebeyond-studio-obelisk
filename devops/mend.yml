@@ -1,0 +1,55 @@
+trigger: none
+
+pr: none
+
+schedules:
+- cron: "0 5 * * *"
+  displayName: 'Daily Mend Build'
+  branches:
+    include:
+    - main
+
+pool:
+  vmImage: 'ubuntu-latest' 
+
+parameters:
+  - name: projects_webApi
+    default: "src/OneBeyond.Studio.Obelisk.WebApi/OneBeyond.Studio.Obelisk.WebApi.csproj"
+  - name: projects_workers
+    default: "src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj"
+
+jobs:
+  - job: Build_Analyse_Web_App
+    displayName: "Build & Analyse Web App"
+    variables:
+      buildConfiguration: "Release"
+      webpackNpmCommand: "build-release"
+      projects.webApp: "${{parameters.projects_webApi}}"
+      projects.workers: "${{parameters.projects_workers}}"
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: "Restore Projects NuGets"
+        inputs:
+          command: restore
+          nugetConfigPath: ./nuget.config
+          projects: |
+            $(projects.webApp)
+            $(projects.workers)
+          verbosityRestore: Minimal
+          noCache: true
+
+      - task: DotNetCoreCLI@2
+        displayName: "Build Projects"
+        inputs:
+          projects: |
+            $(projects.webApp)
+            $(projects.workers)
+          arguments: >
+            --no-restore
+            --configuration $(buildConfiguration)
+
+      - task: WhiteSource@21
+        displayName: "Analyse Projects"
+        inputs:
+          cwd: '$(System.DefaultWorkingDirectory)'
+          projectName: 'Obelisk'

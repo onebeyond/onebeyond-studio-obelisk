@@ -28,7 +28,7 @@ internal sealed class UpdateDummyHandler : IRequestHandler<UpdateDummy>
         _mediator = mediator;
     }
 
-    public async Task<Unit> Handle(UpdateDummy command, CancellationToken cancellationToken)
+    public async Task Handle(UpdateDummy command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -37,7 +37,5 @@ internal sealed class UpdateDummyHandler : IRequestHandler<UpdateDummy>
         dummy.Apply(command);
 
         await _dummyRWRepository.UpdateAsync(dummy, cancellationToken).ConfigureAwait(false);
-
-        return Unit.Value;
     }
 }

@@ -28,14 +28,12 @@ internal sealed class DeleteDummyHandler : IRequestHandler<DeleteDummy>
         _mediator = mediator;
     }
 
-    public async Task<Unit> Handle(DeleteDummy command, CancellationToken cancellationToken)
+    public async Task Handle(DeleteDummy command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
         var dummy = await _dummyRWRepository.GetByIdAsync(command.Id, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         await _dummyRWRepository.DeleteAsync(dummy, cancellationToken).ConfigureAwait(false);
-
-        return Unit.Value;
     }
 }

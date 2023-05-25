@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -228,7 +227,9 @@ public static class Program
                 options.SuppressInferBindingSourcesForParameters = true;
             });
 
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+            Assembly.GetExecutingAssembly(), 
+            typeof(Authentication.Application.AssemblyMark).Assembly));
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -305,7 +306,7 @@ public static class Program
 
         containerBuilder.AddApplication();
 
-        containerBuilder.AddAuthDomain();
+        containerBuilder.AddAuthApplication();
 
         containerBuilder.AddAzureMessageQueue<RaisedDomainEvent>(
             configuration.GetOptions<AzureMessageQueueOptions>("DomainEvents:Queue"));

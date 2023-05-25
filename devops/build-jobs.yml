@@ -12,8 +12,6 @@ parameters:
     default: "src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj"
   - name: projects_efMigrations
     default: "src/OneBeyond.Studio.Obelisk.Infrastructure/OneBeyond.Studio.Obelisk.Infrastructure.csproj"
-  - name: build_nuGetFeedId
-    default: "b9a7f0e7-4bcb-4ec1-9bbb-b299c0ac03c1"
 
 jobs:
   - job: Build_Publish_Web_App
@@ -26,8 +24,8 @@ jobs:
       projects.webApp: "${{parameters.projects_webApi}}"
       projects.workers: "${{parameters.projects_workers}}"
       projects.tests: "**/*.Tests.csproj"
-      sonarCloud.projectKey: "dcslsoftwareltd_Waterloo-Template" # Comes from project setup in SonarCloud
-      sonarCloud.projectName: "Waterloo Template" # Comes from project setup in SonarCloud
+      sonarCloud.projectKey: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
+      sonarCloud.projectName: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
     steps:
       - task: SonarCloudPrepare@1
         displayName: "Prepare SonarCloud Analysis"
@@ -46,12 +44,12 @@ jobs:
         displayName: "Restore Projects NuGets"
         inputs:
           command: restore
+          nugetConfigPath: ./nuget.config
           projects: |
             $(projects.webApp)
             $(projects.workers)
-          feedsToUse: select
-          vstsFeed: ${{parameters.build_nuGetFeedId}}
           verbosityRestore: Minimal
+          noCache: true
 
       - task: DotNetCoreCLI@2
         displayName: "Build Projects"
@@ -135,11 +133,11 @@ jobs:
         displayName: "Restore Projects NuGets"
         inputs:
           command: restore
+          nugetConfigPath: ./nuget.config
           projects: |
             ${{parameters.projects_webApi}}
-          feedsToUse: select
-          vstsFeed: ${{parameters.build_nuGetFeedId}}
           verbosityRestore: Minimal
+          noCache: true
 
       - task: DotNetCoreCLI@2
         displayName: "Install EF Tools"

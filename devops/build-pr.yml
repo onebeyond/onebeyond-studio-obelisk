@@ -1,0 +1,18 @@
+trigger: 'none' # See Azure DevOps for configuration
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  run.sonar: true
+  run.tests: true
+  build.compileMigrationDesignerFiles: false        # Skip compilation of EF designer files
+  sonarCloud.endpoint: 'ObeliskBackendSonarCloud' # Service connection as it stands in Azure DevOps
+
+stages:
+  - stage: Build
+    dependsOn: []
+    jobs:
+      - template: 'build-jobs.yml'
+        parameters:
+          publishArtifacts: false

@@ -10,7 +10,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, Unit>
+internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -22,7 +22,7 @@ internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, Unit
         _userManager = userManager;
     }
 
-    public async Task<Unit> Handle(ResetPassword command, CancellationToken cancellationToken)
+    public async Task Handle(ResetPassword command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -31,8 +31,9 @@ internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, Unit
 
         var resetPasswordResult = await _userManager.ResetPasswordAsync(identityUser, command.ResetPasswordCode, command.Password).ConfigureAwait(false);
 
-        return !resetPasswordResult.Succeeded
-            ? throw new AuthException(string.Join(",", resetPasswordResult.Errors.Select(x => x.Description)))
-            : Unit.Value;
+        if (!resetPasswordResult.Succeeded)
+        {
+            throw new AuthException(string.Join(",", resetPasswordResult.Errors.Select(x => x.Description)));
+        }
     }
 }

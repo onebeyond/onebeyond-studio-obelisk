@@ -3,12 +3,12 @@ trigger: none
 pr: none
 
 variables:
-  devOpsServiceConnection: "Microsoft Azure Sponsorship (5c41ba40-6ca2-4e8a-9646-d3585df38b5a)" # As it stands in Azure DevOps
+  devOpsServiceConnection: "Obelisk Backend Subscription" # As it stands in Azure DevOps
 
 resources:
   pipelines:
     - pipeline: build-ci
-      source: "Obelisk CI"
+      source: "Obelisk Backend Build CI"
       trigger:
         branches:
           include:
@@ -32,9 +32,9 @@ stages:
       - template: "rollout-deploy-stage-jobs.yml"
         parameters:
           buildArtifactPipelineId: build-ci
-          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          projectCode: "obelisk" # It has to be passed as a literal or parameter value
           stageCode: "qa"
-          devOpsEnvironment: "WT QA"
+          devOpsEnvironment: "Obelisk Backend QA"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "QA"
 
@@ -45,8 +45,8 @@ stages:
       - template: "rollout-deploy-stage-jobs.yml"
         parameters:
           buildArtifactPipelineId: build-ci
-          projectCode: "dcslgs-wt" # It has to be passed as a literal or parameter value
+          projectCode: "obelisk" # It has to be passed as a literal or parameter value
           stageCode: "uat"
-          devOpsEnvironment: "WT UAT"
+          devOpsEnvironment: "Obelisk Backend UAT"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "UAT"

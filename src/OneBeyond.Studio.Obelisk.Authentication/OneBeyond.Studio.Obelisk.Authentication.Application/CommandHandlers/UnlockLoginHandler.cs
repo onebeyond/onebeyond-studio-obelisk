@@ -9,7 +9,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin, Unit>
+internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -21,7 +21,7 @@ internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin, Unit>
         _userManager = userManager;
     }
 
-    public async Task<Unit> Handle(UnlockLogin command, CancellationToken cancellationToken)
+    public async Task Handle(UnlockLogin command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -31,8 +31,6 @@ internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin, Unit>
         identityUser.LockoutEnd = null;
 
         await _userManager.UpdateAsync(identityUser).ConfigureAwait(false);
-
-        return Unit.Value;
     }
 
 }
