@@ -228,7 +228,8 @@ public static class Program
             });
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-            Assembly.GetExecutingAssembly(), 
+            Assembly.GetExecutingAssembly(),
+            typeof(AssemblyMark).Assembly,
             typeof(Authentication.Application.AssemblyMark).Assembly));
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
