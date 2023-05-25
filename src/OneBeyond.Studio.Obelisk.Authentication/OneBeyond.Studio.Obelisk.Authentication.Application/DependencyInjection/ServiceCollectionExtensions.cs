@@ -40,7 +40,14 @@ public static class ServiceCollectionExtensions
                 options.Password.RequiredUniqueChars = 2;
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = SessionConstants.SessionDuration;
-                options.Lockout.MaxFailedAccessAttempts = 5;
+                if (int.TryParse(configuration.GetOptions<string>("LockoutMaxFailedAccessAttempts"), out int maxAttempts))
+                {
+                    options.Lockout.MaxFailedAccessAttempts = maxAttempts;
+                }
+                else
+                {
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                }
                 options.Lockout.AllowedForNewUsers = true;
             });
 
