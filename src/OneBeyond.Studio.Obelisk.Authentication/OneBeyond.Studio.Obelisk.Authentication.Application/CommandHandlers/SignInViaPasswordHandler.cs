@@ -44,7 +44,7 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
             command.UserName,
             command.Password,
             command.RememberMe,
-            command.LockoutOnFailure).ConfigureAwait(false);
+            true).ConfigureAwait(false); //Note! We always lockout on failure
 
         if (!signInResult.Succeeded)
         {
@@ -62,7 +62,7 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
                 status = SignInStatus.LockedOut;
                 Logger.LogInformation("{@UserName} locked out", command.UserName);
             }
-            else if (command.LockoutOnFailure)
+            else
             {
                 var remainingAttempts = _userManager.Options.Lockout.MaxFailedAccessAttempts - authUser.AccessFailedCount;
                 Logger.LogInformation("{@UserName} attempted to login with an incorrect password. " +
