@@ -44,7 +44,7 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
             command.UserName,
             command.Password,
             command.RememberMe,
-            true).ConfigureAwait(false);
+            true).ConfigureAwait(false); //Note! We always lockout on failure
 
         if (!signInResult.Succeeded)
         {
