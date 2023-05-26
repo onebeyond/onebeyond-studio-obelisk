@@ -50,7 +50,8 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
                 //    rnd.Next(100),
                 //    $"City  {x}",
                 //    $"Zip{x}"),
-                userId, DateTimeOffset.UtcNow));
+                rnd.Next(10) < 5 ? null : userId, 
+                DateTimeOffset.UtcNow));
 
         await _todoRWRepository.BulkInsertAsync(todoitems, cancellationToken).ConfigureAwait(false);
     }
