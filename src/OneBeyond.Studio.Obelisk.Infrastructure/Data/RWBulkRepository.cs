@@ -15,6 +15,8 @@ using OneBeyond.Studio.Obelisk.Application.Repositories;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
+//TODO WE NEED AN ATTR TO EXCLUDE A PROP FROM BULK IMPORT
+
 public sealed record BulkInsertInfoDto
 {
     /// <summary>
