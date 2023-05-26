@@ -20,27 +20,27 @@ using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
-internal sealed record MappingInfo
-{
-    /// <summary>
-    /// Property name on the entity class if it differs from the Key(sql column name)
-    /// </summary>
-    public string PropertyName { get; init; } = default!;
-
-    public string ColumnName { get; init; } = default!;
-
-    /// <summary>
-    /// DataType - eg System.Int32, System.DateTime, System.Boolean - Not required for string types
-    /// </summary>
-    public string DataType { get; init; } = default!;
-
-    public bool IsNullable { get; init; }
-}
-
 public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<TAggregateRoot, TAggregateRootId>, IRWBulkRepository<TAggregateRoot, TAggregateRootId>
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {
+    private sealed record MappingInfo
+    {
+        /// <summary>
+        /// Property name on the entity class if it differs from the Key(sql column name)
+        /// </summary>
+        public string PropertyName { get; init; } = default!;
+
+        public string ColumnName { get; init; } = default!;
+
+        /// <summary>
+        /// DataType - eg System.Int32, System.DateTime, System.Boolean - Not required for string types
+        /// </summary>
+        public string DataType { get; init; } = default!;
+
+        public bool IsNullable { get; init; }
+    }
+
     private readonly IList<MappingInfo> _mappingInfo;
 
     /// <summary>
