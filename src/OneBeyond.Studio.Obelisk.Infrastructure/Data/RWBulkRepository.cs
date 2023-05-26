@@ -41,11 +41,6 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {
-    /// <summary>
-    /// Info used to build the bulk insert data table. 
-    /// Key is the Sql Column name, BulkInsertInfo - DataType - C# data type, PropertyName - Name of C# property - if empty Key is used
-    /// </summary>
-    //protected abstract Dictionary<string, BulkInsertInfoDto> BulkInsertInfo { get; }
     private readonly Dictionary<string, BulkInsertInfoDto> _bulkInsertInfo;
 
     /// <summary>

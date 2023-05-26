@@ -19,14 +19,14 @@ internal sealed class TodoRWBulkRepository : RWBulkRepository<TodoItem, Guid>, I
 
     //protected override Dictionary<string, BulkInsertInfoDto> BulkInsertInfo => new Dictionary<string, BulkInsertInfoDto>
     //    {
-    //        {"Id",new BulkInsertInfoDto { DataType= "System.Guid" } },
-    //        {"Title",new BulkInsertInfoDto {} },
+    //+        {"Id",new BulkInsertInfoDto { DataType= "System.Guid" } },
+    //+        {"Title",new BulkInsertInfoDto {} },
     //        //{"Priority",new BulkInsertInfoDto { DataType= "System.Int32" } },
     //        //{"HouseNo",new BulkInsertInfoDto { DataType= "System.Int32" } },
     //        //{"Address_City",new BulkInsertInfoDto {  } },
     //        //{"Zip",new BulkInsertInfoDto { PropertyName = "ZipCode" } },
-    //        {"AssignedToUserId",new BulkInsertInfoDto { DataType= "System.Guid" } },
-    //        {"CompletiedDate",new BulkInsertInfoDto { DataType= "System.DateTimeOffset" } }
+    //+        {"AssignedToUserId",new BulkInsertInfoDto { DataType= "System.Guid" } },
+    //+        {"CompletiedDate",new BulkInsertInfoDto { DataType= "System.DateTimeOffset" } }
     //     };
 
     protected override string TableName => "TodoItems";
