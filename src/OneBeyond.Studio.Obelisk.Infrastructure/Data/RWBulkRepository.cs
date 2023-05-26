@@ -56,7 +56,7 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     public async Task BulkInsertAsync(IEnumerable<TAggregateRoot> entitiesToInsert, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(entitiesToInsert, nameof(entitiesToInsert));
-        EnsureArg.IsGt(0, entitiesToInsert.Count(), nameof(entitiesToInsert));
+        EnsureArg.IsGt(entitiesToInsert.Count(), 0, nameof(entitiesToInsert));
 
         var dataTable = CreateBulkInsertDataTable();
 

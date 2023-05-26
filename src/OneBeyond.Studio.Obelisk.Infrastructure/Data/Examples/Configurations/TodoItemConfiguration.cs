@@ -6,7 +6,7 @@ using OneBeyond.Studio.DataAccess.EFCore.RelationalTypeMappings;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
-namespace OneBeyond.Studio.Obelisk.Infrastructure.Data.Examples.Configuration;
+namespace OneBeyond.Studio.Obelisk.Infrastructure.Data.Examples.Configurations;
 
 internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid>
 {

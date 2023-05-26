@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Obelisk.Application.Features.Examples.Repositories;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Commands;
@@ -17,11 +18,11 @@ namespace OneBeyond.Studio.Obelisk.Application.Features.Examples.CommandHandlers
 internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
 {
     private readonly IRORepository<User, Guid> _userRORepository;
-    private readonly IRWBulkRepository<TodoItem, Guid> _todoRWRepository;
+    private readonly ITodoRWBulkRepository _todoRWRepository;
 
     public BulkInsertHandler(
         IRORepository<User, Guid> userRORepository,
-        IRWBulkRepository<TodoItem, Guid> todoRWRepository)
+        ITodoRWBulkRepository todoRWRepository)
     {
         _userRORepository = EnsureArg.IsNotNull(userRORepository, nameof(userRORepository));
         _todoRWRepository = EnsureArg.IsNotNull(todoRWRepository, nameof(todoRWRepository));
