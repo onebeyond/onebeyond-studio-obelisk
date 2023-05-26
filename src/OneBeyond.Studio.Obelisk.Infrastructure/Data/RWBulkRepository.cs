@@ -77,8 +77,6 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
             return;
         }
 
-        //TODO MAKE SURE WE DO NOT SUPPORT / EXCLUDE COLLECTION PROPERTEIS!
-
         var properties = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(prop => prop.CanWrite)
