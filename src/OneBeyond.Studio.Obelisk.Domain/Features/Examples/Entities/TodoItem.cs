@@ -39,6 +39,7 @@ public sealed class TodoItem: AggregateRoot<Guid>
 
     public TodoAddress? Address { get; private set; }
 
+    //[BulkUpdateExclude] This attribute can be used to exclude the property from bulk insert
     public Guid? AssignedToUserId { get; private set; }
 
     public DateTimeOffset? CompletiedDate { get; private set; }

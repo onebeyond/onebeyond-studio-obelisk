@@ -20,7 +20,6 @@ using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
-//TODO WE NEED AN ATTR TO EXCLUDE A PROP FROM BULK IMPORT
 //TODO MAKE SURE WE DO NOT SUPPORT COLLECTION PROPERTEIS!
 
 internal sealed record MappingInfo
@@ -89,6 +88,11 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
         foreach (var prop in properties)
         {
+            if (prop.IsDefined(typeof(BulkUpdateExcludeAttribute)))
+            {
+                continue;
+            }
+
             var isPrimitiveType = 
                 prop.PropertyType.IsPrimitive 
                 || prop.PropertyType == typeof(string) 

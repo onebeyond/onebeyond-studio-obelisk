@@ -45,7 +45,7 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
 
                 new TodoAddress(
                     rnd.Next(100),
-                    $"City  {x}",
+                    $"City{x}",
                     $"Zip{x}"),
 
                 rnd.Next(10) < 5 ? null : userId, 
