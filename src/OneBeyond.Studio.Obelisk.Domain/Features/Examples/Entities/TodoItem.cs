@@ -15,24 +15,26 @@ public sealed class TodoItem: AggregateRoot<Guid>
 
     public TodoItem(
         string title,
-        TodoItemPriority priority,
-        TodoAddress? address = null,
+        //TodoItemPriority priority,
+        //TodoAddress? address = null,
         Guid? assignedToUserId = null,
         DateTimeOffset? completedDate = null)
         : base(Guid.NewGuid())
     {
         Title = title;
-        Priority = priority;
-        Address = address;
+        //Priority = priority;
+        //Address = address;
         AssignedToUserId = assignedToUserId;
         CompletiedDate = completedDate;
     }
 
     public string Title { get; private set; }
 
-    public TodoItemPriority Priority { get; private set; }
+    //TODO To implement
+    //public TodoItemPriority Priority { get; private set; }
 
-    public TodoAddress? Address { get; private set; }
+    //TODO To implement
+    //public TodoAddress? Address { get; private set; }
 
     public Guid? AssignedToUserId { get; private set; }
 

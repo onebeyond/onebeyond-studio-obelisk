@@ -14,19 +14,21 @@ internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid
     {
         base.DoConfigure(builder);
 
-        builder.OwnsOne(x => x.Address, (addrBuilder) =>
-        {
-            addrBuilder.Property(x => x.HouseNo).HasColumnName("HouseNo");
-            addrBuilder.Property(x => x.City);//.HasColumnName("City"); //commented for testing purposes
-            addrBuilder.Property(x => x.ZipCode).HasColumnName("Zip");
-        });
+        //TODO To implement
+        //builder.OwnsOne(x => x.Address, (addrBuilder) =>
+        //{
+        //    addrBuilder.Property(x => x.HouseNo).HasColumnName("HouseNo");
+        //    addrBuilder.Property(x => x.City);//.HasColumnName("City"); //commented for testing purposes
+        //    addrBuilder.Property(x => x.ZipCode).HasColumnName("Zip");
+        //});
 
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.AssignedToUserId);
 
-        builder
-            .Property(x => x.Priority)
-            .HasConversion(SmartEnumRelationalTypeMapping<TodoItemPriority, int>.Converter);
+        //TODO To implement
+        //builder
+        //    .Property(x => x.Priority)
+        //    .HasConversion(SmartEnumRelationalTypeMapping<TodoItemPriority, int>.Converter);
     }
 }

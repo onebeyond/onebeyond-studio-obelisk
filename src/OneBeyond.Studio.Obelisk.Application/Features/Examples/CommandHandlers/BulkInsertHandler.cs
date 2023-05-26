@@ -42,11 +42,14 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
             .Range(1, command.Count)
             .Select(x => new TodoItem(
                 $"TodoItem {x}",
-                TodoItemPriority.FromValue(rnd.Next(2)), 
-                new TodoAddress(
-                    rnd.Next(100),
-                    $"City  {x}",
-                    $"Zip{x}"),
+                //TODO To implement
+                //TodoItemPriority.FromValue(rnd.Next(2)), 
+
+                //TODO To implement
+                //new TodoAddress(
+                //    rnd.Next(100),
+                //    $"City  {x}",
+                //    $"Zip{x}"),
                 userId, DateTimeOffset.UtcNow));
 
         await _todoRWRepository.BulkInsertAsync(todoitems, cancellationToken).ConfigureAwait(false);
