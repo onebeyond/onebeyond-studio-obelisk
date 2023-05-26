@@ -2,7 +2,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OneBeyond.Studio.DataAccess.EFCore.Configurations;
-using OneBeyond.Studio.DataAccess.EFCore.RelationalTypeMappings;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
@@ -14,13 +13,12 @@ internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid
     {
         base.DoConfigure(builder);
 
-        //TODO To implement
-        //builder.OwnsOne(x => x.Address, (addrBuilder) =>
-        //{
-        //    addrBuilder.Property(x => x.HouseNo).HasColumnName("HouseNo");
-        //    addrBuilder.Property(x => x.City);//.HasColumnName("City"); //commented for testing purposes
-        //    addrBuilder.Property(x => x.ZipCode).HasColumnName("Zip");
-        //});
+        builder.OwnsOne(x => x.Address, (addrBuilder) =>
+        {
+            addrBuilder.Property(x => x.HouseNo).HasColumnName("HouseNo");
+            addrBuilder.Property(x => x.City);//.HasColumnName("City"); //commented for testing purposes
+            addrBuilder.Property(x => x.ZipCode).HasColumnName("Zip");
+        });
 
         builder.HasOne<User>()
             .WithMany()

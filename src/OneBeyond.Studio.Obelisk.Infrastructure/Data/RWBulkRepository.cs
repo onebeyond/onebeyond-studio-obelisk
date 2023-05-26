@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
+using Humanizer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,38 +16,42 @@ using OneBeyond.Studio.Crosscuts.Strings;
 using OneBeyond.Studio.DataAccess.EFCore.Projections;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
+using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
 //TODO WE NEED AN ATTR TO EXCLUDE A PROP FROM BULK IMPORT
+//TODO MAKE SURE WE DO NOT SUPPORT COLLECTION PROPERTEIS!
 
-internal sealed record BulkInsertInfoDto
+internal sealed record MappingInfo
 {
+    /// <summary>
+    /// Property name on the entity class if it differs from the Key(sql column name)
+    /// </summary>
+    public string PropertyName { get; init; } = default!;
+
+    public string ColumnName { get; init; } = default!;
+
     /// <summary>
     /// DataType - eg System.Int32, System.DateTime, System.Boolean - Not required for string types
     /// </summary>
     public string DataType { get; init; } = default!;
 
     public bool IsNullable { get; init; }
-
-    /// <summary>
-    /// Property name on the entity class if it differs from the Key(sql column name)
-    /// </summary>
-    public string PropertyName { get; init; } = default!;
 }
 
-public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
+public class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     RWRepository<TAggregateRoot, TAggregateRootId>,
     IRWBulkRepository<TAggregateRoot, TAggregateRootId>
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {
-    private readonly Dictionary<string, BulkInsertInfoDto> _bulkInsertInfo;
+    private readonly IList<MappingInfo> _mappingInfo;
 
     /// <summary>
     /// Destination table in database
     /// </summary>
-    protected abstract string TableName { get; }
+    private readonly string _tableName;
 
     protected RWBulkRepository(
         DomainContext dbContext,
@@ -54,41 +59,73 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
         IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
         : base(dbContext, rwDataAccessPolicyProvider, entityTypeProjections)
     {
-        _bulkInsertInfo = GetProperties(typeof(TAggregateRoot));
+        _mappingInfo = GetMappingInfo(typeof(TAggregateRoot));
+        _tableName = typeof(TAggregateRoot).GetCustomAttribute<BulkUpdateTableNameAttribute>()?.Name ?? typeof(TAggregateRoot).Name.Pluralize();
     }
 
-    private static Dictionary<string, BulkInsertInfoDto> GetProperties(Type type)
+    private static IList<MappingInfo> GetMappingInfo(Type type)
     {
-        Dictionary<string, BulkInsertInfoDto> testBulkInsertInfo = new();
+        List<MappingInfo> mappingInfo = new();
 
-        PopulateProperties(type, testBulkInsertInfo);
+        PopulateProperties(type, null, mappingInfo);
 
-        return testBulkInsertInfo;
+        return mappingInfo;
     }
 
-    private static void PopulateProperties(Type? type, Dictionary<string, BulkInsertInfoDto> testBulkInsertInfo) { 
+    private static void PopulateProperties(
+        Type? type, 
+        string? prefix,
+        IList<MappingInfo> mappingInfo) 
+    { 
         if (type is null)
         {
             return;
         }
 
-        type
+        //TODO MAKE SURE WE DO NOT SUPPORT / EXCLUDE COLLECTION PROPERTEIS!
+
+        var properties = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(prop => prop.CanWrite)
-            .ForEach(prop => {
+            .ToList();
 
-                var isNullable = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+        foreach (var prop in properties)
+        {
+            var isPrimitiveType = 
+                prop.PropertyType.IsPrimitive 
+                || prop.PropertyType == typeof(string) 
+                || prop.PropertyType == typeof(DateTime) 
+                || prop.PropertyType == typeof(DateTimeOffset)
+                || prop.PropertyType == typeof(Guid);
+
+            var isNullable = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+            if (!(isPrimitiveType || isNullable))
+            {
+                PopulateProperties(prop.PropertyType, prop.Name, mappingInfo);
+            }
+            else
+            {
                 var dataType = isNullable ? prop.PropertyType.GetGenericArguments()[0].FullName! : prop.PropertyType.FullName!;
 
-                testBulkInsertInfo.Add(prop.Name, 
-                    new BulkInsertInfoDto
-                    {
-                        DataType = dataType,
-                        IsNullable = isNullable
-                    });
-            });
+                var propertyName = prefix.IsNullOrWhiteSpace() ? prop.Name : $"{prefix}_{prop.Name}";
 
-        PopulateProperties(type.BaseType, testBulkInsertInfo);
+                var columnName = prop.IsDefined(typeof(BulkUpdateColumnNameAttribute))
+                    ? prop.GetCustomAttribute<BulkUpdateColumnNameAttribute>()!.Name
+                    : propertyName;
+
+                mappingInfo.Add(
+                    new MappingInfo
+                    {
+                        ColumnName = columnName,
+                        PropertyName = propertyName,
+                        DataType = dataType,
+                        IsNullable = isNullable, 
+                    });
+            }
+        }
+
+        PopulateProperties(type.BaseType, prefix, mappingInfo);
 
     }
 
@@ -108,15 +145,15 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     {
         var dataTable = new DataTable();
 
-        _bulkInsertInfo.ForEach((column) =>
+        _mappingInfo.ForEach((column) =>
         {
-            var col = dataTable.Columns.Add(column.Key);
+            var col = dataTable.Columns.Add(column.ColumnName);
 
-            if (!column.Value.DataType.IsNullOrWhiteSpace())
+            if (!column.DataType.IsNullOrWhiteSpace())
             {
-                col.DataType = Type.GetType(column.Value.DataType);
+                col.DataType = Type.GetType(column.DataType);
             }
-            col.AllowDBNull = column.Value.IsNullable;
+            col.AllowDBNull = column.IsNullable;
         });
 
         return dataTable;
@@ -125,14 +162,13 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     private DataTable AddDataTableRecords(IEnumerable<TAggregateRoot> entities, DataTable dataTable)
     {
         var entityType = entities.First().GetType();
+
         entities.ForEach((entity) =>
         {
             var row = dataTable.NewRow();
-            _bulkInsertInfo.ForEach((column) =>
+            _mappingInfo.ForEach((column) =>
             {
-                var propertyName = string.IsNullOrEmpty(column.Value.PropertyName) ? column.Key : column.Value.PropertyName;
-                //Possibly too slow for nested for loops?
-                row[column.Key] = entityType.GetProperty(propertyName)!.GetValue(entity) ?? DBNull.Value;
+                row[column.ColumnName] = GetPropertyValue(entityType, entity, column.PropertyName);
             });
 
             dataTable.Rows.Add(row);
@@ -146,15 +182,32 @@ public abstract class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
         CancellationToken cancellationToken)
     {
         using var sqlBulkCopy = new SqlBulkCopy(DbContext.Database.GetConnectionString());
-        sqlBulkCopy.DestinationTableName = TableName;
 
-        _bulkInsertInfo.ForEach((column) =>
+        sqlBulkCopy.DestinationTableName = _tableName;
+
+        _mappingInfo.ForEach((column) =>
         {
-            sqlBulkCopy.ColumnMappings.Add(column.Key, column.Key);
+            sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
         });
 
         await sqlBulkCopy.WriteToServerAsync(dataTable, cancellationToken);
 
+    }
+
+    private static object? GetPropertyValue(Type entityType, object entity, string propertyName)
+    {
+        var propertyProperties = propertyName.Split('_');
+
+        var property = entityType.GetProperty(propertyProperties[0])!;
+
+        if (propertyProperties.Length > 1)
+        {
+            var subEntity = property.GetValue(entity);
+
+            return GetPropertyValue(property.PropertyType, subEntity!, string.Join("_", propertyProperties.Skip(1)));
+        }
+
+        return property.GetValue(entity) ?? DBNull.Value;
     }
 }
 

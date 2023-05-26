@@ -5,12 +5,10 @@ using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
-using OneBeyond.Studio.Obelisk.Application.Features.Examples.Repositories;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
-using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Examples.CommandHandlers;
@@ -18,11 +16,11 @@ namespace OneBeyond.Studio.Obelisk.Application.Features.Examples.CommandHandlers
 internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
 {
     private readonly IRORepository<User, Guid> _userRORepository;
-    private readonly ITodoRWBulkRepository _todoRWRepository;
+    private readonly IRWBulkRepository<TodoItem, Guid> _todoRWRepository;
 
     public BulkInsertHandler(
         IRORepository<User, Guid> userRORepository,
-        ITodoRWBulkRepository todoRWRepository)
+        IRWBulkRepository<TodoItem, Guid> todoRWRepository)
     {
         _userRORepository = EnsureArg.IsNotNull(userRORepository, nameof(userRORepository));
         _todoRWRepository = EnsureArg.IsNotNull(todoRWRepository, nameof(todoRWRepository));
@@ -45,12 +43,13 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
                 //TODO To implement
                 //TodoItemPriority.FromValue(rnd.Next(2)), 
 
-                //TODO To implement
-                //new TodoAddress(
-                //    rnd.Next(100),
-                //    $"City  {x}",
-                //    $"Zip{x}"),
+                new TodoAddress(
+                    rnd.Next(100),
+                    $"City  {x}",
+                    $"Zip{x}"),
+
                 rnd.Next(10) < 5 ? null : userId, 
+
                 DateTimeOffset.UtcNow));
 
         await _todoRWRepository.BulkInsertAsync(todoitems, cancellationToken).ConfigureAwait(false);
