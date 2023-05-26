@@ -7,7 +7,7 @@ namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples;
 
 //NOTE! In case if we want to do bulk insert, bulk updatable properties must have a private setter
 
-[BulkUpdateTableName("TodoItems")]
+//[BulkUpdateTableName("TodoItems")]
 public sealed class TodoItem: AggregateRoot<Guid>
 {
 

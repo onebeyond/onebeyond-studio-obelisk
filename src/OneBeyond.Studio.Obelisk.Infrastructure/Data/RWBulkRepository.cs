@@ -40,9 +40,7 @@ internal sealed record MappingInfo
     public bool IsNullable { get; init; }
 }
 
-public class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
-    RWRepository<TAggregateRoot, TAggregateRootId>,
-    IRWBulkRepository<TAggregateRoot, TAggregateRootId>
+public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<TAggregateRoot, TAggregateRootId>, IRWBulkRepository<TAggregateRoot, TAggregateRootId>
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {
@@ -53,7 +51,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> :
     /// </summary>
     private readonly string _tableName;
 
-    protected RWBulkRepository(
+    public RWBulkRepository(
         DomainContext dbContext,
         IRWDataAccessPolicyProvider<TAggregateRoot> rwDataAccessPolicyProvider,
         IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
