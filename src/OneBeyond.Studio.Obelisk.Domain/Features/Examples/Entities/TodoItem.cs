@@ -1,15 +1,15 @@
 using System;
+using System.Collections.Generic;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
-using OneBeyond.Studio.Obelisk.Domain.Attributes;
-using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
-namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples;
+namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
-//NOTE! In case if we want to do bulk insert, bulk updatable properties must have a private setter
+//NOTE! In case if we want to do bulk insert, bulk updatable properties MUST HAVE A PRIVATE SETTER
 
-//[BulkUpdateTableName("TodoItems")]
+//[BulkUpdateTableName("TodoItems")] Use this attribute if your table has a custom name
 public sealed class TodoItem: AggregateRoot<Guid>
 {
+    private readonly List<TodoItemProperty> _todoItemProperties = new();
 
 #nullable disable
     private TodoItem()
@@ -29,7 +29,7 @@ public sealed class TodoItem: AggregateRoot<Guid>
         //Priority = priority;
         Address = address;
         AssignedToUserId = assignedToUserId;
-        CompletiedDate = completedDate;
+        CompletedDate = completedDate;
     }
 
     public string Title { get; private set; }
@@ -42,8 +42,10 @@ public sealed class TodoItem: AggregateRoot<Guid>
     //[BulkUpdateExclude] This attribute can be used to exclude the property from bulk insert
     public Guid? AssignedToUserId { get; private set; }
 
-    public DateTimeOffset? CompletiedDate { get; private set; }
+    public DateTimeOffset? CompletedDate { get; private set; }
 
     public bool IsComplete
-        => CompletiedDate.HasValue;
+        => CompletedDate.HasValue;
+
+    public IReadOnlyCollection<TodoItemProperty> TodoItemProperties => _todoItemProperties.AsReadOnly();
 }

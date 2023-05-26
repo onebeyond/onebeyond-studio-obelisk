@@ -12,8 +12,8 @@ using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
 {
     [DbContext(typeof(DomainContext))]
-    [Migration("20230526103721_Examples_TodoItems_extra_props_removed")]
-    partial class Examples_TodoItems_extra_props_removed
+    [Migration("20230526153911_Examples_TodoItems")]
+    partial class Examples_TodoItems
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -331,7 +331,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     b.ToTable("EmailTemplates", (string)null);
                 });
 
-            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.TodoItem", b =>
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -339,7 +339,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     b.Property<Guid?>("AssignedToUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("CompletiedDate")
+                    b.Property<DateTimeOffset?>("CompletedDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Identity")
@@ -363,6 +363,41 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Identity"));
 
                     b.ToTable("TodoItems", (string)null);
+                });
+
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItemProperty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Identity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Identity"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TodoItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("Identity");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Identity"));
+
+                    b.HasIndex("TodoItemId");
+
+                    b.ToTable("TodoItemProperties", (string)null);
                 });
 
             modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities.UserBase", b =>
@@ -522,16 +557,58 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.TodoItem", b =>
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
                 {
                     b.HasOne("OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("AssignedToUserId");
+
+                    b.OwnsOne("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoAddress", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("TodoItemId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("HouseNo")
+                                .HasColumnType("int")
+                                .HasColumnName("HouseNo");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Zip");
+
+                            b1.HasKey("TodoItemId");
+
+                            b1.ToTable("TodoItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TodoItemId");
+                        });
+
+                    b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItemProperty", b =>
+                {
+                    b.HasOne("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", null)
+                        .WithMany("TodoItemProperties")
+                        .HasForeignKey("TodoItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("OneBeyond.Studio.Obelisk.Authentication.Application.Entities.AuthUser", b =>
                 {
                     b.Navigation("AuthTokens");
+                });
+
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
+                {
+                    b.Navigation("TodoItemProperties");
                 });
 #pragma warning restore 612, 618
         }

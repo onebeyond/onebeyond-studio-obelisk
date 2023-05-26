@@ -15,7 +15,7 @@ public sealed class TodoAddress : ValueObject
         ZipCode = zipCode;
     }
 
-    //NOTE! In case if we want to do bulk insert, bulk updatable properties must have a private setter
+    //NOTE! In case if we want to do bulk insert, bulk updatable properties MUST HAVE A PRIVATE SETTER
 
     //NOTE! BulkUpdateName should correspond to TodoItemConfiguration inInfrastructure!
 

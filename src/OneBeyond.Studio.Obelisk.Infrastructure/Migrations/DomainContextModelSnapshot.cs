@@ -328,7 +328,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     b.ToTable("EmailTemplates", (string)null);
                 });
 
-            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.TodoItem", b =>
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -336,7 +336,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     b.Property<Guid?>("AssignedToUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset?>("CompletiedDate")
+                    b.Property<DateTimeOffset?>("CompletedDate")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Identity")
@@ -360,6 +360,41 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Identity"));
 
                     b.ToTable("TodoItems", (string)null);
+                });
+
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItemProperty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Identity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Identity"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TodoItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("Identity");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Identity"));
+
+                    b.HasIndex("TodoItemId");
+
+                    b.ToTable("TodoItemProperties", (string)null);
                 });
 
             modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities.UserBase", b =>
@@ -519,7 +554,7 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.TodoItem", b =>
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
                 {
                     b.HasOne("OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities.User", null)
                         .WithMany()
@@ -554,9 +589,23 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItemProperty", b =>
+                {
+                    b.HasOne("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", null)
+                        .WithMany("TodoItemProperties")
+                        .HasForeignKey("TodoItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OneBeyond.Studio.Obelisk.Authentication.Application.Entities.AuthUser", b =>
                 {
                     b.Navigation("AuthTokens");
+                });
+
+            modelBuilder.Entity("OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities.TodoItem", b =>
+                {
+                    b.Navigation("TodoItemProperties");
                 });
 #pragma warning restore 612, 618
         }

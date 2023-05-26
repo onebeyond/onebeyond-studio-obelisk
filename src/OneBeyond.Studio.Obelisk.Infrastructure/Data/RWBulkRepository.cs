@@ -20,8 +20,6 @@ using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
-//TODO MAKE SURE WE DO NOT SUPPORT COLLECTION PROPERTEIS!
-
 internal sealed record MappingInfo
 {
     /// <summary>
