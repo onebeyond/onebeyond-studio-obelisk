@@ -5,6 +5,8 @@ using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Utilities.Identities;
 using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
@@ -26,6 +28,7 @@ public sealed class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
+    private static readonly ILogger Logger = LogManager.CreateLogger<AuthController>();
 
     public AuthController(
         IMediator mediator,
@@ -72,6 +75,9 @@ public sealed class AuthController : ControllerBase
         [FromBody] ForgotPasswordRequest forgotPassword, 
         CancellationToken cancellationToken)
     {
+        // To guard against timing attacks
+        Thread.Sleep(new Random().Next(1000, 3000));
+
         try
         {
             var resetPasswordTokenResult = await _mediator.Send(
@@ -86,7 +92,8 @@ public sealed class AuthController : ControllerBase
         }
         catch (Exception)
         {
-            throw new ObeliskApplicationException("Failed to reset user password");
+            // Don't throw exception so we don't reveal which emails are currently in use
+            Logger.LogInformation("Failed to reset user password");
         }
     }
 
