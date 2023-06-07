@@ -1,5 +1,4 @@
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
-using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
@@ -17,11 +16,7 @@ public sealed class TodoAddress : ValueObject
 
     //NOTE! In case if we want to do bulk insert, bulk updatable properties MUST HAVE A PRIVATE SETTER
 
-    //NOTE! BulkUpdateName should correspond to TodoItemConfiguration inInfrastructure!
-
-    [BulkUpdateColumnName("HouseNo")]
     public int HouseNo { get; private set; }
     public string City { get; private set; }
-    [BulkUpdateColumnName("Zip")]
     public string ZipCode { get; private set; }
 }

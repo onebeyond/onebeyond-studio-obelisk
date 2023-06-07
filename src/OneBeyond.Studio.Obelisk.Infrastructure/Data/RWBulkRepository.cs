@@ -9,6 +9,7 @@ using EnsureThat;
 using Humanizer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
@@ -54,24 +55,28 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
         : base(dbContext, rwDataAccessPolicyProvider, entityTypeProjections)
     {
-        _mappingInfo = GetMappingInfo(typeof(TAggregateRoot));
+        _mappingInfo = GetMappingInfo(DbContext, typeof(TAggregateRoot));
         _tableName = typeof(TAggregateRoot).GetCustomAttribute<BulkUpdateTableNameAttribute>()?.Name ?? typeof(TAggregateRoot).Name.Pluralize();
     }
 
-    private static IList<MappingInfo> GetMappingInfo(Type type)
+    private static IList<MappingInfo> GetMappingInfo(
+        DbContext context, 
+        Type type)
     {
         List<MappingInfo> mappingInfo = new();
 
-        PopulateProperties(type, null, mappingInfo);
+        PopulateProperties(context, type, null, null, mappingInfo);
 
         return mappingInfo;
     }
 
     private static void PopulateProperties(
-        Type? type, 
+        DbContext context,
+        Type? type,
+        IEnumerable<IProperty>? dbProperties,
         string? parentPropertyName,
-        IList<MappingInfo> mappingInfo) 
-    { 
+        IList<MappingInfo> mappingInfo)
+    {
         if (type is null)
         {
             return;
@@ -82,6 +87,11 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
             .Where(prop => prop.CanWrite)
             .ToList();
 
+        if (dbProperties is null)
+        {
+            dbProperties = context.Model.FindEntityType(type)!.GetProperties();
+        }
+
         foreach (var prop in properties)
         {
             if (prop.IsDefined(typeof(BulkUpdateExcludeAttribute)))
@@ -89,10 +99,10 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
                 continue;
             }
 
-            var isPrimitiveType = 
-                prop.PropertyType.IsPrimitive 
-                || prop.PropertyType == typeof(string) 
-                || prop.PropertyType == typeof(DateTime) 
+            var isPrimitiveType =
+                prop.PropertyType.IsPrimitive
+                || prop.PropertyType == typeof(string)
+                || prop.PropertyType == typeof(DateTime)
                 || prop.PropertyType == typeof(DateTimeOffset)
                 || prop.PropertyType == typeof(Guid);
 
@@ -100,30 +110,26 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
             if (!(isPrimitiveType || isNullable))
             {
-                PopulateProperties(prop.PropertyType, prop.Name, mappingInfo);
+                PopulateProperties(context, prop.PropertyType, null, prop.Name, mappingInfo);
             }
             else
             {
                 var dataType = isNullable ? prop.PropertyType.GetGenericArguments()[0].FullName! : prop.PropertyType.FullName!;
 
-                var propertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}_{prop.Name}";
-
-                var columnName = prop.IsDefined(typeof(BulkUpdateColumnNameAttribute))
-                    ? prop.GetCustomAttribute<BulkUpdateColumnNameAttribute>()!.Name
-                    : propertyName;
+                var dbProperty = dbProperties.Single(p => p.Name == prop.Name);
 
                 mappingInfo.Add(
                     new MappingInfo
                     {
-                        ColumnName = columnName,
-                        PropertyName = propertyName,
+                        ColumnName = dbProperty.GetTableColumnMappings().First().Column.Name,
+                        PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
                         DataType = dataType,
-                        IsNullable = isNullable, 
+                        IsNullable = isNullable
                     });
             }
         }
 
-        PopulateProperties(type.BaseType, prefix, mappingInfo);
+        PopulateProperties(context, type.BaseType, dbProperties, parentPropertyName, mappingInfo);
 
     }
 
@@ -194,7 +200,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
     private static object? GetPropertyValue(Type entityType, object entity, string propertyName)
     {
-        var propertyProperties = propertyName.Split('_');
+        var propertyProperties = propertyName.Split('.');
 
         var property = entityType.GetProperty(propertyProperties[0])!;
 
@@ -202,7 +208,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         {
             var subEntity = property.GetValue(entity);
 
-            return GetPropertyValue(property.PropertyType, subEntity!, string.Join("_", propertyProperties.Skip(1)));
+            return GetPropertyValue(property.PropertyType, subEntity!, string.Join(".", propertyProperties.Skip(1)));
         }
 
         return property.GetValue(entity) ?? DBNull.Value;
