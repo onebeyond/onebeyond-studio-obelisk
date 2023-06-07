@@ -69,7 +69,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
     private static void PopulateProperties(
         Type? type, 
-        string? prefix,
+        string? parentPropertyName,
         IList<MappingInfo> mappingInfo) 
     { 
         if (type is null)
@@ -106,7 +106,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
             {
                 var dataType = isNullable ? prop.PropertyType.GetGenericArguments()[0].FullName! : prop.PropertyType.FullName!;
 
-                var propertyName = prefix.IsNullOrWhiteSpace() ? prop.Name : $"{prefix}_{prop.Name}";
+                var propertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}_{prop.Name}";
 
                 var columnName = prop.IsDefined(typeof(BulkUpdateColumnNameAttribute))
                     ? prop.GetCustomAttribute<BulkUpdateColumnNameAttribute>()!.Name
