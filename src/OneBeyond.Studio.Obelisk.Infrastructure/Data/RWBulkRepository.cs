@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using Humanizer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -24,8 +23,15 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<TAggregateRoot, TAggregateRootId>, IRWBulkRepository<TAggregateRoot, TAggregateRootId>
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
-{
-    private sealed record MappingInfo
+{ 
+    private sealed class EntityMapping
+    {
+        public string TableName { get; init; } = default!;
+
+        public IList<PropertyMapping> PropertyMappings { get; init; } = default!;
+    } 
+
+    private sealed record PropertyMapping
     {
         /// <summary>
         /// Property name on the entity class if it differs from the Key(sql column name)
@@ -42,12 +48,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         public bool IsNullable { get; init; }
     }
 
-    private readonly IList<MappingInfo> _mappingInfo;
-
-    /// <summary>
-    /// Destination table in database
-    /// </summary>
-    private readonly string _tableName;
+    private readonly EntityMapping _typeMapping;
 
     public RWBulkRepository(
         DomainContext dbContext,
@@ -55,15 +56,21 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
         : base(dbContext, rwDataAccessPolicyProvider, entityTypeProjections)
     {
-        _mappingInfo = GetMappingInfo(DbContext, typeof(TAggregateRoot));
-        _tableName = typeof(TAggregateRoot).GetCustomAttribute<BulkUpdateTableNameAttribute>()?.Name ?? typeof(TAggregateRoot).Name.Pluralize();
+        _typeMapping = GetTypeMapping(DbContext, typeof(TAggregateRoot));
     }
 
-    private static IList<MappingInfo> GetMappingInfo(
+    private static EntityMapping GetTypeMapping(DomainContext context, Type type)
+        => new EntityMapping
+        {
+            TableName = context.Model.FindEntityType(type)!.GetTableName()!,
+            PropertyMappings = GetTypePropertyMappings(context, typeof(TAggregateRoot))
+        };
+
+    private static IList<PropertyMapping> GetTypePropertyMappings(
         DbContext context, 
         Type type)
     {
-        List<MappingInfo> mappingInfo = new();
+        List<PropertyMapping> mappingInfo = new();
 
         PopulateProperties(context, type, null, null, mappingInfo);
 
@@ -75,7 +82,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         Type? type,
         IEnumerable<IProperty>? dbProperties,
         string? parentPropertyName,
-        IList<MappingInfo> mappingInfo)
+        IList<PropertyMapping> mappingInfo)
     {
         if (type is null)
         {
@@ -83,7 +90,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         }
 
         var properties = type
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(prop => prop.CanWrite)
             .ToList();
 
@@ -119,7 +126,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
                 var dbProperty = dbProperties.Single(p => p.Name == prop.Name);
 
                 mappingInfo.Add(
-                    new MappingInfo
+                    new PropertyMapping
                     {
                         ColumnName = dbProperty.GetTableColumnMappings().First().Column.Name,
                         PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
@@ -149,7 +156,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
     {
         var dataTable = new DataTable();
 
-        _mappingInfo.ForEach((column) =>
+        _typeMapping.PropertyMappings.ForEach((column) =>
         {
             var col = dataTable.Columns.Add(column.ColumnName);
 
@@ -170,7 +177,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         entities.ForEach((entity) =>
         {
             var row = dataTable.NewRow();
-            _mappingInfo.ForEach((column) =>
+            _typeMapping.PropertyMappings.ForEach((column) =>
             {
                 row[column.ColumnName] = GetPropertyValue(entityType, entity, column.PropertyName);
             });
@@ -187,9 +194,9 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
     {
         using var sqlBulkCopy = new SqlBulkCopy(DbContext.Database.GetConnectionString());
 
-        sqlBulkCopy.DestinationTableName = _tableName;
+        sqlBulkCopy.DestinationTableName = _typeMapping.TableName;
 
-        _mappingInfo.ForEach((column) =>
+        _typeMapping.PropertyMappings.ForEach((column) =>
         {
             sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
         });

@@ -13,6 +13,8 @@ internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid
     {
         base.DoConfigure(builder);
 
+        builder.ToTable("MyTodoItems");
+
         builder.OwnsOne(x => x.Address, (addrBuilder) =>
         {
             addrBuilder.Property(x => x.HouseNo).HasColumnName("HouseNo");
