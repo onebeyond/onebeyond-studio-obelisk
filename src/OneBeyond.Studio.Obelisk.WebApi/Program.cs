@@ -219,6 +219,7 @@ public static class Program
             (options) =>
             {
                 options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
 
         services.Configure<ApiBehaviorOptions>(
