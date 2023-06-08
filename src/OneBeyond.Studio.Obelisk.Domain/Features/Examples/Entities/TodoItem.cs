@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
+using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
@@ -17,18 +18,18 @@ public sealed class TodoItem: TodoItemBase
 
     public TodoItem(
         string title,
-        //TodoItemPriority priority,
+        TodoItemPriority priority,
         TodoAddress? address = null,
         Guid? assignedToUserId = null,
         DateTimeOffset? completedDate = null)
         : base(title, assignedToUserId, completedDate)
     {
-        //Priority = priority;
+        Priority = priority;
         Address = address;
     }
 
-    //TODO To implement
-    //public TodoItemPriority Priority { get; private set; }
+    [BulkUpdateExclude]
+    public TodoItemPriority Priority { get; private set; }
 
     public TodoAddress? Address { get; private set; }
 }

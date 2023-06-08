@@ -40,9 +40,7 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
             .Range(1, command.Count)
             .Select(x => new TodoItem(
                 $"TodoItem {x}",
-                //TODO To implement
-                //TodoItemPriority.FromValue(rnd.Next(2)), 
-
+                TodoItemPriority.FromValue(rnd.Next(2)), 
                 new TodoAddress(
                     rnd.Next(100),
                     $"City{x}",
