@@ -7,6 +7,7 @@ using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
+using OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 
@@ -32,6 +33,7 @@ internal sealed class DataAccessBuilder : IDataAccessBuilder
         services.AddSingleton(typeof(IRODataAccessPolicyProvider<>), typeof(AllowDataAccessPolicyProvider<>));
         services.AddSingleton(typeof(IRWDataAccessPolicyProvider<>), typeof(AllowDataAccessPolicyProvider<>));
         services.AddScoped(typeof(IAggregateRootRWRepository<,,>), typeof(AggregateRootRWRepository<,,>));
+        services.AddScoped(typeof(IBulkUpdateConfiguration<,>), typeof(BulkUpdateConfiguration<,>));
     }
 
     public IDataAccessBuilder WithUnitOfWork(TimeSpan? timeout = default, IsolationLevel? isolationLevel = default)

@@ -10,7 +10,7 @@ using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
 
-public class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId>
+internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulkUpdateConfiguration<TAggregateRoot, TAggregateRootId>
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 {

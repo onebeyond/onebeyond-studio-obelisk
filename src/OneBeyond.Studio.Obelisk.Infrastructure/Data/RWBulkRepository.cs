@@ -27,10 +27,13 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
     public RWBulkRepository(
         DomainContext dbContext,
         IRWDataAccessPolicyProvider<TAggregateRoot> rwDataAccessPolicyProvider,
-        IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
+        IEntityTypeProjections<TAggregateRoot> entityTypeProjections,
+        IBulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> bulkUpdateConfiguration)
         : base(dbContext, rwDataAccessPolicyProvider, entityTypeProjections)
     {
-        _typeMapping = new BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId>().GetTypeMapping(dbContext);
+        EnsureArg.IsNotNull(bulkUpdateConfiguration, nameof(bulkUpdateConfiguration));
+
+        _typeMapping = bulkUpdateConfiguration.GetTypeMapping(dbContext);
     }
 
     public async Task BulkInsertAsync(IEnumerable<TAggregateRoot> entitiesToInsert, CancellationToken cancellationToken)
