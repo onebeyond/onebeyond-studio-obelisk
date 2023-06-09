@@ -9,6 +9,9 @@ internal sealed class TodoItemBulkUpdateConfiguration : BulkUpdateConfiguration<
     public override EntityTypeMapping GetTypeMapping(DomainContext context)
     {
         var typeMapping = base.GetTypeMapping(context);
+        //An example on how to exclude a property from bulk import
+        typeMapping.GetPropertyMapping("AssignedToUserId").Exclude();
+        typeMapping.GetPropertyMapping("CompletedDate").Exclude();
         return typeMapping;
     }
 }

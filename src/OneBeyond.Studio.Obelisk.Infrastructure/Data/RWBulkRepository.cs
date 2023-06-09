@@ -52,16 +52,18 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
     {
         var dataTable = new DataTable();
 
-        _typeMapping.PropertyMappings.ForEach((column) =>
-        {
-            var col = dataTable.Columns.Add(column.ColumnName);
-
-            if (!column.DataType.IsNullOrWhiteSpace())
+        _typeMapping.PropertyMappings
+            .Where(x => !x.IsExcluded)
+            .ForEach((column) =>
             {
-                col.DataType = Type.GetType(column.DataType);
-            }
-            col.AllowDBNull = column.IsNullable;
-        });
+                var col = dataTable.Columns.Add(column.ColumnName);
+
+                if (!column.DataType.IsNullOrWhiteSpace())
+                {
+                    col.DataType = Type.GetType(column.DataType);
+                }
+                col.AllowDBNull = column.IsNullable;
+            });
 
         return dataTable;
     }
@@ -73,14 +75,16 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         entities.ForEach((entity) =>
         {
             var row = dataTable.NewRow();
-            _typeMapping.PropertyMappings.ForEach((column) =>
-            {
-                var propValue = GetPropertyValue(entityType, entity, column.PropertyName);
+            _typeMapping.PropertyMappings
+                .Where(x => !x.IsExcluded)
+                .ForEach((column) =>
+                {
+                    var propValue = GetPropertyValue(entityType, entity, column.PropertyName);
 
-                row[column.ColumnName] = column.ValueConverter is { } 
-                    ? column.ValueConverter.ConvertToProvider(propValue) 
-                    : propValue;
-            });
+                    row[column.ColumnName] = column.ValueConverter is { } 
+                        ? column.ValueConverter.ConvertToProvider(propValue) 
+                        : propValue;
+                });
 
             dataTable.Rows.Add(row);
         });
@@ -96,10 +100,12 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
         sqlBulkCopy.DestinationTableName = _typeMapping.TableName;
 
-        _typeMapping.PropertyMappings.ForEach((column) =>
-        {
-            sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
-        });
+        _typeMapping.PropertyMappings
+            .Where(x => !x.IsExcluded)
+            .ForEach((column) =>
+            {
+                sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+            });
 
         await sqlBulkCopy.WriteToServerAsync(dataTable, cancellationToken);
 
