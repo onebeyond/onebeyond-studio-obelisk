@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
@@ -17,7 +14,7 @@ using OneBeyond.Studio.Crosscuts.Strings;
 using OneBeyond.Studio.DataAccess.EFCore.Projections;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
-using OneBeyond.Studio.Obelisk.Domain.Attributes;
+using OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
@@ -25,33 +22,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
     where TAggregateRoot : AggregateRoot<TAggregateRootId>
     where TAggregateRootId : notnull
 { 
-    private sealed class EntityMapping
-    {
-        public string TableName { get; init; } = default!;
-
-        public IList<PropertyMapping> PropertyMappings { get; init; } = default!;
-    } 
-
-    private sealed record PropertyMapping
-    {
-        /// <summary>
-        /// Property name on the entity class if it differs from the Key(sql column name)
-        /// </summary>
-        public string PropertyName { get; init; } = default!;
-
-        public string ColumnName { get; init; } = default!;
-
-        /// <summary>
-        /// DataType - eg System.Int32, System.DateTime, System.Boolean - Not required for string types
-        /// </summary>
-        public string DataType { get; init; } = default!;
-
-        public bool IsNullable { get; init; }
-
-        public ValueConverter? ValueConverter { get; init; }
-    }
-
-    private readonly EntityMapping _typeMapping;
+    private readonly EntityTypeMapping _typeMapping;
 
     public RWBulkRepository(
         DomainContext dbContext,
@@ -59,80 +30,7 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         IEntityTypeProjections<TAggregateRoot> entityTypeProjections)
         : base(dbContext, rwDataAccessPolicyProvider, entityTypeProjections)
     {
-        _typeMapping = GetTypeMapping(DbContext, typeof(TAggregateRoot));
-    }
-
-    private static EntityMapping GetTypeMapping(DomainContext context, Type type)
-        => new EntityMapping
-        {
-            TableName = context.Model.FindEntityType(type)!.GetTableName()!,
-            PropertyMappings = GetTypePropertyMappings(context, typeof(TAggregateRoot))
-        };
-
-    private static IList<PropertyMapping> GetTypePropertyMappings(
-        DbContext context, 
-        Type type)
-    {
-        List<PropertyMapping> mappingInfo = new();
-
-        PopulateProperties(context, type, null, null, mappingInfo);
-
-        return mappingInfo;
-    }
-
-    private static void PopulateProperties(
-        DbContext context,
-        Type? type,
-        IEnumerable<IProperty>? dbProperties,
-        string? parentPropertyName,
-        IList<PropertyMapping> mappingInfo)
-    {
-        if (type is null)
-        {
-            return;
-        }
-
-        var properties = type
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .Where(prop => prop.CanWrite)
-            .ToList();
-
-        if (dbProperties is null)
-        {
-            dbProperties = context.Model.FindEntityType(type)!.GetProperties();
-        }
-
-        foreach (var prop in properties)
-        {
-            if (prop.IsDefined(typeof(BulkUpdateExcludeAttribute)))
-            {
-                continue;
-            }
-
-            var mappedDbProperty = dbProperties.FirstOrDefault(p => p.Name == prop.Name);
-
-            if (mappedDbProperty is { }) // if the property is mapped into a db table column
-            {
-                var mappedDbColumn = mappedDbProperty.GetTableColumnMappings().First()!;
-
-                mappingInfo.Add(
-                    new PropertyMapping
-                    {
-                        PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
-                        DataType = mappedDbColumn.Column.ProviderClrType.FullName!, //dataType,
-                        ColumnName = mappedDbColumn.Column.Name,
-                        IsNullable = mappedDbColumn.Column.IsNullable, 
-                        ValueConverter  = mappedDbProperty.GetValueConverter()
-                    });
-            }
-            else
-            {
-                PopulateProperties(context, prop.PropertyType, null, prop.Name, mappingInfo);
-            }
-        }
-
-        PopulateProperties(context, type.BaseType, dbProperties, parentPropertyName, mappingInfo);
-
+        _typeMapping = new BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId>().GetTypeMapping(dbContext);
     }
 
     public async Task BulkInsertAsync(IEnumerable<TAggregateRoot> entitiesToInsert, CancellationToken cancellationToken)
