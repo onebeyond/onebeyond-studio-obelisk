@@ -39,12 +39,17 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
         var todoitems = Enumerable
             .Range(1, command.Count)
             .Select(x => new TodoItem(
+
                 $"TodoItem {x}",
-                TodoItemPriority.FromValue(rnd.Next(2)), 
-                new TodoAddress(
-                    rnd.Next(100),
-                    $"City{x}",
-                    $"Zip{x}"),
+
+                TodoItemPriority.FromValue(rnd.Next(2)),
+
+                rnd.Next(10) < 5 
+                    ? null 
+                    : new TodoAddress(
+                        rnd.Next(100),
+                        $"City{x}",
+                        $"Zip{x}"),
 
                 rnd.Next(10) < 5 ? null : userId, 
 

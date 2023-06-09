@@ -106,33 +106,24 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
                 continue;
             }
 
-            var isPrimitiveType =
-                prop.PropertyType.IsPrimitive
-                || prop.PropertyType == typeof(string)
-                || prop.PropertyType == typeof(DateTime)
-                || prop.PropertyType == typeof(DateTimeOffset)
-                || prop.PropertyType == typeof(Guid);
+            var mappedDbProperty = dbProperties.FirstOrDefault(p => p.Name == prop.Name);
 
-            var isNullable = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
-
-            if (!(isPrimitiveType || isNullable))
+            if (mappedDbProperty is { }) // if the property is mapped into a db table column
             {
-                PopulateProperties(context, prop.PropertyType, null, prop.Name, mappingInfo);
-            }
-            else
-            {
-                var dataType = isNullable ? prop.PropertyType.GetGenericArguments()[0].FullName! : prop.PropertyType.FullName!;
-
-                var dbProperty = dbProperties.Single(p => p.Name == prop.Name);
+                var mappedDbColumn = mappedDbProperty.GetTableColumnMappings().First()!;
 
                 mappingInfo.Add(
                     new PropertyMapping
                     {
-                        ColumnName = dbProperty.GetTableColumnMappings().First().Column.Name,
                         PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
-                        DataType = dataType,
-                        IsNullable = isNullable
+                        DataType = mappedDbColumn.Column.ProviderClrType.FullName!, //dataType,
+                        ColumnName = mappedDbColumn.Column.Name,
+                        IsNullable = mappedDbColumn.Column.IsNullable
                     });
+            }
+            else
+            {
+                PopulateProperties(context, prop.PropertyType, null, prop.Name, mappingInfo);
             }
         }
 
@@ -205,8 +196,13 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
 
     }
 
-    private static object? GetPropertyValue(Type entityType, object entity, string propertyName)
+    private static object GetPropertyValue(Type entityType, object entity, string propertyName)
     {
+        if (entity is null)
+        {
+            return DBNull.Value;
+        }
+
         var propertyProperties = propertyName.Split('.');
 
         var property = entityType.GetProperty(propertyProperties[0])!;
