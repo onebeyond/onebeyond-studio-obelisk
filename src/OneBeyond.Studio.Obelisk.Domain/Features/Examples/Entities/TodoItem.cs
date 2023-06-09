@@ -5,6 +5,8 @@ using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
+//TODO ID Int (GENERATED ON SERVER SIDE)
+
 //NOTE! In case if we want to do bulk insert, bulk updatable properties MUST HAVE A PRIVATE SETTER
 
 public sealed class TodoItem: TodoItemBase
@@ -28,7 +30,6 @@ public sealed class TodoItem: TodoItemBase
         Address = address;
     }
 
-    [BulkUpdateExclude]
     public TodoItemPriority Priority { get; private set; }
 
     public TodoAddress? Address { get; private set; }

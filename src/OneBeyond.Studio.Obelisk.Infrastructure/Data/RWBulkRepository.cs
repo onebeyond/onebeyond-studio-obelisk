@@ -9,6 +9,7 @@ using EnsureThat;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
@@ -46,6 +47,8 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
         public string DataType { get; init; } = default!;
 
         public bool IsNullable { get; init; }
+
+        public ValueConverter? ValueConverter { get; init; }
     }
 
     private readonly EntityMapping _typeMapping;
@@ -118,7 +121,8 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
                         PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
                         DataType = mappedDbColumn.Column.ProviderClrType.FullName!, //dataType,
                         ColumnName = mappedDbColumn.Column.Name,
-                        IsNullable = mappedDbColumn.Column.IsNullable
+                        IsNullable = mappedDbColumn.Column.IsNullable, 
+                        ValueConverter  = mappedDbProperty.GetValueConverter()
                     });
             }
             else
@@ -170,7 +174,11 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
             var row = dataTable.NewRow();
             _typeMapping.PropertyMappings.ForEach((column) =>
             {
-                row[column.ColumnName] = GetPropertyValue(entityType, entity, column.PropertyName);
+                var propValue = GetPropertyValue(entityType, entity, column.PropertyName);
+
+                row[column.ColumnName] = column.ValueConverter is { } 
+                    ? column.ValueConverter.ConvertToProvider(propValue) 
+                    : propValue;
             });
 
             dataTable.Rows.Add(row);
