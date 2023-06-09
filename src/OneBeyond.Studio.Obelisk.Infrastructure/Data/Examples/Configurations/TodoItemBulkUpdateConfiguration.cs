@@ -12,6 +12,12 @@ internal sealed class TodoItemBulkUpdateConfiguration : BulkUpdateConfiguration<
         //An example on how to exclude a property from bulk import
         typeMapping.GetPropertyMapping("AssignedToUserId").Exclude();
         typeMapping.GetPropertyMapping("CompletedDate").Exclude();
+
+        //To exclude the Address property
+        //typeMapping.GetPropertyMapping("Address.HouseNo").Exclude();
+        //typeMapping.GetPropertyMapping("Address.City").Exclude();
+        //typeMapping.GetPropertyMapping("Address.ZipCode").Exclude();
+
         return typeMapping;
     }
 }
