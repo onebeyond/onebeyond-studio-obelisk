@@ -6,15 +6,17 @@ using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
+using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
+using OneBeyond.Studio.Obelisk.Infrastructure.Data.Examples.Configurations;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 
 internal sealed class DataAccessBuilder : IDataAccessBuilder
 {
     private readonly IServiceCollection _services;
-    private readonly OneBeyond.Studio.DataAccess.EFCore.DependencyInjection.IDataAccessBuilder _dataAccessBuilder;
+    private readonly DataAccess.EFCore.DependencyInjection.IDataAccessBuilder _dataAccessBuilder;
 
     public DataAccessBuilder(
         IServiceCollection services,
@@ -29,11 +31,13 @@ internal sealed class DataAccessBuilder : IDataAccessBuilder
         services.AddScoped(typeof(IRORepository<>), typeof(RORepository<>));
         services.AddScoped(typeof(IRORepository<,>), typeof(RORepository<,>));
         services.AddScoped(typeof(IRWRepository<,>), typeof(RWRepository<,>));
-        services.AddScoped(typeof(IRWBulkRepository<,>), typeof(RWBulkRepository<,>));
         services.AddSingleton(typeof(IRODataAccessPolicyProvider<>), typeof(AllowDataAccessPolicyProvider<>));
         services.AddSingleton(typeof(IRWDataAccessPolicyProvider<>), typeof(AllowDataAccessPolicyProvider<>));
         services.AddScoped(typeof(IAggregateRootRWRepository<,,>), typeof(AggregateRootRWRepository<,,>));
+
+        services.AddScoped(typeof(IRWBulkRepository<,>), typeof(RWBulkRepository<,>));
         services.AddScoped(typeof(IBulkUpdateConfiguration<,>), typeof(BulkUpdateConfiguration<,>));
+        services.AddScoped(typeof(IBulkUpdateConfiguration<TodoItem, Guid>), typeof(TodoItemBulkUpdateConfiguration));
     }
 
     public IDataAccessBuilder WithUnitOfWork(TimeSpan? timeout = default, IsolationLevel? isolationLevel = default)

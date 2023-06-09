@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using OneBeyond.Studio.Domain.SharedKernel.Entities;
-using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using OneBeyond.Studio.Crosscuts.Strings;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
-using OneBeyond.Studio.Obelisk.Domain.Attributes;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
 
@@ -18,11 +17,10 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
         => GetTypeMapping(context, typeof(TAggregateRoot));
 
     private static EntityTypeMapping GetTypeMapping(DomainContext context, Type type)
-        => new EntityTypeMapping
-        {
-            TableName = context.Model.FindEntityType(type)!.GetTableName()!,
-            PropertyMappings = GetTypePropertyMappings(context, typeof(TAggregateRoot))
-        };
+        => new EntityTypeMapping(
+            type.Name,
+            context.Model.FindEntityType(type)!.GetTableName()!,
+            GetTypePropertyMappings(context, typeof(TAggregateRoot)));
 
     private static IList<PropertyMapping> GetTypePropertyMappings(
         DbContext context,
@@ -59,26 +57,14 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
 
         foreach (var prop in properties)
         {
-            if (prop.IsDefined(typeof(BulkUpdateExcludeAttribute)))
-            {
-                continue;
-            }
-
             var mappedDbProperty = dbProperties.FirstOrDefault(p => p.Name == prop.Name);
 
             if (mappedDbProperty is { }) // if the property is mapped into a db table column
             {
-                var mappedDbColumn = mappedDbProperty.GetTableColumnMappings().First()!;
-
                 mappingInfo.Add(
-                    new PropertyMapping
-                    {
-                        PropertyName = parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
-                        DataType = mappedDbColumn.Column.ProviderClrType.FullName!, //dataType,
-                        ColumnName = mappedDbColumn.Column.Name,
-                        IsNullable = mappedDbColumn.Column.IsNullable,
-                        ValueConverter = mappedDbProperty.GetValueConverter()
-                    });
+                    new PropertyMapping(
+                        parentPropertyName.IsNullOrWhiteSpace() ? prop.Name : $"{parentPropertyName}.{prop.Name}",
+                        mappedDbProperty));
             }
             else
             {
