@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -6,25 +5,19 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
-using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
-using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Commands;
-using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
-using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
 [Authorize(Roles = UserRole.ADMINISTRATOR)]
 [Produces("application/json")]
 [ApiVersion("1.0")]
-public sealed class TodoController : ControllerBase
+public sealed class BulkInsertController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public TodoController(
+    public BulkInsertController(
         IMediator mediator)
     {
         _mediator = EnsureArg.IsNotNull(mediator, nameof(mediator));
@@ -32,7 +25,14 @@ public sealed class TodoController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("BulkInsert/{count}")]
-    public Task BulkInsert(int count, CancellationToken cancellationToken)
-        => _mediator.Send(new BulkInsert(count), cancellationToken);
+    [HttpPost("Todos/{count}")]
+    public Task BulkInsertTodos(int count, CancellationToken cancellationToken)
+        => _mediator.Send(new BulkInsertTodoItems(count), cancellationToken);
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost("IntThingies/{count}")]
+    public Task BulkInsertIntThingies(int count, CancellationToken cancellationToken)
+        => _mediator.Send(new BulkInsertIntThingies(count), cancellationToken);
+
 }

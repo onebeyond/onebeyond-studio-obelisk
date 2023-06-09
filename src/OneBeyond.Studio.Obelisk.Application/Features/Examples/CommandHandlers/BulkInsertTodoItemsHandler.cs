@@ -13,12 +13,12 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Examples.CommandHandlers;
 
-internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
+internal sealed class BulkInsertTodoItemsHandler : IRequestHandler<BulkInsertTodoItems>
 {
     private readonly IRORepository<User, Guid> _userRORepository;
     private readonly IRWBulkRepository<TodoItem, Guid> _todoRWRepository;
 
-    public BulkInsertHandler(
+    public BulkInsertTodoItemsHandler(
         IRORepository<User, Guid> userRORepository,
         IRWBulkRepository<TodoItem, Guid> todoRWRepository)
     {
@@ -26,7 +26,7 @@ internal sealed class BulkInsertHandler : IRequestHandler<BulkInsert>
         _todoRWRepository = EnsureArg.IsNotNull(todoRWRepository, nameof(todoRWRepository));
     }
 
-    public async Task Handle(BulkInsert command, CancellationToken cancellationToken)
+    public async Task Handle(BulkInsertTodoItems command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
