@@ -53,7 +53,10 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<CookieAuthenticationFlow>();
 
-        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>()
+        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+        })
             .AddDefaultTokenProviders()
             .AddRoleManager<RoleManager<AuthRole>>()
             .AddUserManager<UserManager<AuthUser>>();
