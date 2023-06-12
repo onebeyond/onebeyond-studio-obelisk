@@ -20,7 +20,7 @@ The project largely works out of the box when opening with a modern version of V
 
 Please note, Obelisk architecture uses Azure queues to dispatch domain events, to run the solution localy you'll need to have [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) running.
 
-Also, the default implementation of IEmailSender used in the application will store all generated e-mails in the following folder:`C:\inetpub\mailroot\Obelisk` (you can find the related code [here](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/Program.cs#LL148C15-L148C15)). Please create this folder manually if it does not exist. Note: this only applies to Windows.
+Also, the default implementation of IEmailSender used in the application will store all generated e-mails in the following folder:`C:\inetpub\mailroot\Obelisk` (you can find the related code [here](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/Program.cs#LL148C15-L148C15)). This folder can be configured in [`appsettings.json -> EmailSender -> Folder -> Folder` section](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/appsettings.json#L33). Please create this folder manually if it does not exist. Note: this only applies to Windows.
 
 Finally, to run Obelisk, simply run the WebApi project through Visual Studio.
 
