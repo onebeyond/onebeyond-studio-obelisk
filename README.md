@@ -14,6 +14,14 @@ Obelisk is a WebAPI template built in ASP.Net and used in hundreds of succesful 
 
 7.0
 
+### Setup
+
+The project largely works out of the box when opening with a modern version of Visual Studio. The main pre-requisite is to have [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) running while running the project.
+
+If you want to read any emails sent while working in a development environment, you will need to make sure the following path exists: `C:\inetpub\mailroot\Obelisk`. If not, then create it manually. Note: this only applies to Windows.
+
+Finally, to run Obelisk, simply run the WebApi project through Visual Studio.
+
 ### Documentation
 
 For more detailed documentation, please refer to our [Wiki](https://github.com/onebeyond/onebeyond-studio-obelisk/wiki)
