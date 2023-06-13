@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
+using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
@@ -31,6 +32,8 @@ public abstract class TodoItemBase: AggregateRoot<Guid>
 
     //[BulkUpdateExclude] This attribute can be used to exclude the property from bulk insert
     public Guid? AssignedToUserId { get; private set; }
+
+    public User? AssignedToUser { get; private set; } //Navigation property
 
     public DateTimeOffset? CompletedDate { get; private set; }
 

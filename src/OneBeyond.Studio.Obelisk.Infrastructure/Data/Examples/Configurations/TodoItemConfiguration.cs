@@ -24,7 +24,7 @@ internal sealed class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoIte
             addrBuilder.Property(x => x.ZipCode).HasColumnName("Zip");
         });
 
-        builder.HasOne<User>()
+        builder.HasOne(x => x.AssignedToUser)
             .WithMany()
             .HasForeignKey(x => x.AssignedToUserId);
 

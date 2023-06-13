@@ -29,15 +29,21 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
     {
         List<PropertyMapping> mappingInfo = new();
 
-        PopulateProperties(context, type, null, null, mappingInfo);
+        //BulkUpdate supports update only of one table. 
+        //We do not support cases when one BulkUpdateRepository<type> bulk updates multiple tables.
+        //So, we get the name of the table the type is mapped to and gather information only about this table.
+        //You'll see in the recursion that if a type is mapped into another table, this is a navigation property, and we do not include it into the bulk update.
+        var typeTableName = context.Model.FindEntityType(type)!.GetTableName()!;
+
+        PopulateTypeProperties(context, typeTableName, type, null, mappingInfo);
 
         return mappingInfo;
     }
 
-    private static void PopulateProperties(
+    private static void PopulateTypeProperties(
         DbContext context,
+        string parentTypeTableName,
         Type? type,
-        IEnumerable<IProperty>? dbProperties,
         string? parentPropertyName,
         IList<PropertyMapping> mappingInfo)
     {
@@ -46,15 +52,50 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
             return;
         }
 
+        var typeTableName = context.Model.FindEntityType(type)?.GetTableName();
+
+        if (typeTableName != parentTypeTableName)
+        {
+            return; //we gather properties that are mapped into the parentTypeTableName only. If the type is mapped into another table, we do not include it into the bulk update.
+        }
+
+        PopulateMappedTypeProperties(
+            context, 
+            parentTypeTableName, 
+            type, 
+            context.Model.FindEntityType(type)!.GetProperties(), 
+            parentPropertyName, 
+            mappingInfo);
+    }
+
+    private static void PopulateBaseTypeProperties(
+        DbContext context,
+        string parentTypeTableName,
+        Type? type,
+        IEnumerable<IProperty> dbProperties,
+        string? parentPropertyName,
+        IList<PropertyMapping> mappingInfo)
+    {
+        if (type is null)
+        {
+            return;
+        }
+
+        PopulateMappedTypeProperties(context, parentTypeTableName, type, dbProperties, parentPropertyName, mappingInfo);
+    }
+
+    private static void PopulateMappedTypeProperties(
+        DbContext context,
+        string parentTypeTableName,
+        Type type,
+        IEnumerable<IProperty> dbProperties,
+        string? parentPropertyName,
+        IList<PropertyMapping> mappingInfo)
+    {
         var properties = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(prop => prop.CanWrite && !IsCollection(prop.PropertyType)) //Note, we exclude all collections, as we don't want to update them when doing bulk update
             .ToList();
-
-        if (dbProperties is null)
-        {
-            dbProperties = context.Model.FindEntityType(type)!.GetProperties();
-        }
 
         foreach (var prop in properties)
         {
@@ -69,12 +110,11 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
             }
             else
             {
-                PopulateProperties(context, prop.PropertyType, null, prop.Name, mappingInfo);
+                PopulateTypeProperties(context, parentTypeTableName, prop.PropertyType, prop.Name, mappingInfo);
             }
         }
 
-        PopulateProperties(context, type.BaseType, dbProperties, parentPropertyName, mappingInfo);
-
+        PopulateBaseTypeProperties(context, parentTypeTableName, type.BaseType, dbProperties, parentPropertyName, mappingInfo);
     }
 
     private static bool IsCollection(Type type)
