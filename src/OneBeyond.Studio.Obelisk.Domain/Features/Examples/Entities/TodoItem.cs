@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 
@@ -23,9 +24,12 @@ public sealed class TodoItem: TodoItemBase
     {
         Priority = priority;
         Address = address;
+        Tags = new List<TodoItemTag>();
     }
 
     public TodoItemPriority Priority { get; private set; }
 
     public TodoAddress? Address { get; private set; }
+
+    public ICollection<TodoItemTag> Tags { get; set; } //NEVER DO IT LIKE THIS. IT IS JUST TO SUPPORT THE LEGACY CODE.
 }

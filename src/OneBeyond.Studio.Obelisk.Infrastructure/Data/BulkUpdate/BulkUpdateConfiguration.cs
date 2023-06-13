@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -47,7 +48,7 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
 
         var properties = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .Where(prop => prop.CanWrite)
+            .Where(prop => prop.CanWrite && !IsCollection(prop.PropertyType)) //Note, we exclude all collections, as we don't want to update them when doing bulk update
             .ToList();
 
         if (dbProperties is null)
@@ -76,4 +77,6 @@ internal class BulkUpdateConfiguration<TAggregateRoot, TAggregateRootId> : IBulk
 
     }
 
+    private static bool IsCollection(Type type)
+        => typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string);
 }

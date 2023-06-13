@@ -9,7 +9,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data.Examples.Configurations;
 
-internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid>
+internal sealed class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid>
 {
     protected override void DoConfigure(EntityTypeBuilder<TodoItem> builder)
     {
@@ -29,6 +29,10 @@ internal class TodoItemConfiguration: BaseEntityTypeConfiguration<TodoItem, Guid
             .HasForeignKey(x => x.AssignedToUserId);
 
         builder.HasMany(x => x.TodoItemProperties)
+           .WithOne()
+           .HasForeignKey(x => x.TodoItemId);
+
+        builder.HasMany(x => x.Tags)
            .WithOne()
            .HasForeignKey(x => x.TodoItemId);
 
