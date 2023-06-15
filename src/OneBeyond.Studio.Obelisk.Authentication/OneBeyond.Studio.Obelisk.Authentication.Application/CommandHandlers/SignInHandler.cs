@@ -45,8 +45,7 @@ internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain
         {
             Logger.LogInformation("User attempted to login with unrecognised account");
             return new Domain.SignInResult(
-                SignInStatus.Failure,
-                "Invalid username or password");
+                SignInStatus.Failure);
         }
 
         try
@@ -58,7 +57,7 @@ internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain
         catch (Exception exception)
         when (!exception.IsCritical())
         {
-            return new Domain.SignInResult(SignInStatus.Failure, exception.Message);
+            return new Domain.SignInResult(SignInStatus.Failure);
         }
 
         var signInResult = await SignInAsync(command, authUser, cancellationToken).ConfigureAwait(false);
@@ -74,7 +73,7 @@ internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain
         when (!exception.IsCritical())
         {
             await SignInManager.SignOutAsync().ConfigureAwait(false);
-            return new Domain.SignInResult(SignInStatus.Failure, exception.Message);
+            return new Domain.SignInResult(SignInStatus.Failure);
         }
 
         return signInResult;
