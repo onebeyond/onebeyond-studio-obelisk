@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -6,13 +7,16 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
+using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -22,6 +26,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
+    private static readonly ILogger Logger = LogManager.CreateLogger<UsersController>();
 
     public UsersController(
         IMediator mediator,
@@ -81,10 +86,20 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("{userId}")]
-    public Task UpdateUser(
+    public async Task UpdateUser(
         [FromMixedSource] UpdateUser command,
         CancellationToken cancellationToken)
-        => Mediator.Send(command, cancellationToken);
+    {
+        var result = await Mediator.Send(command, cancellationToken);
+        if (!result.Success)
+        {
+            foreach (var error in result.Errors)
+            {
+                Logger.LogInformation(error);
+            }
+            throw new ObeliskApplicationException("Failed to update user");
+        }
+    }
 
     /// <summary>
     /// Generates a reset password token for a specified login ID.
