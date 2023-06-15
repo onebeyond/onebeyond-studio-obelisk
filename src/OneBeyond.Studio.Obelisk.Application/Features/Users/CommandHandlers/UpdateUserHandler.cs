@@ -55,7 +55,7 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
         }
         else
         {
-            throw new ObeliskApplicationException(string.Concat(updateLoginResult.Errors));
+            throw new ObeliskApplicationException(string.Join(",", updateLoginResult.Errors));
         }
     }
 }
