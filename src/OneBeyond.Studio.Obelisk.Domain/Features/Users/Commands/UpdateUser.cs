@@ -1,11 +1,10 @@
 using System;
 using EnsureThat;
 using MediatR;
-using OneBeyond.Studio.Obelisk.Authentication.Domain;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 
-public sealed record UpdateUser : IRequest<UpdateUserResult>
+public sealed record UpdateUser : IRequest
 {
     public UpdateUser(
         Guid userId,

@@ -86,20 +86,10 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("{userId}")]
-    public async Task UpdateUser(
+    public Task UpdateUser(
         [FromMixedSource] UpdateUser command,
         CancellationToken cancellationToken)
-    {
-        var result = await Mediator.Send(command, cancellationToken);
-        if (!result.Success)
-        {
-            foreach (var error in result.Errors)
-            {
-                Logger.LogInformation(error);
-            }
-            throw new ObeliskApplicationException("Failed to update user");
-        }
-    }
+        => Mediator.Send(command, cancellationToken);
 
     /// <summary>
     /// Generates a reset password token for a specified login ID.
