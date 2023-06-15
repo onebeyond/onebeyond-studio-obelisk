@@ -7,11 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
-using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
-using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
@@ -26,7 +22,6 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
-    private static readonly ILogger Logger = LogManager.CreateLogger<UsersController>();
 
     public UsersController(
         IMediator mediator,
