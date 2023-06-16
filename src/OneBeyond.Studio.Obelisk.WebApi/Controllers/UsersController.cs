@@ -106,7 +106,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         await Mediator.Send(
             new SendResetPasswordEmail(
                 loginId,
-                _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
+                _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId,resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);
     }
