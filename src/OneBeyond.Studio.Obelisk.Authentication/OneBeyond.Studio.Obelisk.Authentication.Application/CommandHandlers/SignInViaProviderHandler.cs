@@ -52,6 +52,6 @@ internal sealed class SignInViaProviderHandler : SignInHandler<SignInViaProvider
             statusMessage = $"Sign in with provider {command.Login.SignInProviderId} failed.";
         }
 
-        return new Domain.SignInResult(status, statusMessage);
+        return new Domain.SignInResult(status);
     }
 }

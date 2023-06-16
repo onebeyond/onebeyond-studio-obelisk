@@ -4,12 +4,12 @@ public struct SignInResult
 {
     public SignInResult(
         SignInStatus status,
-        string message)
+        int? lockoutMinutes = null)
     {
         Status = status;
-        StatusMessage = message;
+        LockoutMinutes = lockoutMinutes;
     }
 
     public SignInStatus Status { get; }
-    public string StatusMessage { get; }
+    public int? LockoutMinutes { get; }
 }

@@ -46,11 +46,11 @@ internal sealed class SignInTfaHandler : IRequestHandler<SignInTfa, SignInResult
                     : "Invalid authenticator code provided for user";
             }
 
-            return new SignInResult(status, statusMessage);
+            return new SignInResult(status);
         }
         catch (AuthLoginNotFoundException)
         {
-            return new SignInResult(SignInStatus.Failure, "Invalid username or password");
+            return new SignInResult(SignInStatus.Failure);
         }
     }
 }
