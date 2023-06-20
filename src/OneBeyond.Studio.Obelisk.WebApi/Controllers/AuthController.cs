@@ -93,7 +93,7 @@ public sealed class AuthController : ControllerBase
             await _mediator.Send(
                 new SendResetPasswordEmail(
                         resetPasswordTokenResult.LoginId,
-                        _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.Value)),
+                        _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.LoginId,resetPasswordTokenResult.Value)),
                     cancellationToken).ConfigureAwait(false);
         }
         catch (Exception)
@@ -111,15 +111,15 @@ public sealed class AuthController : ControllerBase
         try
         {
             await _mediator.Send(new ResetPassword(
-                   resetPassword.UserName,
-                   resetPassword.Code,
+                   resetPassword.UserId,
+                   resetPassword.Token,
                    resetPassword.Password),
                cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             // Don't throw exception so we don't reveal which emails are currently in use
-            Logger.LogInformation("Failed to reset user password");
+            Logger.LogError("Failed to reset user password for user: {exception}", ex.Message);
         }
     }
 

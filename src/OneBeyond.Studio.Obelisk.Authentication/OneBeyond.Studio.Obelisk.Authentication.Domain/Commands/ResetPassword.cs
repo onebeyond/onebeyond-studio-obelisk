@@ -6,20 +6,19 @@ namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 public sealed record ResetPassword : IRequest
 {
     public ResetPassword(
-        string userName,
-        string resetPasswordCode,
+        string userId,
+        string token,
         string password)
     {
-        EnsureArg.IsNotNullOrWhiteSpace(userName, nameof(userName));
-        EnsureArg.IsNotNullOrWhiteSpace(resetPasswordCode, nameof(resetPasswordCode));
+        EnsureArg.IsNotNullOrWhiteSpace(userId, nameof(userId));
+        EnsureArg.IsNotNullOrWhiteSpace(token, nameof(token));
         EnsureArg.IsNotNullOrWhiteSpace(password, nameof(password));
 
-        UserName = userName;
-        ResetPasswordCode = resetPasswordCode;
+        UserId = userId;
+        Token = token;
         Password = password;
     }
-
-    public string UserName { get; }
-    public string ResetPasswordCode { get; }
+    public string UserId { get; }
+    public string Token { get; }
     public string Password { get; }
 }
