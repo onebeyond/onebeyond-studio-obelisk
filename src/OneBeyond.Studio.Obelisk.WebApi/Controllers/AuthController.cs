@@ -119,7 +119,7 @@ public sealed class AuthController : ControllerBase
         catch (Exception ex)
         {
             // Don't throw exception so we don't reveal which emails are currently in use
-            Logger.LogInformation("Failed to reset user password");
+            Logger.LogInformation($"Failed to reset user password: {ex.Message}");
         }
     }
 
