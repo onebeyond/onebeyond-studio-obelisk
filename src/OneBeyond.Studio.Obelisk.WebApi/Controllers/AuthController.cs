@@ -4,7 +4,11 @@ using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Utilities.Identities;
 using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
@@ -26,16 +30,21 @@ public sealed class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
+    private readonly IOptions<IdentityOptions> _identityOptions;
+    private static readonly ILogger Logger = LogManager.CreateLogger<AuthController>();
 
     public AuthController(
         IMediator mediator,
-        ClientApplicationLinkGenerator clientApplicationLinkGenerator)
+        ClientApplicationLinkGenerator clientApplicationLinkGenerator,
+        IOptions<IdentityOptions> identityOptions)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
         EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
+        EnsureArg.IsNotNull(identityOptions, nameof(identityOptions));
 
         _mediator = mediator;
         _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
+        _identityOptions = identityOptions;
     }
 
     [Authorize]
@@ -72,6 +81,9 @@ public sealed class AuthController : ControllerBase
         [FromBody] ForgotPasswordRequest forgotPassword, 
         CancellationToken cancellationToken)
     {
+        // To guard against timing attacks
+        Thread.Sleep(new Random().Next(1000, 3000));
+
         try
         {
             var resetPasswordTokenResult = await _mediator.Send(
@@ -86,7 +98,8 @@ public sealed class AuthController : ControllerBase
         }
         catch (Exception)
         {
-            throw new ObeliskApplicationException("Failed to reset user password");
+            // Don't throw exception so we don't reveal which emails are currently in use
+            Logger.LogInformation("Error in forgot password");
         }
     }
 
@@ -105,7 +118,8 @@ public sealed class AuthController : ControllerBase
         }
         catch (Exception)
         {
-            throw new ObeliskApplicationException("Failed to reset user password");
+            // Don't throw exception so we don't reveal which emails are currently in use
+            Logger.LogInformation("Failed to reset user password");
         }
     }
 
@@ -118,6 +132,10 @@ public sealed class AuthController : ControllerBase
             HttpContext.User?.Identity?.TryGetLoginId() ?? throw new ObeliskApplicationException("Failed to retrieve the ID of a logged in user"),
             changePassword.OldPassword, 
             changePassword.NewPassword), cancellationToken);
+
+    [HttpGet("PasswordRequirements")]
+    public PasswordOptions PasswordRequirements()
+        => _identityOptions.Value.Password;
 
     /// <summary>
     /// Empty action used for keeping session alive when user pressed cancel logout.

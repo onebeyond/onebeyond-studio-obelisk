@@ -40,13 +40,23 @@ public static class ServiceCollectionExtensions
                 options.Password.RequiredUniqueChars = 2;
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = SessionConstants.SessionDuration;
-                options.Lockout.MaxFailedAccessAttempts = 5;
+                if (int.TryParse(configuration.GetOptions<string>("LockoutMaxFailedAccessAttempts"), out var maxAttempts))
+                {
+                    options.Lockout.MaxFailedAccessAttempts = maxAttempts;
+                }
+                else
+                {
+                    options.Lockout.MaxFailedAccessAttempts = 5;
+                }
                 options.Lockout.AllowedForNewUsers = true;
             });
 
         services.AddScoped<CookieAuthenticationFlow>();
 
-        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>()
+        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+        })
             .AddDefaultTokenProviders()
             .AddRoleManager<RoleManager<AuthRole>>()
             .AddUserManager<UserManager<AuthUser>>();

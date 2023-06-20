@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
@@ -15,16 +16,19 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
 {
     private readonly UserManager<AuthUser> _userManager;
     private static readonly ILogger Logger = LogManager.CreateLogger<SignInViaPasswordHandler>();
+    private readonly IOptions<IdentityOptions> _identityOptions;
 
     public SignInViaPasswordHandler(
         UserManager<AuthUser> userManager,
         SignInManager<AuthUser> signInManager,
-        IAuthenticationFlowHandler authFlowHandler)
+        IAuthenticationFlowHandler authFlowHandler,
+        IOptions<IdentityOptions> identityOptions)
         : base(signInManager, authFlowHandler)
     {
         EnsureArg.IsNotNull(userManager, nameof(userManager));
 
         _userManager = userManager;
+        _identityOptions = identityOptions;
     }
 
     protected override Task<AuthUser?> FindAuthUserAsync(
@@ -44,7 +48,7 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
             command.UserName,
             command.Password,
             command.RememberMe,
-            command.LockoutOnFailure).ConfigureAwait(false);
+            true).ConfigureAwait(false); //Note! We always lockout on failure
 
         if (!signInResult.Succeeded)
         {
@@ -62,7 +66,7 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
                 status = SignInStatus.LockedOut;
                 Logger.LogInformation("{@UserName} locked out", command.UserName);
             }
-            else if (command.LockoutOnFailure)
+            else
             {
                 var remainingAttempts = _userManager.Options.Lockout.MaxFailedAccessAttempts - authUser.AccessFailedCount;
                 Logger.LogInformation("{@UserName} attempted to login with an incorrect password. " +
@@ -81,6 +85,6 @@ internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword
             }
         }
 
-        return new Domain.SignInResult(status, statusMessage);
+        return new Domain.SignInResult(status, (int)_identityOptions.Value.Lockout.DefaultLockoutTimeSpan.TotalMinutes);
     }
 }
