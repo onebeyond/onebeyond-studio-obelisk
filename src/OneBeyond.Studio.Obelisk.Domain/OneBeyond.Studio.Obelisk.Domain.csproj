@@ -8,8 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0" />
     <PackageReference Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.ChangeTracker.Domain\OneBeyond.Studio.ChangeTracker.Domain.csproj" />
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Domain.SharedKernel\OneBeyond.Studio.Domain.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Examples\Entities\" />
   </ItemGroup>
 
 </Project>

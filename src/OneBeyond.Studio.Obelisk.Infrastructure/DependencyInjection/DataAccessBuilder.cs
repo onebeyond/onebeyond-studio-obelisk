@@ -47,4 +47,12 @@ internal sealed class DataAccessBuilder : IDataAccessBuilder
         }
         return this;
     }
+
+    public IDataAccessBuilder WithChangeTracking()
+    {
+        _dataAccessBuilder.WithChangeTracking();
+
+        return this;
+    }
+
 }

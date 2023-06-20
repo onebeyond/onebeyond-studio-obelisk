@@ -40,8 +40,6 @@
     <PackageReference Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.3" />
     <PackageReference Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.3" />
     <PackageReference Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.3" />
-    <PackageReference Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.0" />
-    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Hosting.AspNet\OneBeyond.Studio.Hosting.AspNet.csproj" />
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Infrastructure.Azure\OneBeyond.Studio.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Infrastructure\OneBeyond.Studio.Obelisk.Infrastructure.csproj" />
   </ItemGroup>
 

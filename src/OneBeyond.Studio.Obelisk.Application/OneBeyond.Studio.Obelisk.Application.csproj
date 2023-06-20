@@ -9,11 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Application.SharedKernel\OneBeyond.Studio.Application.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.ChangeTracker.Domain\OneBeyond.Studio.ChangeTracker.Domain.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Domain\OneBeyond.Studio.Obelisk.Authentication.Domain.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Domain\OneBeyond.Studio.Obelisk.Domain.csproj" />
   </ItemGroup>

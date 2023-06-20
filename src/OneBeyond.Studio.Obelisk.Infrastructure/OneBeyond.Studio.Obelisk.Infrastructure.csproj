@@ -13,11 +13,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0" />
-    <PackageReference Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Application.SharedKernel\OneBeyond.Studio.Application.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.DataAccess.EFCore\OneBeyond.Studio.DataAccess.EFCore.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Application\OneBeyond.Studio.Obelisk.Authentication.Application.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Application\OneBeyond.Studio.Obelisk.Application.csproj" />
   </ItemGroup>

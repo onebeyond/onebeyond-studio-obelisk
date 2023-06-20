@@ -12,12 +12,12 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.5" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.11.1" />
-    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0" />
-    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Application.SharedKernel\OneBeyond.Studio.Application.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\..\OnebeyondStudioCore\src\OneBeyond.Studio.Domain.SharedKernel\OneBeyond.Studio.Domain.SharedKernel.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication.Domain\OneBeyond.Studio.Obelisk.Authentication.Domain.csproj" />
   </ItemGroup>
 

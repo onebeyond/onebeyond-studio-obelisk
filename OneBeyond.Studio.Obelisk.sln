@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C7B2FD65-9A28-4439-8BB7-BA9AFA7848A4}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		..\OnebeyondStudioCore\src\OneBeyond.Studio.Hosting.AspNet\OneBeyond.Studio.Hosting.AspNet.csproj = ..\OnebeyondStudioCore\src\OneBeyond.Studio.Hosting.AspNet\OneBeyond.Studio.Hosting.AspNet.csproj
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.WebApi", "src\OneBeyond.Studio.Obelisk.WebApi\OneBeyond.Studio.Obelisk.WebApi.csproj", "{1BBA6599-8FCB-4167-9B40-B4B3314861F3}"
@@ -28,6 +29,24 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Domain.Tests", "src\OneBeyond.Studio.Obelisk.Domain.Tests\OneBeyond.Studio.Obelisk.Domain.Tests.csproj", "{401E2A2C-5466-47C3-ABA7-C437D9FE442C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Obelisk.Workers", "src\OneBeyond.Studio.Obelisk.Workers\OneBeyond.Studio.Obelisk.Workers.csproj", "{3826B005-74AD-48CA-9CF1-C9BFED6A1196}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Application.SharedKernel", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Application.SharedKernel\OneBeyond.Studio.Application.SharedKernel.csproj", "{46160D2B-F4E7-42EB-821B-642B4617DC97}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Crosscuts", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Crosscuts\OneBeyond.Studio.Crosscuts.csproj", "{C2A97E6F-D221-45F4-A96E-6AE0851ACCF5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.DataAccess.EFCore", "..\OnebeyondStudioCore\src\OneBeyond.Studio.DataAccess.EFCore\OneBeyond.Studio.DataAccess.EFCore.csproj", "{04506833-D381-408F-893B-9E41EAE72CA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Domain.SharedKernel", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Domain.SharedKernel\OneBeyond.Studio.Domain.SharedKernel.csproj", "{270009CA-6901-42EB-BE34-7E43E931EC39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Hosting", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Hosting\OneBeyond.Studio.Hosting.csproj", "{2E561B4D-1D2B-4138-A4ED-E6A4E9159D96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Infrastructure.Azure", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Infrastructure.Azure\OneBeyond.Studio.Infrastructure.Azure.csproj", "{B372953B-037B-4C14-B773-C3D6A414376D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.Hosting.AspNet", "..\OnebeyondStudioCore\src\OneBeyond.Studio.Hosting.AspNet\OneBeyond.Studio.Hosting.AspNet.csproj", "{16CBAAD0-D1E4-4A8C-8C77-95724C7DA84A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.ChangeTracker.Domain", "..\OnebeyondStudioCore\src\OneBeyond.Studio.ChangeTracker.Domain\OneBeyond.Studio.ChangeTracker.Domain.csproj", "{C5A7ADC1-11D2-4BA9-AB12-AB5BAAC479FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneBeyond.Studio.ChangeTracker.Infrastructure", "..\OnebeyondStudioCore\src\OneBeyond.Studio.ChangeTracker.Infrastructure\OneBeyond.Studio.ChangeTracker.Infrastructure.csproj", "{8289BBF8-E77C-4E12-9E1C-B621D1106F52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +86,42 @@ Global
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3826B005-74AD-48CA-9CF1-C9BFED6A1196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46160D2B-F4E7-42EB-821B-642B4617DC97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46160D2B-F4E7-42EB-821B-642B4617DC97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46160D2B-F4E7-42EB-821B-642B4617DC97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46160D2B-F4E7-42EB-821B-642B4617DC97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A97E6F-D221-45F4-A96E-6AE0851ACCF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A97E6F-D221-45F4-A96E-6AE0851ACCF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A97E6F-D221-45F4-A96E-6AE0851ACCF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A97E6F-D221-45F4-A96E-6AE0851ACCF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04506833-D381-408F-893B-9E41EAE72CA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04506833-D381-408F-893B-9E41EAE72CA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04506833-D381-408F-893B-9E41EAE72CA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04506833-D381-408F-893B-9E41EAE72CA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{270009CA-6901-42EB-BE34-7E43E931EC39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{270009CA-6901-42EB-BE34-7E43E931EC39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{270009CA-6901-42EB-BE34-7E43E931EC39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{270009CA-6901-42EB-BE34-7E43E931EC39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E561B4D-1D2B-4138-A4ED-E6A4E9159D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E561B4D-1D2B-4138-A4ED-E6A4E9159D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E561B4D-1D2B-4138-A4ED-E6A4E9159D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E561B4D-1D2B-4138-A4ED-E6A4E9159D96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B372953B-037B-4C14-B773-C3D6A414376D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B372953B-037B-4C14-B773-C3D6A414376D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B372953B-037B-4C14-B773-C3D6A414376D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B372953B-037B-4C14-B773-C3D6A414376D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16CBAAD0-D1E4-4A8C-8C77-95724C7DA84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16CBAAD0-D1E4-4A8C-8C77-95724C7DA84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16CBAAD0-D1E4-4A8C-8C77-95724C7DA84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16CBAAD0-D1E4-4A8C-8C77-95724C7DA84A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5A7ADC1-11D2-4BA9-AB12-AB5BAAC479FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5A7ADC1-11D2-4BA9-AB12-AB5BAAC479FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5A7ADC1-11D2-4BA9-AB12-AB5BAAC479FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5A7ADC1-11D2-4BA9-AB12-AB5BAAC479FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8289BBF8-E77C-4E12-9E1C-B621D1106F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8289BBF8-E77C-4E12-9E1C-B621D1106F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8289BBF8-E77C-4E12-9E1C-B621D1106F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8289BBF8-E77C-4E12-9E1C-B621D1106F52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

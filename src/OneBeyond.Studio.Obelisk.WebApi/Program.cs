@@ -244,8 +244,9 @@ public static class Program
             configuration,
             (dataAccessBuilder) =>
                 dataAccessBuilder
-                    .WithDomainEvents(isReceiverHost: true)); // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
-                                                              //.WithUnitOfWork();
+                    .WithDomainEvents(isReceiverHost: true) // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
+                    .WithChangeTracking()); 
+                    //.WithUnitOfWork();
 
         services.AddHostedService<DomainEventRelayJob>();
 

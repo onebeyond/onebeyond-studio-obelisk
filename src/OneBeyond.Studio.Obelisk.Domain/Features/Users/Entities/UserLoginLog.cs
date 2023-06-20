@@ -1,9 +1,11 @@
 using System;
 using EnsureThat;
+using OneBeyond.Studio.ChangeTracker.Domain.Attributes;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
+[ChangeTrackerIgnore]
 public sealed class UserLoginLog : AggregateRoot<int>
 {
     public UserLoginLog(string username, bool success, string? status)
