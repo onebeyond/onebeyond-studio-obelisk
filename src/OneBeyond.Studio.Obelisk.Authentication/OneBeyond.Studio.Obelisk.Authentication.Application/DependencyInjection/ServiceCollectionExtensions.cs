@@ -1,6 +1,7 @@
 using System;
 using EnsureThat;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -61,6 +62,8 @@ public static class ServiceCollectionExtensions
             .AddRoleManager<RoleManager<AuthRole>>()
             .AddUserManager<UserManager<AuthUser>>();
 
+        var allowCrossSiteCookies = configuration.GetOptions<CookieAuthNOptions>("CookieAuthN").AllowCrossSiteCookies;
+
         //NOTE: AddIdentity will overwrite some of the settings e.g. LoginPath
         //So this call must be made after services.AddIdentity
         services.ConfigureApplicationCookie(
@@ -68,7 +71,7 @@ public static class ServiceCollectionExtensions
             {
                 options.Cookie.Name = SessionConstants.CookieName;
                 options.Cookie.HttpOnly = true;
-                if (configuration.GetOptions<CookieAuthNOptions>("CookieAuthN").AllowCrossSiteCookies)
+                if (allowCrossSiteCookies)
                 {
                     options.Cookie.SameSite = SameSiteMode.None;
                 }
@@ -76,6 +79,17 @@ public static class ServiceCollectionExtensions
                 options.SlidingExpiration = true;
                 options.EventsType = typeof(CookieAuthenticationFlow);
             });
+
+        if (allowCrossSiteCookies)
+        {
+            // If 'AllowCrossSiteCookies' is set to true in the configuration,
+            // we set the 'SameSite' attribute of the 'TwoFactorUserIdScheme' cookie 
+            // to 'SameSiteMode.None'. This allows the TFA cookie to be included in cross-site requests.
+            services.Configure<CookieAuthenticationOptions>(
+                IdentityConstants.TwoFactorUserIdScheme,
+                x => x.Cookie.SameSite = SameSiteMode.None);
+        }
+
         services.AddSingleton((_) =>
             configuration.GetOptions<CookieAuthNOptions>("CookieAuthN"));
 
