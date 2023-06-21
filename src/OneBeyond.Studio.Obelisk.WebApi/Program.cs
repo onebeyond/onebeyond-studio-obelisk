@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
@@ -263,6 +265,17 @@ public static class Program
         services.AddMixedSourceBinder(); //Mixed source binder used to gather commands, queries and dtos in controllers from mixed sources: body and route
 
         services.AddLocalization(options => options.ResourcesPath = "Localizations/Resources");
+
+        if (configuration.GetValue<bool>("CookieAuthN:EnableNoneSameSiteModeFor2FACookie"))
+        {
+            // If 'EnableNoneSameSiteModeFor2FACookie' is set to true in the configuration,
+            // this block sets the 'SameSite' attribute of the 'TwoFactorUserIdScheme' cookie 
+            // to 'SameSiteMode.None'. This allows the cookie to be included in cross-site requests.
+            // Note: Use this setting with caution as it could potentially decrease security protections. 
+            services.Configure<CookieAuthenticationOptions>(
+                IdentityConstants.TwoFactorUserIdScheme,
+                x => x.Cookie.SameSite = SameSiteMode.None);
+        }
 
         services.AddHealthChecks(environment, configuration);
     }
