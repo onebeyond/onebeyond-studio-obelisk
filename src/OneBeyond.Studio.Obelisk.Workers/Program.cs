@@ -21,7 +21,7 @@ using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
 
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
-using SmtpEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 
 namespace OneBeyond.Studio.Obelisk.Workers;
 
@@ -81,7 +81,7 @@ internal static class Program
         if (environment.IsDevelopment())
         {
             serviceCollection.AddEmailSender(
-                configuration.GetOptions<SmtpEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
+                configuration.GetOptions<FolderEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
         }
         else
         {
