@@ -55,7 +55,7 @@ using OneBeyond.Studio.Obelisk.WebApi.Swagger;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
-using SmtpEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
@@ -146,7 +146,7 @@ public static class Program
         if (environment.IsDevelopment())
         {
             services.AddEmailSender(
-                configuration.GetOptions<SmtpEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
+                configuration.GetOptions<FolderEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
         }
         else
         {
