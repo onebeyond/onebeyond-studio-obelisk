@@ -9,12 +9,19 @@ using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
+using OneBeyond.Studio.Crosscuts.Options;
+using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
+using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
+using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
 using OneBeyond.Studio.Infrastructure.Azure.KeyVault.Configurations;
 using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
+
+using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
+using SmtpEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 
 namespace OneBeyond.Studio.Obelisk.Workers;
 
@@ -58,6 +65,7 @@ internal static class Program
         IServiceCollection serviceCollection)
     {
         var configuration = hostBuilderContext.Configuration;
+        var environment = hostBuilderContext.HostingEnvironment;
 
         serviceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
@@ -67,6 +75,19 @@ internal static class Program
             .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
 
         serviceCollection.AddAutoMapper(typeof(Application.AssemblyMark).Assembly);
+
+        serviceCollection.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+
+        if (environment.IsDevelopment())
+        {
+            serviceCollection.AddEmailSender(
+                configuration.GetOptions<SmtpEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
+        }
+        else
+        {
+            serviceCollection.AddEmailSender(
+                configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>("EmailSender:SendGrid"));
+        }
 
         serviceCollection.AddApplicationInsightsTelemetryWorkerService();
     }
