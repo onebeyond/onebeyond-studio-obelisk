@@ -1,6 +1,6 @@
 using EnsureThat;
 
-namespace OneBeyond.Studio.FeaturePermissions;
+namespace OneBeyond.Studio.FeaturePermissions.AmbientContexts;
 
 [Serializable]
 public record UserContext
