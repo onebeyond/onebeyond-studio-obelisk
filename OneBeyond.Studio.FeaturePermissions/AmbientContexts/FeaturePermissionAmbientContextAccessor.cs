@@ -32,9 +32,8 @@ public sealed class FeaturePermissionAmbientContextAccessor : IAmbientContextAcc
 
         var userContext = (userIdentity is null || !userIdentity.IsAuthenticated) ?
             null :
-            new UserContext(
-                httpContextAccessor.GetUserClaimValue(ClaimTypes.NameIdentifier),
-                Guid.Parse(userIdentity.TryGetLoginId()!),
+            new FeaturePermissionUserContext(                
+                userIdentity.TryGetLoginId()!,
                 userIdentity.GetUserType(),
                 userIdentity.GetUserRole(),
                 GetFeaturePermissions(claimsPrincipal));
