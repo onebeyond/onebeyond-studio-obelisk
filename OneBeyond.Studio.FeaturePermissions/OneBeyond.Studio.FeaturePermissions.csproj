@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
     <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0.1" />
     <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.1" />

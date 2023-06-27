@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OneBeyond.Studio.Application.AmbientContexts;
-public interface IUserIdAccessor
+internal interface IUserIdSetter
 {
-    public Guid? GetLoginId();
+    public void SetUserid(Guid aspNetUserId);
 }
