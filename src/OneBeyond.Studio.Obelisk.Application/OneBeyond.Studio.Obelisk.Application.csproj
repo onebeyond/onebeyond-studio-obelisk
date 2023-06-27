@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\OneBeyond.Studio.Application\OneBeyond.Studio.Application.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Domain\OneBeyond.Studio.Obelisk.Authentication.Domain.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Domain\OneBeyond.Studio.Obelisk.Domain.csproj" />
   </ItemGroup>

@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Http;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Crosscuts.Utilities.Identities;
 using OneBeyond.Studio.Hosting.AspNet.Http;
 
 namespace OneBeyond.Studio.FeaturePermissions.AmbientContexts;
-public sealed class AmbientContextAccessor
+
+/// <summary>
+/// Ambient context accessor with feature permissions. For use where the web ambient context is available.
+/// </summary>
+public sealed class FeaturePermissionAmbientContextAccessor : IAmbientContextAccessor<AmbientContext>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AmbientContextAccessor(IHttpContextAccessor httpContextAccessor)
+    public FeaturePermissionAmbientContextAccessor(IHttpContextAccessor httpContextAccessor)
     {
         EnsureArg.IsNotNull(httpContextAccessor, nameof(httpContextAccessor));
 

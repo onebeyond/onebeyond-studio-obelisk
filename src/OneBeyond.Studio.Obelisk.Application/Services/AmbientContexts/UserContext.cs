@@ -1,26 +1,20 @@
 using System;
 using EnsureThat;
+using OneBeyond.Studio.Application;
 
 namespace OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 
 //This class is not be sealed for the case when someone needs to extend it
 [Serializable]
-public record UserContext
+public record UserContext : UserContextBase
 {
     public UserContext(string userAuthId, Guid userId, string userTypeId, string? userRoleId)
+        : base(userAuthId, userTypeId, userRoleId)
     {
-        EnsureArg.IsNotNullOrWhiteSpace(userAuthId, nameof(userAuthId));
         EnsureArg.IsNotDefault(userId, nameof(userId));
-        EnsureArg.IsNotNullOrWhiteSpace(userTypeId, nameof(userTypeId));
 
-        UserAuthId = userAuthId;
         UserId = userId;
-        UserTypeId = userTypeId;
-        UserRoleId = userRoleId;
     }
 
-    public string UserAuthId { get; }
-    public Guid UserId { get; }
-    public string UserTypeId { get; }
-    public string? UserRoleId { get; }
+    public Guid UserId { get; init; }
 }

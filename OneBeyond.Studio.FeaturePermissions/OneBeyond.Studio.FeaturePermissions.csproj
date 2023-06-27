@@ -13,4 +13,8 @@
     <PackageReference Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OneBeyond.Studio.Application\OneBeyond.Studio.Application.csproj" />
+  </ItemGroup>
+
 </Project>
