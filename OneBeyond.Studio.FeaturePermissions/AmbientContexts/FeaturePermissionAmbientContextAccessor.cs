@@ -10,7 +10,7 @@ namespace OneBeyond.Studio.FeaturePermissions.AmbientContexts;
 /// <summary>
 /// Ambient context accessor with feature permissions. For use where the web ambient context is available.
 /// </summary>
-public sealed class FeaturePermissionAmbientContextAccessor : IAmbientContextAccessor<AmbientContext>
+public class FeaturePermissionAmbientContextAccessor : IAmbientContextAccessor<FeaturePermissionAmbientContext>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -21,10 +21,10 @@ public sealed class FeaturePermissionAmbientContextAccessor : IAmbientContextAcc
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public AmbientContext AmbientContext
+    public FeaturePermissionAmbientContext AmbientContext
         => BuildAmbientContext(_httpContextAccessor);
 
-    private AmbientContext BuildAmbientContext(IHttpContextAccessor httpContextAccessor)
+    private FeaturePermissionAmbientContext BuildAmbientContext(IHttpContextAccessor httpContextAccessor)
     {
         var claimsPrincipal = httpContextAccessor.HttpContext?.User;
 
@@ -38,7 +38,7 @@ public sealed class FeaturePermissionAmbientContextAccessor : IAmbientContextAcc
                 userIdentity.GetUserRole(),
                 GetFeaturePermissions(claimsPrincipal));
 
-        return new AmbientContext(userContext);
+        return new FeaturePermissionAmbientContext(userContext);
     }
 
 

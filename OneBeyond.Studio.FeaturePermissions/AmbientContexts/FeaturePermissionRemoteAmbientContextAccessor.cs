@@ -8,7 +8,7 @@ using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
 
 namespace OneBeyond.Studio.FeaturePermissions.AmbientContexts;
-internal sealed class FeaturePermissionRemoteAmbientContextAccessor<TAuthUser> : IAmbientContextAccessor<AmbientContext>
+internal sealed class FeaturePermissionRemoteAmbientContextAccessor<TAuthUser> : IAmbientContextAccessor<FeaturePermissionAmbientContext>
     where TAuthUser : IdentityUser<Guid>   
 {
     private readonly IUserIdAccessor _userIdAccessor;    
@@ -22,28 +22,28 @@ internal sealed class FeaturePermissionRemoteAmbientContextAccessor<TAuthUser> :
         _userManager = userManager;
     }
 
-    public AmbientContext AmbientContext => BuildAmbientContextAsync().GetAwaiter().GetResult();
+    public FeaturePermissionAmbientContext AmbientContext => BuildAmbientContextAsync().GetAwaiter().GetResult();
 
-    private async Task<AmbientContext> BuildAmbientContextAsync() {
+    private async Task<FeaturePermissionAmbientContext> BuildAmbientContextAsync() {
         var userId = _userIdAccessor.GetLoginId();
 
         if (userId is null)
         {
-            return new AmbientContext(null);
+            return new FeaturePermissionAmbientContext(null);
         }
 
         var authUser = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
 
         if (authUser is null)
         {
-            return new AmbientContext(null);
+            return new FeaturePermissionAmbientContext(null);
         }
 
         var claims = await _userManager.GetClaimsAsync(authUser).ConfigureAwait(false);
 
         if (claims is null)
         {
-            return new AmbientContext(null);
+            return new FeaturePermissionAmbientContext(null);
         }
 
         var roles = await _userManager.GetRolesAsync(authUser).ConfigureAwait(false);
@@ -58,6 +58,6 @@ internal sealed class FeaturePermissionRemoteAmbientContextAccessor<TAuthUser> :
         var userContext = new FeaturePermissionUserContext(
             authUser.Id.ToString(), "User", roleList, featurePermissions);
 
-        return new AmbientContext(userContext);
+        return new FeaturePermissionAmbientContext(userContext);
     }
 }

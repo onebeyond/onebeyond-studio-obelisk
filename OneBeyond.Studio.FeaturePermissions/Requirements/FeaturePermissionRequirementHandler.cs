@@ -2,16 +2,16 @@ using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Application.SharedKernel.Authorization;
 using OneBeyond.Studio.FeaturePermissions.AmbientContexts;
-using AmbientContext = OneBeyond.Studio.FeaturePermissions.AmbientContexts.AmbientContext;
+using FeaturePermissionAmbientContext = OneBeyond.Studio.FeaturePermissions.AmbientContexts.FeaturePermissionAmbientContext;
 
 namespace OneBeyond.Studio.FeaturePermissions.Requirements;
 public class FeaturePermissionRequirementHandler<TRequest> : IAuthorizationRequirementHandler<HasFeaturePermissionRequirement, TRequest>
     where TRequest : IBaseRequest
 {
-    private readonly IAmbientContextAccessor<AmbientContext> _ambientContextAccessor;
+    private readonly IAmbientContextAccessor<FeaturePermissionAmbientContext> _ambientContextAccessor;
 
     public FeaturePermissionRequirementHandler(
-        IAmbientContextAccessor<AmbientContext> ambientContextAccessor)
+        IAmbientContextAccessor<FeaturePermissionAmbientContext> ambientContextAccessor)
     {
         _ambientContextAccessor = ambientContextAccessor;
     }
