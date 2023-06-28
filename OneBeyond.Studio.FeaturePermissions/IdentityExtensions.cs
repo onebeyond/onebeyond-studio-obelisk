@@ -8,10 +8,7 @@ using System.Threading.Tasks;
 
 namespace OneBeyond.Studio.FeaturePermissions;
 public static class IdentityExtensions
-{
-    public static string GetUserId(this IIdentity identity)
-            => identity.GetFromClaim(ApplicationClaims.ApplicationUserId);
-
+{    
     public static string GetUserType(this IIdentity identity)
         => identity.GetFromClaim(ApplicationClaims.ApplicationUserType);
 
