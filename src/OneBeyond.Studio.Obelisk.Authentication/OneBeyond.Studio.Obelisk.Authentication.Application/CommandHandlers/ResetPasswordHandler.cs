@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
@@ -15,6 +17,7 @@ namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, ResetPasswordStatus>
 {
     private readonly UserManager<AuthUser> _userManager;
+    private static readonly ILogger Logger = LogManager.CreateLogger<ResetPasswordHandler>();
 
     public ResetPasswordHandler(
         UserManager<AuthUser> userManager
@@ -33,12 +36,14 @@ internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, Rese
             var identityUser = await FindUserByIdAsync(command.UserId);
             return await ResetUserPasswordAsync(identityUser, command.Token, command.Password);
         }
-        catch (AuthLoginNotFoundException)
+        catch (AuthLoginNotFoundException ex)
         {
+            Logger.LogInformation(ex.Message);
             return ResetPasswordStatus.InvalidToken;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Logger.LogInformation("{@UserId} reset password exception: {@exception}", command.UserId, ex.Message);
             return ResetPasswordStatus.OtherError;
         }
     }
