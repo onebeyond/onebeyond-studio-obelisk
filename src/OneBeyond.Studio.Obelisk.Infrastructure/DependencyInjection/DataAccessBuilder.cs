@@ -36,8 +36,8 @@ internal sealed class DataAccessBuilder : IDataAccessBuilder
         services.AddScoped(typeof(IAggregateRootRWRepository<,,>), typeof(AggregateRootRWRepository<,,>));
 
         services.AddScoped(typeof(IRWBulkRepository<,>), typeof(RWBulkRepository<,>));
-        services.AddScoped(typeof(IBulkUpdateConfiguration<,>), typeof(BulkUpdateConfiguration<,>));
-        services.AddScoped(typeof(IBulkUpdateConfiguration<TodoItem, Guid>), typeof(TodoItemBulkUpdateConfiguration));
+        services.AddSingleton(typeof(IBulkUpdateConfiguration<,>), typeof(BulkUpdateConfiguration<,>));
+        services.AddSingleton(typeof(IBulkUpdateConfiguration<TodoItem, Guid>), typeof(TodoItemBulkUpdateConfiguration));
     }
 
     public IDataAccessBuilder WithUnitOfWork(TimeSpan? timeout = default, IsolationLevel? isolationLevel = default)
