@@ -110,16 +110,14 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("ResetPassword")]
-    public async Task<ResetPasswordStatus> ResetPassword(
+    public Task<ResetPasswordStatus> ResetPassword(
         [FromBody] ResetPasswordRequest resetPassword,
         CancellationToken cancellationToken)
-    {
-        return await _mediator.Send(new ResetPassword(
-               resetPassword.UserId,
-               resetPassword.Token,
-               resetPassword.Password),
-           cancellationToken).ConfigureAwait(false);
-    }
+        => _mediator.Send(new ResetPassword(
+            resetPassword.UserId,
+            resetPassword.Token,
+            resetPassword.Password),
+            cancellationToken);
 
     [Authorize]
     [HttpPost("ChangePassword")]
