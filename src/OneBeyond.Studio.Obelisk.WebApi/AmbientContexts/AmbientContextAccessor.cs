@@ -29,7 +29,7 @@ internal sealed class AmbientContextAccessor : IAmbientContextAccessor<AmbientCo
         var userContext = userIdentity is null || !userIdentity.IsAuthenticated
             ? null
             : new UserContext(
-                httpContextAccessor.GetUserAuthId(ClaimTypes.NameIdentifier), // Claim type depends on authentication method in use. For example, ot might be ClaimConstants.ObjectId for pure OpenId
+                httpContextAccessor.GetUserClaimValue(ClaimTypes.NameIdentifier), // Claim type depends on authentication method in use. For example, ot might be ClaimConstants.ObjectId for pure OpenId
                 Guid.Parse(userIdentity.GetUserId()),
                 userIdentity.GetUserType(),
                 userIdentity.GetUserRole());

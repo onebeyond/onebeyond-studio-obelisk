@@ -3,7 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using MediatR;
+using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Obelisk.Application.Exceptions;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
@@ -35,7 +38,7 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
         //Please note! The reason we use mediator within a command handler
         //is because we consider Authentication project as an external for us (for our Domain).
         //In case if you want to use mediator to execute commands or your Domain - that most likely would be considered as a code smell.
-        await _mediator.Send(
+        var updateLoginResult = await _mediator.Send(
             new UpdateLogin(
                 user.LoginId,
                 command.UserName,
@@ -44,8 +47,15 @@ internal sealed class UpdateUserHandler : IRequestHandler<UpdateUser>
             ),
             cancellationToken).ConfigureAwait(false);
 
-        user.Apply(command);
+        if (updateLoginResult.Success)
+        {
+            user.Apply(command);
 
-        await _userRWRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+            await _userRWRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            throw new ObeliskApplicationException(string.Join(",", updateLoginResult.Errors));
+        }
     }
 }

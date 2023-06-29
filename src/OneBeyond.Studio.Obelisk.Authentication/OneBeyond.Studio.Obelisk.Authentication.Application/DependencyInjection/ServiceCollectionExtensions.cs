@@ -1,6 +1,7 @@
 using System;
 using EnsureThat;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -53,10 +54,15 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<CookieAuthenticationFlow>();
 
-        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>()
+        var identityBuilder = services.AddIdentity<AuthUser, AuthRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+        })
             .AddDefaultTokenProviders()
             .AddRoleManager<RoleManager<AuthRole>>()
             .AddUserManager<UserManager<AuthUser>>();
+
+        var allowCrossSiteCookies = configuration.GetOptions<CookieAuthNOptions>("CookieAuthN").AllowCrossSiteCookies;
 
         //NOTE: AddIdentity will overwrite some of the settings e.g. LoginPath
         //So this call must be made after services.AddIdentity
@@ -65,7 +71,7 @@ public static class ServiceCollectionExtensions
             {
                 options.Cookie.Name = SessionConstants.CookieName;
                 options.Cookie.HttpOnly = true;
-                if (configuration.GetOptions<CookieAuthNOptions>("CookieAuthN").AllowCrossSiteCookies)
+                if (allowCrossSiteCookies)
                 {
                     options.Cookie.SameSite = SameSiteMode.None;
                 }
@@ -73,8 +79,26 @@ public static class ServiceCollectionExtensions
                 options.SlidingExpiration = true;
                 options.EventsType = typeof(CookieAuthenticationFlow);
             });
+
+        if (allowCrossSiteCookies)
+        {
+            // If 'AllowCrossSiteCookies' is set to true in the configuration,
+            // we set the 'SameSite' attribute of the 'TwoFactorUserIdScheme' cookie 
+            // to 'SameSiteMode.None'. This allows the TFA cookie to be included in cross-site requests.
+            services.Configure<CookieAuthenticationOptions>(
+                IdentityConstants.TwoFactorUserIdScheme,
+                x => x.Cookie.SameSite = SameSiteMode.None);
+        }
+
         services.AddSingleton((_) =>
             configuration.GetOptions<CookieAuthNOptions>("CookieAuthN"));
+
+        services.Configure<SecurityStampValidatorOptions>(options =>
+        {
+            //Every time we logout we update the user security stamp to make sure that all existing auth cookies are invalidated.
+            //Here we decrease the default interval between security stamp validations from 30 minutes to 1 minute
+            options.ValidationInterval = TimeSpan.FromSeconds(60);
+        });
 
         //NOTE: Order is important
         //App auth uses Identity which will override any configured options for forwarding

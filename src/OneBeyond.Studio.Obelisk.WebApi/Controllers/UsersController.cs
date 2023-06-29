@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -12,7 +13,6 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
@@ -106,7 +106,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         await Mediator.Send(
             new SendResetPasswordEmail(
                 loginId,
-                _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordToken)),
+                _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId,resetPasswordToken)),
             cancellationToken)
             .ConfigureAwait(false);
     }

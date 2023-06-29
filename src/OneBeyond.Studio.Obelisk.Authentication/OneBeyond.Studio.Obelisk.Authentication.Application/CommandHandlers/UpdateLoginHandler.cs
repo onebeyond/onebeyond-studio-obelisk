@@ -5,12 +5,13 @@ using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class UpdateLoginHandler : IRequestHandler<UpdateLogin>
+internal sealed class UpdateLoginHandler : IRequestHandler<UpdateLogin, UpdateLoginResult>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -22,7 +23,7 @@ internal sealed class UpdateLoginHandler : IRequestHandler<UpdateLogin>
         _userManager = userManager;
     }
 
-    public async Task Handle(UpdateLogin command, CancellationToken cancellationToken)
+    public async Task<UpdateLoginResult> Handle(UpdateLogin command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
@@ -44,7 +45,9 @@ internal sealed class UpdateLoginHandler : IRequestHandler<UpdateLogin>
             await _userManager.AddToRoleAsync(identityUser, command.RoleId).ConfigureAwait(false);
         }
 
-        await _userManager.UpdateAsync(identityUser).ConfigureAwait(false);
+        var result = await _userManager.UpdateAsync(identityUser).ConfigureAwait(false);
+
+        return new UpdateLoginResult(result.Succeeded, result.Errors.Select(x => x.Description));
     }
 
 }
