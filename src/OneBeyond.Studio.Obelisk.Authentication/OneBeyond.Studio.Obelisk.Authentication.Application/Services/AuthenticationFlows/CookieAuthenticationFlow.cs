@@ -5,6 +5,7 @@ using EnsureThat;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
@@ -44,6 +45,7 @@ internal sealed class CookieAuthenticationFlow : CookieAuthenticationEvents
 
         try
         {
+            await SecurityStampValidator.ValidatePrincipalAsync(context); //We validate security stamp to make sure that after a user is logged out, all existing cookies are invalid.
             await _authFlowHandler.OnValidatingLoginAsync(loginId, CancellationToken.None);
             await base.ValidatePrincipal(context);
             Logger.LogInformation(
