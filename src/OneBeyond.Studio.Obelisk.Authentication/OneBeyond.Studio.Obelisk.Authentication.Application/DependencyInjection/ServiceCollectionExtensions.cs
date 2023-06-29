@@ -96,7 +96,7 @@ public static class ServiceCollectionExtensions
         services.Configure<SecurityStampValidatorOptions>(options =>
         {
             //Every time we logout we update the user security stamp to make sure that all existing auth cookies are invalidated
-            options.ValidationInterval = TimeSpan.FromSeconds(10);
+            options.ValidationInterval = TimeSpan.FromSeconds(60);
         });
 
         //NOTE: Order is important
