@@ -65,7 +65,7 @@ public sealed class AuthController : ControllerBase
         => _mediator.Send(signInViaPassword, cancellationToken);
 
     [HttpPost("Basic/SignInWithTwoFA")]
-        public Task<SignInResult> SignInWithTwoFA(
+    public Task<SignInResult> SignInWithTwoFA(
         [FromBody] SignInTfa signInViaTfa,
         CancellationToken cancellationToken)
         => _mediator.Send(signInViaTfa, cancellationToken);
@@ -84,7 +84,7 @@ public sealed class AuthController : ControllerBase
 
     [HttpPost("ForgotPassword")]
     public async Task ForgotPassword(
-        [FromBody] ForgotPasswordRequest forgotPassword, 
+        [FromBody] ForgotPasswordRequest forgotPassword,
         CancellationToken cancellationToken)
     {
         // To guard against timing attacks
@@ -99,7 +99,7 @@ public sealed class AuthController : ControllerBase
             await _mediator.Send(
                 new SendResetPasswordEmail(
                         resetPasswordTokenResult.LoginId,
-                        _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.LoginId,resetPasswordTokenResult.Value)),
+                        _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.LoginId, resetPasswordTokenResult.Value)),
                     cancellationToken).ConfigureAwait(false);
         }
         catch (Exception)
@@ -110,29 +110,19 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("ResetPassword")]
-    public async Task ResetPassword(
-        [FromBody] ResetPasswordRequest resetPassword, 
+    public Task<ResetPasswordStatus> ResetPassword(
+        [FromBody] ResetPasswordRequest resetPassword,
         CancellationToken cancellationToken)
-    {
-        try
-        {
-            await _mediator.Send(new ResetPassword(
-                   resetPassword.UserId,
-                   resetPassword.Token,
-                   resetPassword.Password),
-               cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            // Don't throw exception so we don't reveal which emails are currently in use
-            Logger.LogError("Failed to reset user password for user: {exception}", ex.Message);
-        }
-    }
+        => _mediator.Send(new ResetPassword(
+            resetPassword.UserId,
+            resetPassword.Token,
+            resetPassword.Password),
+            cancellationToken);
 
     [Authorize]
     [HttpPost("ChangePassword")]
     public Task<ChangePasswordResult> ChangePassword(
-        [FromBody] ChangePasswordRequest changePassword, 
+        [FromBody] ChangePasswordRequest changePassword,
         CancellationToken cancellationToken)
         => _mediator.Send(new ChangePassword(
             _ambientContext.GetUserContext().UserAuthId,
