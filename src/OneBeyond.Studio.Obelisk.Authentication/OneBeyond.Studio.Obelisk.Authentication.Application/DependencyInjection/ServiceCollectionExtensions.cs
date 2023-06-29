@@ -93,6 +93,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton((_) =>
             configuration.GetOptions<CookieAuthNOptions>("CookieAuthN"));
 
+        services.Configure<SecurityStampValidatorOptions>(options =>
+        {
+            //Every time we logout we update the user security stamp to make sure that all existing auth cookies are invalidated.
+            //Here we decrease the default interval between security stamp validations from 30 minutes to 1 minute
+            options.ValidationInterval = TimeSpan.FromSeconds(60);
+        });
+
         //NOTE: Order is important
         //App auth uses Identity which will override any configured options for forwarding
         //If using JWT and Identity combined, UseCombinedScheme must come last

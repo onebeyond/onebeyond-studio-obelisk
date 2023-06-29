@@ -6,13 +6,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Crosscuts.Utilities.Identities;
-using OneBeyond.Studio.Obelisk.Application.Exceptions;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
+using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
@@ -20,6 +20,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.Requests.Auth;
+using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 using SignInResult = OneBeyond.Studio.Obelisk.Authentication.Domain.SignInResult;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
@@ -28,21 +29,26 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [ApiVersion("1.0")]
 public sealed class AuthController : ControllerBase
 {
+    private static readonly ILogger Logger = LogManager.CreateLogger<AuthController>();
+
     private readonly IMediator _mediator;
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
     private readonly IOptions<IdentityOptions> _identityOptions;
-    private static readonly ILogger Logger = LogManager.CreateLogger<AuthController>();
+    private readonly AmbientContext _ambientContext;
 
     public AuthController(
         IMediator mediator,
+        IAmbientContextAccessor<AmbientContext> ambientContextAccessor,
         ClientApplicationLinkGenerator clientApplicationLinkGenerator,
         IOptions<IdentityOptions> identityOptions)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
+        EnsureArg.IsNotNull(ambientContextAccessor, nameof(ambientContextAccessor));
         EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
         EnsureArg.IsNotNull(identityOptions, nameof(identityOptions));
 
         _mediator = mediator;
+        _ambientContext = ambientContextAccessor.AmbientContext;
         _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
         _identityOptions = identityOptions;
     }
@@ -73,7 +79,7 @@ public sealed class AuthController : ControllerBase
     [Authorize]
     [HttpPost("SignOut")]
     public Task SignOut(CancellationToken cancellationToken)
-        => _mediator.Send(new SignOut(), cancellationToken);
+        => _mediator.Send(new SignOut(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
 
 
     [HttpPost("ForgotPassword")]
@@ -121,7 +127,7 @@ public sealed class AuthController : ControllerBase
         [FromBody] ChangePasswordRequest changePassword,
         CancellationToken cancellationToken)
         => _mediator.Send(new ChangePassword(
-            HttpContext.User?.Identity?.TryGetLoginId() ?? throw new ObeliskApplicationException("Failed to retrieve the ID of a logged in user"),
+            _ambientContext.GetUserContext().UserAuthId,
             changePassword.OldPassword,
             changePassword.NewPassword), cancellationToken);
 
