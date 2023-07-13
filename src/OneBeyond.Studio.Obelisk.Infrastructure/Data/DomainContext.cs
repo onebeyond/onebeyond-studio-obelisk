@@ -5,6 +5,7 @@ using OneBeyond.Studio.DataAccess.EFCore.DbContexts;
 using OneBeyond.Studio.DataAccess.EFCore.DomainEvents;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
+using SmartEnum.EFCore;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
@@ -39,5 +40,7 @@ public class DomainContext : IdentityDbContext<AuthUser, AuthRole, string>
             builder
                 .ApplyConfiguration(new RaisedDomainEventConfiguration());
         }
+
+        builder.ConfigureSmartEnum();
     }
 }
