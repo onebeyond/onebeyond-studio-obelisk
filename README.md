@@ -4,7 +4,7 @@
   </a>
 </p>
 
-[![License](https://img.shields.io/github/license/OneBeyond/onebeyond-studio-obelisk?style=plastic)](LICENSE)
+[![License](https://img.shields.io/github/license/OneBeyond/onebeyond-studio-obelisk?style=plastic)](LICENSE) [![Maintainability](https://api.codeclimate.com/v1/badges/f8e43de616f1c08ee399/maintainability)](https://codeclimate.com/github/onebeyond/onebeyond-studio-obelisk/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/f8e43de616f1c08ee399/test_coverage)](https://codeclimate.com/github/onebeyond/onebeyond-studio-obelisk/test_coverage)
 
 # Introduction
 
