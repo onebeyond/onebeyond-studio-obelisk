@@ -92,7 +92,9 @@ internal static class Program
         ConfigureSerilog(hostBuilderContext);
     }
 
-    private static void ConfigureSerilog(HostBuilderContext hostBuilderContext)
+    private static void ConfigureSerilog(
+        HostBuilderContext hostBuilderContext,
+        IServiceCollection serviceCollection)
     {
         var loggerConfiguration = new LoggerConfiguration()
                .ReadFrom.Configuration(hostBuilderContext.Configuration);
@@ -107,6 +109,9 @@ internal static class Program
                     TelemetryConfiguration.CreateDefault(),
                     TelemetryConverter.Traces)
                 .CreateLogger();
+
+        serviceCollection.AddLogging(
+            cfg => cfg.AddSerilog(Log.Logger, true));
     }
 
     private static void ConfigureContainerBuilder(
