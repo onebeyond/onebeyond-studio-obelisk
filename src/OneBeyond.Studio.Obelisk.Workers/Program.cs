@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,10 +20,8 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
-
-using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
-using Microsoft.ApplicationInsights.Extensibility;
+using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
 namespace OneBeyond.Studio.Obelisk.Workers;
 
