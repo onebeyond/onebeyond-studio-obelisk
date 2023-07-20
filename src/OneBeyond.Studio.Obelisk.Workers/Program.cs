@@ -89,7 +89,7 @@ internal static class Program
         }
 
         serviceCollection.AddApplicationInsightsTelemetryWorkerService();
-        ConfigureSerilog(hostBuilderContext);
+        ConfigureSerilog(hostBuilderContext, serviceCollection);
     }
 
     private static void ConfigureSerilog(
