@@ -22,6 +22,7 @@ using Serilog;
 
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace OneBeyond.Studio.Obelisk.Workers;
 
@@ -41,7 +42,6 @@ internal static class Program
                 .ConfigureFunctionsWorkerDefaults()
                 .ConfigureServices(ConfigureServiceCollection)
                 .ConfigureContainer<ContainerBuilder>(ConfigureContainerBuilder)
-                .UseSerilog(ConfigureSerilog)
                 .Build())
             {
                 Log.Information("Azure Function host is starting");
@@ -90,6 +90,24 @@ internal static class Program
         }
 
         serviceCollection.AddApplicationInsightsTelemetryWorkerService();
+        ConfigureSerilog(hostBuilderContext);
+    }
+
+    private static void ConfigureSerilog(HostBuilderContext hostBuilderContext)
+    {
+        var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(hostBuilderContext.Configuration);
+
+        Log.Logger = hostBuilderContext.HostingEnvironment.IsDevelopment()
+            ? loggerConfiguration.CreateLogger()
+            : loggerConfiguration
+                .Enrich.FromLogContext()
+                // NOTE: the line below needs to be hardcoded even if the same property is already set in the configuration JSON
+                .Enrich.WithProperty("ApplicationExecutable", "Workers")
+                .WriteTo.ApplicationInsights(
+                    TelemetryConfiguration.CreateDefault(),
+                    TelemetryConverter.Traces)
+                .CreateLogger();
     }
 
     private static void ConfigureContainerBuilder(
@@ -119,9 +137,4 @@ internal static class Program
             builder.AddUserSecrets(Assembly.GetExecutingAssembly());
         }
     }
-
-    private static void ConfigureSerilog(
-        HostBuilderContext hostBuilderContext,
-        LoggerConfiguration loggerConfiguration)
-        => loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration);
 }
