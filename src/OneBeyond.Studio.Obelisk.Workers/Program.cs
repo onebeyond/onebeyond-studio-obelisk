@@ -27,7 +27,7 @@ namespace OneBeyond.Studio.Obelisk.Workers;
 
 internal static class Program
 {
-    public static void Main(string[] args)
+    public static void Main(string[] _)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
