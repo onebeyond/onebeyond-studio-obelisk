@@ -83,16 +83,12 @@ public static class Program
 
             ConfigureLogging(builder.Host);
 
-            builder.Host.ConfigureServices(
-                (hostBuilerContext, serviceCollection) =>
-                    ConfigureServices(hostBuilerContext, serviceCollection));
+            builder.Host.ConfigureServices(ConfigureServices);
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-            builder.Host.ConfigureContainer<ContainerBuilder>(
-                (hostBuilderContext, containerBuilder) =>
-                    ConfigureAutofacServices(hostBuilderContext, containerBuilder));
+            builder.Host.ConfigureContainer<ContainerBuilder>(ConfigureAutofacServices);
 
             var app = builder.Build();
 
