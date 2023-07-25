@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0" />
-    <PackageReference Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.3" />
+    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.4" />
+    <PackageReference Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.4" />
   </ItemGroup>
 
 </Project>

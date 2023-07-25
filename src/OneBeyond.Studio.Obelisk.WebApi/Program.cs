@@ -55,7 +55,7 @@ using OneBeyond.Studio.Obelisk.WebApi.Swagger;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
-using SmtpEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
@@ -83,16 +83,12 @@ public static class Program
 
             ConfigureLogging(builder.Host);
 
-            builder.Host.ConfigureServices(
-                (hostBuilerContext, serviceCollection) =>
-                    ConfigureServices(hostBuilerContext, serviceCollection));
+            builder.Host.ConfigureServices(ConfigureServices);
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-            builder.Host.ConfigureContainer<ContainerBuilder>(
-                (hostBuilderContext, containerBuilder) =>
-                    ConfigureAutofacServices(hostBuilderContext, containerBuilder));
+            builder.Host.ConfigureContainer<ContainerBuilder>(ConfigureAutofacServices);
 
             var app = builder.Build();
 
@@ -146,7 +142,7 @@ public static class Program
         if (environment.IsDevelopment())
         {
             services.AddEmailSender(
-                configuration.GetOptions<SmtpEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
+                configuration.GetOptions<FolderEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
         }
         else
         {

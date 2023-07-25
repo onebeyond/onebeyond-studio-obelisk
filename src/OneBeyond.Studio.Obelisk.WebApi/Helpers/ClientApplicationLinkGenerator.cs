@@ -35,11 +35,13 @@ public sealed class ClientApplicationLinkGenerator
         return new Uri(url);
     }
 
-    public Uri GetResetPasswordUrl(string resetPasswordToken)
+    public Uri GetResetPasswordUrl(
+        string loginId, 
+        string resetPasswordToken)
     {
         EnsureArg.IsNotNullOrWhiteSpace(resetPasswordToken, nameof(resetPasswordToken));
 
-        var url = $"{_clientApplicationOptions.ResetPasswordUrl}?code={Uri.EscapeDataString(resetPasswordToken)}";
+        var url = $"{_clientApplicationOptions.ResetPasswordUrl}?loginId={Uri.EscapeDataString(loginId)}&code={Uri.EscapeDataString(resetPasswordToken)}";
 
         return new Uri(url);
     }
