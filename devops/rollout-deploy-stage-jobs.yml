@@ -17,8 +17,6 @@ parameters:
     displayName: "Environment name to run the code against."
   - name: attemptNumber
     displayName: "Attempt number"
-    type: number
-    default: 1
 
 jobs:
   - job: Build_TF_Plan
