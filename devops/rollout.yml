@@ -30,6 +30,8 @@ stages:
     dependsOn: [Set_Deployment_Number]
     jobs:
       - template: "rollout-deploy-stage-jobs.yml"
+        variables:
+          initialAttempt: 1
         parameters:
           buildArtifactPipelineId: build-ci
           projectCode: "obelisk" # It has to be passed as a literal or parameter value
@@ -37,12 +39,15 @@ stages:
           devOpsEnvironment: "Obelisk Backend QA"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "QA"
+          attemptNumber: $[counter(variables['initialAttempt'], 1)]
 
   - stage: Deploy_To_UAT
     displayName: "UAT"
     dependsOn: [Deploy_To_QA]
     jobs:
       - template: "rollout-deploy-stage-jobs.yml"
+        variables:
+          initialAttempt: 1
         parameters:
           buildArtifactPipelineId: build-ci
           projectCode: "obelisk" # It has to be passed as a literal or parameter value
@@ -50,3 +55,4 @@ stages:
           devOpsEnvironment: "Obelisk Backend UAT"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "UAT"
+          attemptNumber: $[counter(variables['initialAttempt'], 1)]

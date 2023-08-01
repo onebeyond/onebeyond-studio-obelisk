@@ -15,10 +15,10 @@ parameters:
     displayName: "Azure DevOps service connection"
   - name: runtimeEnvironment # Used for picking up the appsettings.<runtimeEnvironment>.json file, so case is important on Linux'
     displayName: "Environment name to run the code against."
-
-variables:
-  initialAttempt: 1
-  attemptNumber: $[counter(variables['initialAttempt'], 1)]
+  - name: attemptNumber
+    displayName: "Attempt number"
+    type: number
+    default: 1
 
 jobs:
   - job: Build_TF_Plan
