@@ -15,8 +15,6 @@ parameters:
     displayName: "Azure DevOps service connection"
   - name: runtimeEnvironment # Used for picking up the appsettings.<runtimeEnvironment>.json file, so case is important on Linux'
     displayName: "Environment name to run the code against."
-  - name: attemptNumber
-    displayName: "Attempt number"
 
 jobs:
   - job: Build_TF_Plan
@@ -47,7 +45,7 @@ jobs:
 
       - publish: "$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip"
         displayName: "Publish TF Plan"
-        artifact: "TF-Plan-${{parameters.stageCode}}-${{parameters.attemptNumber}}"
+        artifact: "TF-Plan-${{parameters.stageCode}}"
 
   - ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
       - job: Confirm_TF_Plan
@@ -89,7 +87,7 @@ jobs:
             - task: ExtractFiles@1
               displayName: "Extract TF Plan"
               inputs:
-                archiveFilePatterns: "$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}-${{parameters.attemptNumber}}/TF-Plan-${{parameters.stageCode}}.zip"
+                archiveFilePatterns: "$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}/TF-Plan-${{parameters.stageCode}}.zip"
                 destinationFolder: "$(tf.workingDirectory)"
 
             - task: ExtractFiles@1
@@ -145,7 +143,7 @@ jobs:
                 azureSubscription: ${{parameters.devOpsServiceConnection}}
                 appType: webAppLinux
                 appName: "$(Terraform_Output.web_api_app_service_name)"
-                package: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebApi/WebApi123.zip"
+                package: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebApi/WebApi.zip"
                 deploymentMethod: zipDeploy
                 appSettings: >
                   -ASPNETCORE_ENVIRONMENT "${{parameters.runtimeEnvironment}}"

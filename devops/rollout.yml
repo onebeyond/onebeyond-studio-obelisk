@@ -4,10 +4,6 @@ pr: none
 
 variables:
   devOpsServiceConnection: "Obelisk Backend Subscription" # As it stands in Azure DevOps
-  qaInitialAttempt: 1
-  qaAttempt: $[counter(variables['qaInitialAttempt'], 1)]
-  uatInitialAttempt: 1
-  uatAttempt: $[counter(variables['uatInitialAttempt'], 1)]
 
 resources:
   pipelines:
@@ -41,7 +37,6 @@ stages:
           devOpsEnvironment: "Obelisk Backend QA"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "QA"
-          attemptNumber: $(qaAttempt)
 
   - stage: Deploy_To_UAT
     displayName: "UAT"
@@ -55,4 +50,3 @@ stages:
           devOpsEnvironment: "Obelisk Backend UAT"
           devOpsServiceConnection: $(devOpsServiceConnection)
           runtimeEnvironment: "UAT"
-          attemptNumber: $(qaAttempt)
