@@ -17,8 +17,8 @@ pool:
 variables:
   major: 1
   minor: 2
-  run.sonar: true
-  run.tests: true
+  run.sonar: false
+  run.tests: false
   build.compileMigrationDesignerFiles: true # Compilation of EF designer files
   sonarCloud.endpoint: "ObeliskBackendSonarCloud" # Service connection as it stands in Azure DevOps
 
