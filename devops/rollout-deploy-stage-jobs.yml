@@ -1,111 +1,115 @@
 parameters:
   - name: buildArtifactPipelineId
-    displayName: 'ID of pipeline used for building artifacts'
+    displayName: "ID of pipeline used for building artifacts"
   - name: projectCode
-    displayName: 'Project code'
+    displayName: "Project code"
   - name: stageCode
-    displayName: 'Stage code'
+    displayName: "Stage code"
     values:
       - qa
       - uat
       - prod
   - name: devOpsEnvironment
-    displayName: 'Environment name in Azure DevOps to be target by the stage deployment'
+    displayName: "Environment name in Azure DevOps to be target by the stage deployment"
   - name: devOpsServiceConnection
-    displayName: 'Azure DevOps service connection'
+    displayName: "Azure DevOps service connection"
   - name: runtimeEnvironment # Used for picking up the appsettings.<runtimeEnvironment>.json file, so case is important on Linux'
-    displayName: 'Environment name to run the code against.'
+    displayName: "Environment name to run the code against."
+
+variables:
+  initialAttempt: 1
+  attemptNumber: $[counter(variables['initialAttempt'], 1)]
 
 jobs:
   - job: Build_TF_Plan
-    displayName: 'Build Stage TF Plan'
+    displayName: "Build Stage TF Plan"
     variables:
-      tf.workingDirectory: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/TF-Files'
+      tf.workingDirectory: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/TF-Files"
     steps:
       - checkout: none
 
       - download: ${{parameters.buildArtifactPipelineId}}
-        displayName: 'Download TF Files'
-        artifact: 'TF-Files'
-    
-      - template: 'infra-build-tfp-steps.yml'
+        displayName: "Download TF Files"
+        artifact: "TF-Files"
+
+      - template: "infra-build-tfp-steps.yml"
         parameters:
           stageCode: ${{parameters.stageCode}}
-          azServiceConnection: '${{parameters.devOpsServiceConnection}}'
-          tfWorkingDirectory: '$(tf.workingDirectory)'
-          tfBackendResourceGroupName: '${{lower(parameters.projectCode)}}-infra-rg'
+          azServiceConnection: "${{parameters.devOpsServiceConnection}}"
+          tfWorkingDirectory: "$(tf.workingDirectory)"
+          tfBackendResourceGroupName: "${{lower(parameters.projectCode)}}-infra-rg"
           tfBackendStorageAccountName: ${{replace(lower(parameters.projectCode), '-', '')}}infrastorage
 
       - task: ArchiveFiles@2
-        displayName: 'Archive TF Plan'
+        displayName: "Archive TF Plan"
         inputs:
           includeRootFolder: false
-          rootFolderOrFile: '$(tf.workingDirectory)'
-          archiveFile: '$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip'
+          rootFolderOrFile: "$(tf.workingDirectory)"
+          archiveFile: "$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip"
 
-      - publish: '$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip'
-        displayName: 'Publish TF Plan'
-        artifact: 'TF-Plan-${{parameters.stageCode}}'
+      - publish: "$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip"
+        displayName: "Publish TF Plan"
+        artifact: "TF-Plan-${{parameters.stageCode}}-$(attemptNumber)"
 
   - ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
-    - job: Confirm_TF_Plan
-      displayName: 'Confirm Stage TF Plan'
-      dependsOn: [ Build_TF_Plan ]
-      variables:
-        tfPlanHasChanges: $[dependencies.Build_TF_Plan.outputs['Terraform_Plan.changesPresent']]
-      pool: server
-      steps:
-        - task: ManualValidation@0
-          displayName: 'Confirm TF Plan for "$(System.StageDisplayName)"'
-          condition: and(succeeded(), eq(variables.tfPlanHasChanges, true))
-          inputs:
-            instructions: 'Please check and confirm TF plan for "$(System.StageDisplayName)"'
-            #notifyUsers: might be useful to configure
+      - job: Confirm_TF_Plan
+        displayName: "Confirm Stage TF Plan"
+        dependsOn: [Build_TF_Plan]
+        variables:
+          tfPlanHasChanges: $[dependencies.Build_TF_Plan.outputs['Terraform_Plan.changesPresent']]
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            displayName: 'Confirm TF Plan for "$(System.StageDisplayName)"'
+            condition: and(succeeded(), eq(variables.tfPlanHasChanges, true))
+            inputs:
+              instructions: 'Please check and confirm TF plan for "$(System.StageDisplayName)"'
+              #notifyUsers: might be useful to configure
 
   - deployment:
-    displayName: 'Deploy to Stage'
+    displayName: "Deploy to Stage"
     ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
-      dependsOn: [ Build_TF_Plan, Confirm_TF_Plan ]
+      dependsOn: [Build_TF_Plan, Confirm_TF_Plan]
     ${{ else }}:
-      dependsOn: [ Build_TF_Plan ]
+      dependsOn: [Build_TF_Plan]
     environment: ${{parameters.devOpsEnvironment}}
     variables:
       - name: tf.workingDirectory
-        value: '$(Agent.TempDirectory)/TFPlan'
+        value: "$(Agent.TempDirectory)/TFPlan"
       - name: ef.workingDirectory
-        value: '$(Pipeline.Workspace)/EFBundle'
+        value: "$(Pipeline.Workspace)/EFBundle"
     strategy:
       runOnce:
         deploy:
           steps:
             - download: current
-              displayName: 'Download This Pipeline Artifacts'
+              displayName: "Download This Pipeline Artifacts"
 
             - download: ${{parameters.buildArtifactPipelineId}}
-              displayName: 'Download Build Pipeline Artifacts'
+              displayName: "Download Build Pipeline Artifacts"
 
             - task: ExtractFiles@1
-              displayName: 'Extract TF Plan'
+              displayName: "Extract TF Plan"
               inputs:
-                archiveFilePatterns:  '$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}/TF-Plan-${{parameters.stageCode}}.zip'
-                destinationFolder: '$(tf.workingDirectory)'
+                archiveFilePatterns: "$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}-$(attemptNumber)/TF-Plan-${{parameters.stageCode}}.zip"
+                destinationFolder: "$(tf.workingDirectory)"
 
             - task: ExtractFiles@1
-              displayName: 'Extract EF Bundle'
+              displayName: "Extract EF Bundle"
               inputs:
-                archiveFilePatterns: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/EF-Bundle/*.zip'
-                destinationFolder: '$(ef.workingDirectory)'
+                archiveFilePatterns: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/EF-Bundle/*.zip"
+                destinationFolder: "$(ef.workingDirectory)"
 
             - task: TerraformInstaller@0
-              displayName: 'Install TF'
+              displayName: "Install TF"
               inputs:
                 terraformVersion: latest
 
             - task: TerraformTaskV3@3
-              displayName: 'Apply TF Plan'
+              displayName: "Apply TF Plan"
               inputs:
-                workingDirectory: '$(tf.workingDirectory)'
-                environmentServiceNameAzureRM: '${{parameters.devOpsServiceConnection}}'
+                workingDirectory: "$(tf.workingDirectory)"
+                environmentServiceNameAzureRM: "${{parameters.devOpsServiceConnection}}"
                 command: apply
                 commandOptions: >
                   -input=false
@@ -124,37 +128,37 @@ jobs:
                     ]
                   | .[]'
               name: Terraform_Output
-              displayName: 'Publish TF Outputs'
-              workingDirectory: '$(tf.workingDirectory)'
+              displayName: "Publish TF Outputs"
+              workingDirectory: "$(tf.workingDirectory)"
 
             - bash: |
                 chmod a+x ./efbundle
                 ./efbundle --connection "$(Terraform_Output.web_api_sqldb_connection_string)"
-              displayName: 'Apply EF Bundle'
-              workingDirectory: '$(ef.workingDirectory)'
+              displayName: "Apply EF Bundle"
+              workingDirectory: "$(ef.workingDirectory)"
 
             # Please use the AzureRmWebAppDeployment@4 should you need the webDeploy method.
             # For zipDeploy, runFromPackage, please bear in mind
             # these types of deployment make any specific Web Job unstoppable, unless WEBJOBS_STOPPED setting is used
             # (https://azureappservices.blogspot.com/2020/08/unable-to-stop-continuous-webjobs.html)
             - task: AzureWebApp@1
-              displayName: 'Deploy Web App Service'
+              displayName: "Deploy Web App Service"
               inputs:
                 azureSubscription: ${{parameters.devOpsServiceConnection}}
                 appType: webAppLinux
-                appName: '$(Terraform_Output.web_api_app_service_name)'
-                package: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebApi/WebApi.zip'
+                appName: "$(Terraform_Output.web_api_app_service_name)"
+                package: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/WebApi/WebApi.zip"
                 deploymentMethod: zipDeploy
                 appSettings: >
                   -ASPNETCORE_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
 
             - task: AzureFunctionApp@1
-              displayName: 'Deploy Workers Function'
+              displayName: "Deploy Workers Function"
               inputs:
                 azureSubscription: ${{parameters.devOpsServiceConnection}}
                 appType: functionAppLinux
-                appName: '$(Terraform_Output.workers_app_name)'
-                package: '$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip'
+                appName: "$(Terraform_Output.workers_app_name)"
+                package: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip"
                 deploymentMethod: runFromPackage
                 appSettings: >
                   -AZURE_FUNCTIONS_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
