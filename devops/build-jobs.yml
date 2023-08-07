@@ -80,6 +80,8 @@ jobs:
           summaryFileLocation: $(Agent.TempDirectory)/**/coverage.cobertura.xml
 
       - task: SonarCloudAnalyze@1
+        inputs:
+          jdkversion: "JAVA_HOME_17_X64"
         displayName: "Analyze SonarCloud"
         condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
 
