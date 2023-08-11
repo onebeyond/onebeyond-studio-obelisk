@@ -5,13 +5,10 @@ public static class SecurityMiddlewareConstants
     public static class AccessControlExposeHeadersConstants
     {
         /// <summary>
-        /// Header value for content-security-policy
+        /// Header value for Access-Control-Expose-Headers
         /// </summary>
         public const string Header = "Access-Control-Expose-Headers";
 
-        /// <summary>
-        /// Disables content sniffing
-        /// </summary>
         public const string ContentDisposition = "Content-Disposition";
     }
 
