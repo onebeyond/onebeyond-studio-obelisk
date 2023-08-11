@@ -2,6 +2,15 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security.Constants;
 
 public static class SecurityMiddlewareConstants
 {
+    public static class AccessControlExposeHeadersConstants
+    {
+        /// <summary>
+        /// Header value for Access-Control-Expose-Headers
+        /// </summary>
+        public const string Header = "Access-Control-Expose-Headers";
+
+        public const string ContentDisposition = "Content-Disposition";
+    }
 
     public static class ContentSecurityPolicyConstants
     {
