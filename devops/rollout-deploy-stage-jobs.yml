@@ -45,7 +45,7 @@ jobs:
 
       - publish: "$(tf.workingDirectory)/TF-Plan-${{parameters.stageCode}}.zip"
         displayName: "Publish TF Plan"
-        artifact: "TF-Plan-${{parameters.stageCode}}-$(System.JobAttempt)"
+        artifact: "TF-Plan-${{parameters.stageCode}}-$(System.StageAttempt)"
 
   - ${{ if ne(parameters.stageCode, 'qa') }}: # The QA stage does not require plan confirmation as the plan was checked via PR
       - job: Confirm_TF_Plan
@@ -87,7 +87,7 @@ jobs:
             - task: ExtractFiles@1
               displayName: "Extract TF Plan"
               inputs:
-                archiveFilePatterns: "$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}-$(System.JobAttempt)/TF-Plan-${{parameters.stageCode}}.zip"
+                archiveFilePatterns: "$(Pipeline.Workspace)/TF-Plan-${{parameters.stageCode}}-$(System.StageAttempt)/TF-Plan-${{parameters.stageCode}}.zip"
                 destinationFolder: "$(tf.workingDirectory)"
 
             - task: ExtractFiles@1
