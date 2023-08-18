@@ -15,9 +15,9 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.14.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageReference Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.4" />
-    <PackageReference Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.4" />
-    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0.4" />
+    <PackageReference Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.5" />
+    <PackageReference Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.5" />
+    <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0.5" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
