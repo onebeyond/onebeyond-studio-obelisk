@@ -56,6 +56,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using MoreLinq;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
@@ -204,7 +205,12 @@ public static class Program
                 options.AddDefaultPolicy(
                     (builder) =>
                     {
-                        builder.WithOrigins(configuration.GetOptions<string[]>("Cors:AllowedOrigins"))
+                        var origins = configuration
+                            .GetOptions<string[]>("Cors:AllowedOrigins")
+                            .Select(origin => origin.TrimEnd('/')) //trim ending slash for urls (to eliminate CORS issues)
+                            .ToArray();
+
+                        builder.WithOrigins(origins)
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
