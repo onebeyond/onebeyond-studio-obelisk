@@ -30,7 +30,10 @@ public abstract class UserBase : AggregateRoot<Guid>
         RoleId = roleId;
         IsActive = true;
 
-        RaiseDomainEvent(new UserCreated(Id, resetPasswordUrl));
+        // This will raise both a domain event and an integration event
+        RaiseIntegrationEvent(
+            new UserCreated(Id, resetPasswordUrl), 
+            raiseAsDomainEvent: true);
     }
 
 #nullable disable

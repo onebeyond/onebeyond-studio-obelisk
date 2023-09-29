@@ -70,7 +70,7 @@ internal static class Program
 
         serviceCollection.AddDataAccess(
                 configuration,
-                (dataAccessBuilder) => dataAccessBuilder.WithDomainEvents())
+                (dataAccessBuilder) => dataAccessBuilder.WithDomainAndIntegrationEvents())
             .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
 
         serviceCollection.AddAutoMapper(typeof(Application.AssemblyMark).Assembly);

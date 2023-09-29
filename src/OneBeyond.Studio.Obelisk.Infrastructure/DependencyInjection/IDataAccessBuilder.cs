@@ -7,5 +7,5 @@ public interface IDataAccessBuilder
 {
     IDataAccessBuilder WithUnitOfWork(TimeSpan? timeout = default, IsolationLevel? isolationLevel = default);
 
-    IDataAccessBuilder WithDomainEvents(bool isReceiverHost = false);
+    IDataAccessBuilder WithDomainAndIntegrationEvents(bool isReceiverHost = false);
 }

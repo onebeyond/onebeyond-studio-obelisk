@@ -1,10 +1,10 @@
 using System;
 using EnsureThat;
-using OneBeyond.Studio.Domain.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Domain.SharedKernel.IntegrationEvents;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.DomainEvents;
 
-public sealed class UserCreated : DomainEvent
+public sealed class UserCreated : IntegrationEvent // NOTE: this is also a domain event
 {
     public UserCreated(
         Guid userId,

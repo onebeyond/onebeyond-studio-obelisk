@@ -5,6 +5,7 @@ using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Authorization;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Application.SharedKernel.IntegrationEvents;
 using OneBeyond.Studio.Obelisk.Application.Services.AuthenticationFlows;
 using OneBeyond.Studio.Obelisk.Application.Services.EmailTemplateService;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.AuthenticationFlows;
@@ -35,6 +36,10 @@ public static class ContainerBuilderExtensions
         containerBuilder.RegisterAssemblyTypes(thisAssembly)
             .AsClosedTypesOf(typeof(IPostSaveDomainEventHandler<>))
             .InstancePerLifetimeScope();
+
+        containerBuilder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+           .AsClosedTypesOf(typeof(IIntegrationEventHandler<>))
+           .InstancePerLifetimeScope();
 
         containerBuilder.RegisterType<AuthenticationFlowHandler>()
             .As<IAuthenticationFlowHandler>()

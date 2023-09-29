@@ -43,9 +43,9 @@ internal sealed class DataAccessBuilder : IDataAccessBuilder
         return this;
     }
 
-    public IDataAccessBuilder WithDomainEvents(bool isReceiverHost = false)
+    public IDataAccessBuilder WithDomainAndIntegrationEvents(bool isReceiverHost = false)
     {
-        _dataAccessBuilder.WithDomainEvents();
+        _dataAccessBuilder.WithDomainAndIntegrationEvents();
         if (isReceiverHost)
         {
             _services.AddMsSQLRaisedDomainEventReceiver<DomainContext>();
