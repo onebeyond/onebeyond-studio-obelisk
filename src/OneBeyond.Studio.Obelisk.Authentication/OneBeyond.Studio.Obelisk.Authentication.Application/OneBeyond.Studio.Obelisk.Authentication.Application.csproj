@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.Identity.Web" Version="2.13.3" />
     <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0.7" />
     <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.7" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
