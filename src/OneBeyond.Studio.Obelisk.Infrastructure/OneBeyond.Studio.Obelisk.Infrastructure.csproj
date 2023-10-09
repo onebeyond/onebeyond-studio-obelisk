@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.SmartEnum.EFCore" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+    <PackageReference Include="Ardalis.SmartEnum.EFCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" >
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" Version="7.1.0.7" />
-    <PackageReference Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.0.7" />
+    <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" />
+    <PackageReference Include="OneBeyond.Studio.DataAccess.EFCore" />
   </ItemGroup>
 
   <ItemGroup>
