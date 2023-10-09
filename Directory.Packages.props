@@ -36,7 +36,7 @@
     <PackageVersion Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.0.7" />
-    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0.7" />
+    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0.8" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="7.0.1" />
