@@ -28,7 +28,7 @@
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" />
     <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.0.7" />
-    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.7" />
+    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.8" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.5" />
