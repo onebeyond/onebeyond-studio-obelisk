@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Asp.Versioning.ApiExplorer;
 using EnsureThat;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
