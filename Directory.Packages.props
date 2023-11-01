@@ -29,12 +29,12 @@
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" Version="7.1.1" />
     <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.1" />
     <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.1" />
-    <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.5" />
+    <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.6" />
     <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.1" />
     <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
