@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

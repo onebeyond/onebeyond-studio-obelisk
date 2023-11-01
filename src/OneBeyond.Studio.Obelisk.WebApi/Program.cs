@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning.ApiExplorer;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
@@ -12,13 +13,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Crosscuts.Logging;
@@ -54,9 +55,8 @@ using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
-using MoreLinq;
+using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
@@ -192,11 +192,18 @@ public static class Program
                     options.AddPrivateSettersSerialization();
                 });
 
-        services.AddApiVersioning(
+        var apiVersioningBuilder = services.AddApiVersioning(
             (options) =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = false;
                 options.ReportApiVersions = true;
+            });
+
+        apiVersioningBuilder.AddApiExplorer(
+            (options) =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
 
         services.AddCors(
@@ -215,13 +222,6 @@ public static class Program
                             .AllowAnyMethod()
                             .AllowCredentials();
                     });
-            });
-
-        services.AddVersionedApiExplorer(
-            (options) =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
             });
 
         services.Configure<ApiBehaviorOptions>(
