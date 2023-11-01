@@ -13,38 +13,38 @@
     <PackageVersion Include="MediatR" Version="12.1.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker" Version="1.19.0" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.2.0" />
-    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.15.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10" />
+    <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.15.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.10" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="2.15.1" />
-    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
-    <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" />
-    <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.0.7" />
-    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.7" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="7.0.13" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="2.15.3" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
+    <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" Version="7.1.1" />
+    <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="7.1.1" />
+    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.1" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Folder" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.Azure" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.5" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.FileSystem" Version="7.0.0.5" />
-    <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.0.7" />
-    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.0.7" />
+    <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="7.1.1" />
+    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="7.1.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="7.0.1" />
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.0.2" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="7.0.8" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>

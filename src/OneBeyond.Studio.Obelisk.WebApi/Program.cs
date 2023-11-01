@@ -62,7 +62,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi;
 
 public static class Program
 {
-    private const string SELF_CHECK = "self";
+    private const string _selfCheck = "self";
 
     public static async Task Main(string[] args)
     {
@@ -276,7 +276,7 @@ public static class Program
     {
         var hcBuilder = services.AddHealthChecks();
 
-        hcBuilder.AddCheck(SELF_CHECK, () => HealthCheckResult.Healthy());
+        hcBuilder.AddCheck(_selfCheck, () => HealthCheckResult.Healthy());
 
         hcBuilder
             .AddSqlServer(
@@ -401,7 +401,7 @@ public static class Program
                 });
                 endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
                 {
-                    Predicate = r => r.Name.Contains(SELF_CHECK)
+                    Predicate = r => r.Name.Contains(_selfCheck)
                 });
             });
     }
