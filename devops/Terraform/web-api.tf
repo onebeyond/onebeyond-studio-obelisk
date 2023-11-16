@@ -41,7 +41,7 @@ resource "azurerm_linux_web_app" "web_api" {
     websockets_enabled    = true
     health_check_path     = "/health/ready"
     application_stack {
-      dotnet_version = "7.0"
+      dotnet_version = "8.0"
     }
   }
   logs {
