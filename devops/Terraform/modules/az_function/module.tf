@@ -40,7 +40,7 @@ resource "azurerm_linux_function_app" "function" {
     application_insights_key               = var.application_insights.key
     application_insights_connection_string = var.application_insights.connection_string
     application_stack {
-      dotnet_version              = "7.0"
+      dotnet_version              = "8.0"
       use_dotnet_isolated_runtime = true
     }
   }
