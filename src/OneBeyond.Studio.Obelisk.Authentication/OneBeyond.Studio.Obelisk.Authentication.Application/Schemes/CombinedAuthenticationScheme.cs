@@ -16,8 +16,7 @@ public sealed class CombinedAuthenticationScheme<TScheme1, TScheme2> : Authentic
     public CombinedAuthenticationScheme(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock) : base(options, logger, encoder, clock)
+        UrlEncoder encoder) : base(options, logger, encoder)
     {
         _primaryScheme = new TScheme1();
         _secondaryScheme = new TScheme2();
