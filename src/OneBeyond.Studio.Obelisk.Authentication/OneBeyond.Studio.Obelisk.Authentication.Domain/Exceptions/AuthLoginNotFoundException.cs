@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
@@ -20,10 +19,4 @@ public sealed class AuthLoginNotFoundException : AuthException
         : base(message, innerException)
     {
     }
-
-    private AuthLoginNotFoundException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
-
 }

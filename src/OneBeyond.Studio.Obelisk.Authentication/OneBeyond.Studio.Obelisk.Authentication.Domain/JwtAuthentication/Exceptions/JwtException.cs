@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Exceptions;
@@ -19,11 +18,6 @@ public class JwtException : AuthException
 
     public JwtException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    protected JwtException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }
