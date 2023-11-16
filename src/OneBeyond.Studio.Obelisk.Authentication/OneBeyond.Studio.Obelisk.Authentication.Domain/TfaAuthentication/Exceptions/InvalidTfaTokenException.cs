@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Exceptions;
 
@@ -20,10 +19,4 @@ public sealed class InvalidTfaTokenException : TfaException
         : base(message, innerException)
     {
     }
-
-    private InvalidTfaTokenException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
-
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Application.Exceptions;
@@ -18,11 +17,6 @@ public class ObeliskApplicationException : OneBeyondException
 
     public ObeliskApplicationException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    protected ObeliskApplicationException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }
