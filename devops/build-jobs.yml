@@ -40,6 +40,10 @@ jobs:
             sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
             sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
 
+      - task: UseDotNet@2
+        inputs:
+          version: "8.x"
+
       - task: DotNetCoreCLI@2
         displayName: "Restore Projects NuGets"
         inputs:
@@ -131,6 +135,10 @@ jobs:
   - job: Build_Publish_EF_Bundle
     displayName: "Build & Publish EF Bundle"
     steps:
+      - task: UseDotNet@2
+        inputs:
+          version: "8.x"
+
       - task: DotNetCoreCLI@2
         displayName: "Restore Projects NuGets"
         inputs:
