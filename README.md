@@ -12,7 +12,7 @@ Obelisk is a WebAPI template built in ASP.Net and used in hundreds of succesful 
 
 ### Supported .NET version:
 
-7.0
+8.0
 
 ### Setup
 
