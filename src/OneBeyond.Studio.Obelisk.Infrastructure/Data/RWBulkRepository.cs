@@ -82,7 +82,9 @@ public class RWBulkRepository<TAggregateRoot, TAggregateRootId> : RWRepository<T
                     var propValue = GetPropertyValue(entityType, entity, column.PropertyName);
 
                     row[column.ColumnName] = column.ValueConverter is { } 
-                        ? column.ValueConverter.ConvertToProvider(propValue) 
+                        ? propValue.GetType() == typeof(System.DBNull)
+                            ? null 
+                            : column.ValueConverter.ConvertToProvider(propValue)
                         : propValue;
                 });
 
