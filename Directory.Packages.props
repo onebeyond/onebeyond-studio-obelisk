@@ -25,7 +25,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="2.15.3" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="2.16.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" Version="8.0.0.1" />
     <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="8.0.0.1" />
