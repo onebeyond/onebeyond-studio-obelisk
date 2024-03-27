@@ -14,11 +14,11 @@ using OneBeyond.Studio.Obelisk.WebApi.Requests;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
-public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
+public abstract class QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, TEntityId>
     : ControllerBase
-    where TAggregateRoot : AggregateRoot<TAggregateRootId>
-    where TAggregateRootGetDTO : new()
-    where TAggregateRootListDTO : new()
+    where TEntity : DomainEntity<TEntityId>
+    where TEntityGetDTO : new()
+    where TEntityListDTO : new()
 {
     protected QBasedController(IMediator mediator)
     {
@@ -61,35 +61,35 @@ public abstract class QBasedController<TAggregateRootGetDTO, TAggregateRootListD
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("{id}")]
     public virtual async Task<IActionResult> GetById(
-        TAggregateRootId id,
+        TEntityId id,
         CancellationToken cancellationToken)
     {
-        var result = await GetByIdAsync<TAggregateRootGetDTO>(id, cancellationToken);
+        var result = await GetByIdAsync<TEntityGetDTO>(id, cancellationToken);
         return result is not null
             ? Json(result)
             : BadRequest("Not found");
     }
 
-    protected virtual Task<PagedList<TAggregateRootListDTO>> ListAsync(
+    protected virtual Task<PagedList<TEntityListDTO>> ListAsync(
         ListRequest queryParameters,
         Dictionary<string, IReadOnlyCollection<string>> query,
         CancellationToken cancellationToken)
         => Mediator.Send(
-            queryParameters.ToListQuery<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>(query),
+            queryParameters.ToListQuery<TEntityListDTO, TEntity, TEntityId>(query),
             cancellationToken);
 
     protected virtual Task<TDTO> GetByIdAsync<TDTO>(
-        TAggregateRootId aggregateRootId,
+        TEntityId aggregateRootId,
         CancellationToken cancellationToken)
         => Mediator.Send(
-            new GetById<TDTO, TAggregateRoot, TAggregateRootId>(aggregateRootId),
+            new GetById<TDTO, TEntity, TEntityId>(aggregateRootId),
             cancellationToken);
 }
 
-public abstract class QBasedController<TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
-    : QBasedController<TAggregateRootListDTO, TAggregateRootListDTO, TAggregateRoot, TAggregateRootId>
-    where TAggregateRoot : AggregateRoot<TAggregateRootId>
-    where TAggregateRootListDTO : new()
+public abstract class QBasedController<TEntityListDTO, TEntity, TEntityId>
+    : QBasedController<TEntityListDTO, TEntityListDTO, TEntity, TEntityId>
+    where TEntity : DomainEntity<TEntityId>
+    where TEntityListDTO : new()
 {
     protected QBasedController(
         IMediator mediator)
