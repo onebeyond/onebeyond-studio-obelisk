@@ -148,19 +148,8 @@ jobs:
                 appSettings: >
                   -ASPNETCORE_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
 
-            # [BUG]: deployment gets stuck and fails sporadically:
+            # [BUG]: using inline script instead of AzureFunctionApp, as deployment gets stuck and fails sporadically:
             # https://github.com/microsoft/azure-pipelines-tasks/issues/18766
-            # - task: AzureFunctionApp@1
-            #   displayName: "Deploy Workers Function"
-            #   inputs:
-            #     azureSubscription: ${{parameters.devOpsServiceConnection}}
-            #     appType: functionAppLinux
-            #     appName: "$(Terraform_Output.workers_app_name)"
-            #     package: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip"
-            #     deploymentMethod: runFromPackage
-            #     appSettings: >
-            #       -AZURE_FUNCTIONS_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
-
             - task: AzureCLI@2
               displayName: "Deploy Workers Function"
               inputs:
