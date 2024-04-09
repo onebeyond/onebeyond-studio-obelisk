@@ -158,4 +158,12 @@ jobs:
                 scriptLocation: "inlineScript"
                 inlineScript: |
                   az functionapp deployment source config-zip --src "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip" --name "$(Terraform_Output.workers_app_name)" --resource-group "$(Terraform_Output.rg_name)"
+
+            - task: AzureCLI@2
+              displayName: "Update Workers Function Settings"
+              inputs:
+                azureSubscription: ${{parameters.devOpsServiceConnection}}
+                scriptType: "pscore"
+                scriptLocation: "inlineScript"
+                inlineScript: |
                   az functionapp config appsettings set --name "$(Terraform_Output.workers_app_name)"  --resource-group "$(Terraform_Output.rg_name)" --settings AZURE_FUNCTIONS_ENVIRONMENT="${{parameters.runtimeEnvironment}}"
