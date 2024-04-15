@@ -24,7 +24,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="2.17.1" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="2.17.4" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" Version="8.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="8.0.0.2" />
@@ -43,7 +43,7 @@
     <PackageVersion Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.5.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="8.0.1" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
