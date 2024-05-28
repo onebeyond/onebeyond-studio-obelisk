@@ -15,6 +15,14 @@ namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds Data Access for DI
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <param name="cloudDeployment">This parameter is set to true by default. This allows for retries optimised for sql server, such that under load, the application continues to perform.</param>
+    /// <param name="configureDataAccessBuilder"></param>
+    /// <returns></returns>
     public static IServiceCollection AddDataAccess(
         this IServiceCollection services,
         IConfiguration configuration,
