@@ -20,7 +20,7 @@
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.4.0" />
     <PackageVersion Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="8.0.4" />
