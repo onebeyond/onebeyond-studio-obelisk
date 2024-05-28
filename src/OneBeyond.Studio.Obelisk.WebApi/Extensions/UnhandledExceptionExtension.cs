@@ -26,7 +26,7 @@ internal static class UnhandledExceptionExtension
             Logger.LogError(exception, "An unhandled exception has occured while processing HTTP request");
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(exception.Message));
+            await httpContext.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("An unexpected error has occurred"));
 
             throw;
         }
