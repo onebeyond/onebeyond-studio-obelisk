@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDataAccess(
         this IServiceCollection services,
         IConfiguration configuration,
+        bool cloudDeployment = true,
         Action<IDataAccessBuilder>? configureDataAccessBuilder = default)
     {
         EnsureArg.IsNotNull(services, nameof(services));
@@ -26,7 +27,14 @@ public static class ServiceCollectionExtensions
         var coreDataAccessBuilder = services.AddDataAccess<DomainContext>(
             configuration.GetOptions<DataAccessOptions>("Infrastructure"),
             (serviceProvider, dbContextOptionsBuilder)
-                => dbContextOptionsBuilder.UseSqlServer(configuration.GetConnectionString("ApplicationConnectionString")!),
+                => dbContextOptionsBuilder
+                    .UseSqlServer(configuration.GetConnectionString("ApplicationConnectionString")!, 
+                    options => {
+                        if (cloudDeployment)
+                        {
+                            options.EnableRetryOnFailure();
+                        }
+                    }),
             (serviceProvider, dbContextOptions, areDomainEventsEnabled)
                 => new DomainContext(dbContextOptions, areDomainEventsEnabled));
 
