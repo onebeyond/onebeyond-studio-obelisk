@@ -25,9 +25,9 @@ public static class ServiceCollectionExtensions
     /// <returns></returns>
     public static IServiceCollection AddDataAccess(
         this IServiceCollection services,
-        IConfiguration configuration,
-        bool cloudDeployment = true,
-        Action<IDataAccessBuilder>? configureDataAccessBuilder = default)
+        IConfiguration configuration,        
+        Action<IDataAccessBuilder>? configureDataAccessBuilder = default,
+        bool cloudDeployment = true)
     {
         EnsureArg.IsNotNull(services, nameof(services));
         EnsureArg.IsNotNull(configuration, nameof(configuration));
