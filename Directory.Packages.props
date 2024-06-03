@@ -23,7 +23,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="8.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="2.18.1" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" ersion="7.1.0.7" Version="8.0.0.3" />
