@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,13 @@ public sealed class PropertyMapping
         ColumnName = mappedDbColumn.Column.Name;
         IsNullable = mappedDbColumn.Column.IsNullable;
         ValueConverter = dbProperty.GetValueConverter();
+
+        if (dbProperty.ClrType.IsEnum && ValueConverter == null)
+        {
+            var underlyingType = Enum.GetUnderlyingType(dbProperty.ClrType);
+            var enumIsNullable = underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            DataType = enumIsNullable ? underlyingType.GetGenericArguments()[0].FullName! : underlyingType.FullName!;
+        }
 
         IsExcluded = false;
     }
