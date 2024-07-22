@@ -6,8 +6,10 @@ using OneBeyond.Studio.Application.SharedKernel.DataAccessPolicies;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Repositories;
+using OneBeyond.Studio.Obelisk.Domain.Features.Examples.Entities;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.BulkUpdate;
+using OneBeyond.Studio.Obelisk.Infrastructure.Data.Examples.Configurations;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 
