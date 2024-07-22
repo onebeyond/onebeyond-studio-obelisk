@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning.ApiExplorer;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
@@ -12,13 +13,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Crosscuts.Logging;
@@ -54,14 +55,14 @@ using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
 public static class Program
 {
-    private const string SELF_CHECK = "self";
+    private const string _selfCheck = "self";
 
     public static async Task Main(string[] args)
     {
@@ -83,16 +84,12 @@ public static class Program
 
             ConfigureLogging(builder.Host);
 
-            builder.Host.ConfigureServices(
-                (hostBuilerContext, serviceCollection) =>
-                    ConfigureServices(hostBuilerContext, serviceCollection));
+            builder.Host.ConfigureServices(ConfigureServices);
 
             // Autofac factory will automatically populate services defined above into its container
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-            builder.Host.ConfigureContainer<ContainerBuilder>(
-                (hostBuilderContext, containerBuilder) =>
-                    ConfigureAutofacServices(hostBuilderContext, containerBuilder));
+            builder.Host.ConfigureContainer<ContainerBuilder>(ConfigureAutofacServices);
 
             var app = builder.Build();
 
@@ -195,11 +192,18 @@ public static class Program
                     options.AddPrivateSettersSerialization();
                 });
 
-        services.AddApiVersioning(
+        var apiVersioningBuilder = services.AddApiVersioning(
             (options) =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = false;
                 options.ReportApiVersions = true;
+            });
+
+        apiVersioningBuilder.AddApiExplorer(
+            (options) =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
 
         services.AddCors(
@@ -208,18 +212,16 @@ public static class Program
                 options.AddDefaultPolicy(
                     (builder) =>
                     {
-                        builder.WithOrigins(configuration.GetOptions<string[]>("Cors:AllowedOrigins"))
+                        var origins = configuration
+                            .GetOptions<string[]>("Cors:AllowedOrigins")
+                            .Select(origin => origin.TrimEnd('/')) //trim ending slash for urls (to eliminate CORS issues)
+                            .ToArray();
+
+                        builder.WithOrigins(origins)
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
                     });
-            });
-
-        services.AddVersionedApiExplorer(
-            (options) =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
             });
 
         services.Configure<ApiBehaviorOptions>(
@@ -274,7 +276,7 @@ public static class Program
     {
         var hcBuilder = services.AddHealthChecks();
 
-        hcBuilder.AddCheck(SELF_CHECK, () => HealthCheckResult.Healthy());
+        hcBuilder.AddCheck(_selfCheck, () => HealthCheckResult.Healthy());
 
         hcBuilder
             .AddSqlServer(
@@ -399,7 +401,7 @@ public static class Program
                 });
                 endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
                 {
-                    Predicate = r => r.Name.Contains(SELF_CHECK)
+                    Predicate = r => r.Name.Contains(_selfCheck)
                 });
             });
     }

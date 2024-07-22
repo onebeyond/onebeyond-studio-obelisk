@@ -13,7 +13,7 @@ resource "azurerm_linux_web_app" "web_api" {
   location                = azurerm_resource_group.stage.location
   service_plan_id         = azurerm_service_plan.web_api.id
   https_only              = true
-  client_affinity_enabled = true
+  client_affinity_enabled = false
   tags                    = local.default_tags
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY                    = azurerm_application_insights.web_api.instrumentation_key
@@ -41,7 +41,7 @@ resource "azurerm_linux_web_app" "web_api" {
     websockets_enabled    = true
     health_check_path     = "/health/ready"
     application_stack {
-      dotnet_version = "7.0"
+      dotnet_version = "8.0"
     }
   }
   logs {

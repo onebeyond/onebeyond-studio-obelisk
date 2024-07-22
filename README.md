@@ -4,23 +4,23 @@
   </a>
 </p>
 
-[![License](https://img.shields.io/github/license/OneBeyond/onebeyond-studio-obelisk?style=plastic)](LICENSE)
+[![License](https://img.shields.io/github/license/OneBeyond/onebeyond-studio-obelisk?style=plastic)](LICENSE) [![Maintainability](https://api.codeclimate.com/v1/badges/f8e43de616f1c08ee399/maintainability)](https://codeclimate.com/github/onebeyond/onebeyond-studio-obelisk/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/f8e43de616f1c08ee399/test_coverage)](https://codeclimate.com/github/onebeyond/onebeyond-studio-obelisk/test_coverage)
 
 # Introduction
 
-Obelisk is a WebAPI template built in ASP.Net and used in hundreds of succesful One Beyond projects. Obelisk in it's current .NET (Core) form has been in development and production use since early 2018 and draws on developments dating back to 2014 to accelerate delivery of ASP.Net MVC based projects. The core template is supported by core libraries and scaffolder utilities to accelerate development of SPA based front ends, e2e and load tests.
+Obelisk is a WebAPI template built in ASP.Net and used in hundreds of succesful One Beyond projects. Obelisk in its current .NET (Core) form has been in development and production use since early 2018 and draws on developments dating back to 2014 to accelerate delivery of ASP.Net MVC based projects. The core template is supported by core libraries and scaffolder utilities to accelerate development of SPA based front ends, e2e and load tests.
 
 ### Supported .NET version:
 
-7.0
+8.0
 
 ### Setup
 
 The project largely works out of the box when opening with a modern version of Visual Studio. 
 
-Please note, Obelisk architecture uses Azure queues to dispatch domain events, to run the solution localy you'll need to have [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) running.
+Please note, Obelisk architecture uses Azure queues to dispatch domain events, to run the solution locally you'll need to have [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) running.
 
-Also, the default implementation of IEmailSender used in the application will store all generated e-mails in the following folder:`C:\inetpub\mailroot\Obelisk` (you can find the related code [here](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/Program.cs#LL148C15-L148C15)). This folder can be configured in [`appsettings.json -> EmailSender -> Folder -> Folder` section](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/appsettings.json#L33). Please create this folder manually if it does not exist. Note: this only applies to Windows.
+Also, the default implementation of IEmailSender used in the application will store all generated e-mails in the following folder: `C:\inetpub\mailroot\Obelisk` (you can find the related code [here](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/Program.cs#LL148C15-L148C15)). This folder can be configured in [`appsettings.json -> EmailSender -> Folder -> Folder` section](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/appsettings.json#L33). Please create this folder manually if it does not exist. Note: this only applies to Windows.
 
 Finally, to run Obelisk, simply run the WebApi project through Visual Studio.
 

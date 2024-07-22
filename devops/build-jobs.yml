@@ -40,6 +40,10 @@ jobs:
             sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
             sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
 
+      - task: UseDotNet@2
+        inputs:
+          version: "8.x"
+
       - task: DotNetCoreCLI@2
         displayName: "Restore Projects NuGets"
         inputs:
@@ -80,6 +84,8 @@ jobs:
           summaryFileLocation: $(Agent.TempDirectory)/**/coverage.cobertura.xml
 
       - task: SonarCloudAnalyze@1
+        inputs:
+          jdkversion: "JAVA_HOME_17_X64"
         displayName: "Analyze SonarCloud"
         condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
 
@@ -129,6 +135,10 @@ jobs:
   - job: Build_Publish_EF_Bundle
     displayName: "Build & Publish EF Bundle"
     steps:
+      - task: UseDotNet@2
+        inputs:
+          version: "8.x"
+
       - task: DotNetCoreCLI@2
         displayName: "Restore Projects NuGets"
         inputs:
@@ -148,7 +158,7 @@ jobs:
             install
             --global
             dotnet-ef
-            --version 7.0.*
+            --version 8.0.*
 
       - task: DotNetCoreCLI@2
         displayName: "Build EF Bundle"

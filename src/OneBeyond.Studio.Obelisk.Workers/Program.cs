@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,15 +20,14 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
-
-using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
+using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
 namespace OneBeyond.Studio.Obelisk.Workers;
 
 internal static class Program
 {
-    public static void Main(string[] args)
+    public static void Main(string[] _)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -41,7 +41,6 @@ internal static class Program
                 .ConfigureFunctionsWorkerDefaults()
                 .ConfigureServices(ConfigureServiceCollection)
                 .ConfigureContainer<ContainerBuilder>(ConfigureContainerBuilder)
-                .UseSerilog(ConfigureSerilog)
                 .Build())
             {
                 Log.Information("Azure Function host is starting");
@@ -90,6 +89,29 @@ internal static class Program
         }
 
         serviceCollection.AddApplicationInsightsTelemetryWorkerService();
+        ConfigureSerilog(hostBuilderContext, serviceCollection);
+    }
+
+    private static void ConfigureSerilog(
+        HostBuilderContext hostBuilderContext,
+        IServiceCollection serviceCollection)
+    {
+        var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(hostBuilderContext.Configuration);
+
+        Log.Logger = hostBuilderContext.HostingEnvironment.IsDevelopment()
+            ? loggerConfiguration.CreateLogger()
+            : loggerConfiguration
+                .Enrich.FromLogContext()
+                // NOTE: the line below needs to be hardcoded even if the same property is already set in the configuration JSON
+                .Enrich.WithProperty("ApplicationExecutable", "Workers")
+                .WriteTo.ApplicationInsights(
+                    TelemetryConfiguration.CreateDefault(),
+                    TelemetryConverter.Traces)
+                .CreateLogger();
+
+        serviceCollection.AddLogging(
+            cfg => cfg.AddSerilog(Log.Logger, true));
     }
 
     private static void ConfigureContainerBuilder(
@@ -119,9 +141,4 @@ internal static class Program
             builder.AddUserSecrets(Assembly.GetExecutingAssembly());
         }
     }
-
-    private static void ConfigureSerilog(
-        HostBuilderContext hostBuilderContext,
-        LoggerConfiguration loggerConfiguration)
-        => loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration);
 }

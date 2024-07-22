@@ -27,6 +27,10 @@ jobs:
       projects.webApp: "${{parameters.projects_webApi}}"
       projects.workers: "${{parameters.projects_workers}}"
     steps:
+      - task: UseDotNet@2
+        inputs:
+          version: "8.x"
+          
       - task: DotNetCoreCLI@2
         displayName: "Restore Projects NuGets"
         inputs:

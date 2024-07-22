@@ -5,7 +5,13 @@ resource "random_password" "sql_server_password" {
   min_numeric      = 1
   min_upper        = 1
   min_special      = 1
-  override_special = "!#$%&*-_=+?@£.,[]"
+  override_special = "!#$%*-_+?@.[]()"
+
+  lifecycle {
+    ignore_changes = [
+      length
+    ]
+  }
 }
 
 resource "azurerm_key_vault_secret" "sql_server_passwords" {

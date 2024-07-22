@@ -20,7 +20,13 @@ internal sealed class SecurityHeadersBuilder
 
         AddContentTypeOptionsNoSniff();
 
-        var headerValue = securityHeaders.GetValue<string>(FrameOptionsConstants.Header);
+        var headerValue = securityHeaders.GetValue<string>(AccessControlExposeHeadersConstants.Header);
+        if (!string.IsNullOrEmpty(headerValue))
+        {
+            AddCustomHeader(AccessControlExposeHeadersConstants.Header, headerValue);
+        }
+
+        headerValue = securityHeaders.GetValue<string>(FrameOptionsConstants.Header);
         if (string.IsNullOrEmpty(headerValue))
         {
             AddFrameOptionsSameOrigin();

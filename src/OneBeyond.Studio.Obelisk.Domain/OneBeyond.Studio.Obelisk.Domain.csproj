@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" Version="7.1.0.1" />
-    <PackageReference Include="OneBeyond.Studio.FileStorage.Domain" Version="7.0.0.4" />
+    <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" />
+    <PackageReference Include="OneBeyond.Studio.FileStorage.Domain" />
   </ItemGroup>
 
 </Project>
