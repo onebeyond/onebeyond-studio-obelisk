@@ -45,7 +45,7 @@
     <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.6.2" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.7.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
   </ItemGroup>
 </Project>
