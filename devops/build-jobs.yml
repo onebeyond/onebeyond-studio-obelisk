@@ -83,11 +83,11 @@ jobs:
           codeCoverageTool: "Cobertura"
           summaryFileLocation: $(Agent.TempDirectory)/**/coverage.cobertura.xml
 
-      - task: SonarCloudAnalyze@1
-        inputs:
-          jdkversion: "JAVA_HOME_17_X64"
+      - task: SonarCloudAnalyze@2
         displayName: "Analyze SonarCloud"
         condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
+        inputs:
+          jdkversion: 'JAVA_HOME_17_X64'
 
       - ${{ if eq(parameters.publishArtifacts, true) }}:
           - task: DotNetCoreCLI@2
