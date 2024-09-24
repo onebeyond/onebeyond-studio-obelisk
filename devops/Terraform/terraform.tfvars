@@ -4,7 +4,8 @@ resource_location = "uksouth"
 
 key_vault_admins = [
   "andrii.kaplanovskyi@one-beyond.com",
-  "fabio.maistro@one-beyond.com"
+  "nick.skliar-davies@one-beyond.com",
+  "alexis.shirtliff@one-beyond.com"
 ]
 
 sql_allowed_ips = {
