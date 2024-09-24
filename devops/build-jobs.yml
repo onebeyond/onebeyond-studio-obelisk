@@ -27,7 +27,7 @@ jobs:
       sonarCloud.projectKey: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
       sonarCloud.projectName: "onebeyond-studio-obelisk" # Comes from project setup in SonarCloud
     steps:
-      - task: SonarCloudPrepare@1
+      - task: SonarCloudPrepare@2
         displayName: "Prepare SonarCloud Analysis"
         condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
         inputs:
