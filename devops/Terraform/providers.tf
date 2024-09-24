@@ -3,19 +3,19 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.83.0"
+      version = "3.116.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.26"
+      version = "2.53.1"
     }
     mssql = {
       source  = "betr-io/mssql"
-      version = "~> 0.2"
+      version = "0.3.1"
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.1.3"
+      version = "3.6.3"
     }
   }
 }
