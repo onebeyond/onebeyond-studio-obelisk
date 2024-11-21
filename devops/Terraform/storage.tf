@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "stage" {
-  name                             = "${replace(local.resource_prefix, "-", "")}storage"
+  name                             = "${replace(replace(local.resource_prefix, "-", ""), "backend", "be")}storage" # must be between 3 & 24 chars
   resource_group_name              = azurerm_resource_group.stage.name
   location                         = azurerm_resource_group.stage.location
   account_tier                     = "Standard"

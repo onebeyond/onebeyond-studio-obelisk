@@ -101,7 +101,7 @@ jobs:
               inputs:
                 terraformVersion: latest
 
-            - task: TerraformTaskV3@3
+            - task: TerraformTaskV4@4
               displayName: "Apply TF Plan"
               inputs:
                 workingDirectory: "$(tf.workingDirectory)"

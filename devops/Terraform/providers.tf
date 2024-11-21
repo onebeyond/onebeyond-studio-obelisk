@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.116.0"
+      version = "4.10.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "2.53.1"
+      version = "3.0.2"
     }
     mssql = {
       source  = "betr-io/mssql"
@@ -22,6 +22,7 @@ terraform {
 
 provider "azurerm" {
   subscription_id = "5c41ba40-6ca2-4e8a-9646-d3585df38b5a"
+  resource_provider_registrations = "none"
 
   features {
     resource_group {
