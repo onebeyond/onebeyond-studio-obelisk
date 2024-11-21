@@ -23,7 +23,7 @@ steps:
     inputs:
       terraformVersion: latest
 
-  - task: TerraformTaskV3@3
+  - task: TerraformTaskV4@4
     displayName: 'Initialize TF'
     inputs:
       workingDirectory: '${{parameters.tfWorkingDirectory}}'
@@ -44,7 +44,7 @@ steps:
     displayName: 'Select TF Workspace'
     workingDirectory: '${{parameters.tfWorkingDirectory}}'
 
-  - task: TerraformTaskV3@3
+  - task: TerraformTaskV4@4
     name: Terraform_Plan
     displayName: 'Build TF Plan'
     inputs:
