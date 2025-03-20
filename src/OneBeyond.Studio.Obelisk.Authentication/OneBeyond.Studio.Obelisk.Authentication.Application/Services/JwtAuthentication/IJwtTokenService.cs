@@ -15,4 +15,6 @@ internal interface IJwtTokenService
         AuthUser identityUser,
         string oldRefreshToken,
         CancellationToken cancellationToken);
+
+    Task SignOutAsync(AuthUser identityUser);
 }

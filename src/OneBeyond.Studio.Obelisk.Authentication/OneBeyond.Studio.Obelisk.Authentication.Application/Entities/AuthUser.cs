@@ -40,4 +40,8 @@ public class AuthUser : Microsoft.AspNetCore.Identity.IdentityUser<string>
         }
     }
 
+    internal void SignOutAllTokens()
+    {
+        _authTokens.Clear();
+    }
 }

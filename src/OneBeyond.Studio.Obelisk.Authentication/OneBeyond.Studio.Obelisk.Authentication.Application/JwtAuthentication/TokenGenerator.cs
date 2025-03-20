@@ -40,7 +40,7 @@ internal static class TokenGenerator
 
             Claims = new Dictionary<string, object?>
             {
-                { JwtClaims.JWT_CLAIM_USERNAME, user.UserName },
+                { ClaimTypes.NameIdentifier, user.UserName },
                 { JwtClaims.JWT_CLAIM_LOGINID, user.Id }
             }
         };

@@ -4,40 +4,32 @@ using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
+using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
+using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
+
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
 [AllowAnonymous]
 [Produces("application/json")]
 [Route("api/account/jwt")]
-public sealed class JWTAuthenticationController : Controller
+public sealed partial class JWTAuthenticationController : Controller
 {
-    public sealed record SignInJwtDto
-    {
-        public SignInJwtDto(
-            string username,
-            string password)
-        {
-            EnsureArg.IsNotNullOrWhiteSpace(username, nameof(username));
-            EnsureArg.IsNotNullOrWhiteSpace(password, nameof(password));
-
-            Username = username;
-            Password = password;
-        }
-
-        public string Username { get; private init; }
-        public string Password { get; private init; }
-    }
 
     private readonly IMediator _mediator;
+    private readonly AmbientContext _ambientContext;
 
-    public JWTAuthenticationController(IMediator mediator)
+    public JWTAuthenticationController(IMediator mediator, IAmbientContextAccessor<AmbientContext> ambientContextAccessor)
     {
         EnsureArg.IsNotNull(mediator, nameof(mediator));
+        EnsureArg.IsNotNull(ambientContextAccessor, nameof(ambientContextAccessor));
 
         _mediator = mediator;
+        _ambientContext = ambientContextAccessor.AmbientContext;
     }
 
     /// <summary>
@@ -70,4 +62,10 @@ public sealed class JWTAuthenticationController : Controller
         => _mediator.Send(
                 new RefreshJwtToken(refreshToken),
                 cancellationToken);
+
+    [Authorize]
+    [HttpPost("signout")]
+    public Task SignOutAllTokens(CancellationToken cancellationToken)
+        => _mediator.Send(new SignOutAllTokens(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
+
 }
