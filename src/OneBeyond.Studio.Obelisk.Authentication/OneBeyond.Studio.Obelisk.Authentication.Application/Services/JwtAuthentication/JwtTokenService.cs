@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication;
@@ -19,21 +20,29 @@ internal sealed class JwtTokenService : IJwtTokenService
     private readonly UserManager<AuthUser> _userManager;
     private readonly JwtAuthenticationOptions _jwtConfiguration;
     private readonly IApplicationClaimsService _applicationClaimsService;
-    private readonly ILogger _logger = LogManager.CreateLogger<JwtTokenService>();
+    private readonly IRWRepository<AuthToken, int> _rWRepository;
+    private readonly IRORepository<AuthToken, int> _roRepository;
+
+    private static readonly ILogger _logger = LogManager.CreateLogger<JwtTokenService>();
 
     public JwtTokenService(
         UserManager<AuthUser> userManager,
         JwtAuthenticationOptions jwtConfiguration,
-        IApplicationClaimsService applicationClaimsService
-        )
+        IApplicationClaimsService applicationClaimsService,
+        IRWRepository<AuthToken, int> rWRepository,
+        IRORepository<AuthToken, int> roRepository)
     {
         EnsureArg.IsNotNull(userManager, nameof(userManager));
         EnsureArg.IsNotNull(jwtConfiguration, nameof(jwtConfiguration));
         EnsureArg.IsNotNull(applicationClaimsService, nameof(applicationClaimsService));
+        EnsureArg.IsNotNull(rWRepository, nameof(rWRepository));
+        EnsureArg.IsNotNull(roRepository, nameof(roRepository));
 
         _userManager = userManager;
         _jwtConfiguration = jwtConfiguration;
         _applicationClaimsService = applicationClaimsService;
+        _rWRepository = rWRepository;
+        _roRepository = roRepository;
     }
 
     public Task<JwtToken> RefreshTokenAsync(
@@ -97,5 +106,23 @@ internal sealed class JwtTokenService : IJwtTokenService
         EnsureArg.IsNotNull(identityUser, nameof (identityUser));
         identityUser.SignOutAllTokens();
         await _userManager.UpdateAsync(identityUser);
+    }
+
+    public async Task CleardownExpiredTokensAsync(CancellationToken cancellationToken) 
+    {
+        _logger.LogInformation("Clearing down expired JWT");
+        var expiredTokens = await _roRepository
+            .ListAsync(x => x.ExpiresOn < DateTimeOffset.UtcNow.AddDays(-1), 
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        _logger.LogInformation("{tokenCount} tokens to clear", expiredTokens.Count);
+        
+        foreach (var expiredToken in expiredTokens)
+        {
+            await _rWRepository.DeleteAsync(expiredToken.Id, cancellationToken).ConfigureAwait(false);
+        }
+
+        _logger.LogInformation("Clear down complete");
     }
 }

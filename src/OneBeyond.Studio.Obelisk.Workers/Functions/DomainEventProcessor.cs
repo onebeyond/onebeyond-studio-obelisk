@@ -11,6 +11,8 @@ namespace OneBeyond.Studio.Obelisk.Workers.Functions;
 
 internal sealed class DomainEventProcessor
 {
+    // These are intentionally single-underscored to allow deployment to
+    // both windows and linux.
     private const string QueueConnection = "DomainEvents_Queue_ConnectionString";
     private const string QueueName = "DomainEvents_Queue_QueueName";
 

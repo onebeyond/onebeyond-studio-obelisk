@@ -5,7 +5,7 @@ using OneBeyond.Studio.Domain.SharedKernel.Entities;
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 
 //It is public because we need it to be visible in Infrastructure project, where we configure entities
-public sealed class AuthToken : DomainEntity<int>
+public sealed class AuthToken : AggregateRoot<int>
 {
     internal AuthToken(
         string loginId,
