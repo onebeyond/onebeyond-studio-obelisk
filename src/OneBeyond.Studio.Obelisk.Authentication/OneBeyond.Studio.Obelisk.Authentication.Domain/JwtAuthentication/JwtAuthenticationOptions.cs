@@ -8,6 +8,7 @@ public sealed record JwtAuthenticationOptions
     public string? Issuer { get; init; }
     public int? AccessTokenExpirationMinutes { get; init; }
     public int? RefreshTokenExpirationDays { get; init; }
+    public bool? EnableReplayDefence { get; init; }
 
     public void EnsureIsValid()
     {

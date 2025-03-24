@@ -20,6 +20,7 @@ public sealed class AuthToken : DomainEntity<int>
         LoginId = loginId;
         RefreshToken = refreshToken;
         ExpiresOn = expiresOn;
+        Refreshed = false;
     }
 
 #nullable disable        
@@ -32,6 +33,13 @@ public sealed class AuthToken : DomainEntity<int>
 
     public string RefreshToken { get; private set; }
     public DateTimeOffset ExpiresOn { get; private set; }
+    public bool Refreshed { get; private set; }
+
+    public void Expire()
+    {
+        Refreshed = true;
+        ExpiresOn = DateTimeOffset.UtcNow;
+    }
 
     public bool IsExpired
         => ExpiresOn <= DateTimeOffset.UtcNow;

@@ -97,7 +97,5 @@ internal sealed class JwtTokenService : IJwtTokenService
         EnsureArg.IsNotNull(identityUser, nameof (identityUser));
         identityUser.SignOutAllTokens();
         await _userManager.UpdateAsync(identityUser);
-    } 
-
-
+    }
 }

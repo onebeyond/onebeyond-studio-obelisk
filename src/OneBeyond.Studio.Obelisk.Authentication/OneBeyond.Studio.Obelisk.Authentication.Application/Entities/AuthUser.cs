@@ -34,10 +34,7 @@ public class AuthUser : Microsoft.AspNetCore.Identity.IdentityUser<string>
 
         var token = _authTokens.FirstOrDefault(x => x.RefreshToken == refreshToken);
 
-        if (token != null)
-        {
-            _authTokens.Remove(token);
-        }
+        token?.Expire();
     }
 
     internal void SignOutAllTokens()

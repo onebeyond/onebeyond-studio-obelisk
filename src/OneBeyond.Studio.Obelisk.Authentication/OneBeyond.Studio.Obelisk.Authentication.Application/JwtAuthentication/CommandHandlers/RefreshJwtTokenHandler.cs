@@ -46,6 +46,18 @@ internal sealed class RefreshJwtTokenHandler : IRequestHandler<RefreshJwtToken, 
             throw new JwtAuthenticationFailedException("Refresh token not found.");
         }
 
+        // Defends against replay attacks. In the event that a token has already been refreshed, everyone
+        // loses all their tokens, as that's the only possible way this happens. A "normally expired" 
+        // token will not be considered "Refreshed".
+        if (token.Refreshed)
+        {
+            var user = await _userManager.FindByIdAsync(token.LoginId).ConfigureAwait(false)
+                ?? throw new JwtAuthenticationFailedException($"Login with id {token.LoginId} not found.");
+            await _jWTokenService.SignOutAsync(user);
+
+            throw new JwtAuthenticationFailedException("Refresh token expired");
+        }
+
         if (token.IsExpired)
         {
             throw new JwtAuthenticationFailedException("Refresh token expired.");

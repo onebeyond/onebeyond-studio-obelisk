@@ -16,8 +16,10 @@ internal sealed class AuthTokenConfiguration : BaseEntityTypeConfiguration<AuthT
             .IsRequired();
 
         builder
-            .Property(x => x.RefreshToken)
+            .Property(x => x.RefreshToken)            
             .HasMaxLength(250)
             .IsRequired();
+
+        builder.HasIndex(x => x.RefreshToken);        
     }
 }
