@@ -35,11 +35,4 @@ public interface IJwtTokenService
     /// <param name="identityUser">The user to sign out.</param>
     /// <returns></returns>
     Task SignOutAsync(AuthUser identityUser);
-
-    /// <summary>
-    /// Clears down tokens expired over a day ago. Prevents excessive table growth.
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task CleardownExpiredTokensAsync(CancellationToken cancellationToken);
 }

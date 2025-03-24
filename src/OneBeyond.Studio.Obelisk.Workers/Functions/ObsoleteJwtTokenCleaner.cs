@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -11,15 +10,15 @@ namespace OneBeyond.Studio.Obelisk.Workers.Functions;
 
 public class ObsoleteJwtTokenCleaner
 {
-    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IJwtCleardownService _jwtCleardownService;
 
     private const string Schedule = "Jwt_Schedule";
     private static readonly ILogger _logger = LogManager.CreateLogger<DomainEventProcessor>();
 
-    public ObsoleteJwtTokenCleaner(IJwtTokenService jwtTokenService)
+    public ObsoleteJwtTokenCleaner(IJwtCleardownService jwtCleardownService)
     {
-        EnsureArg.IsNotNull(jwtTokenService, nameof(jwtTokenService));
-        _jwtTokenService = jwtTokenService;
+        EnsureArg.IsNotNull(jwtCleardownService, nameof(jwtCleardownService));
+        _jwtCleardownService = jwtCleardownService;
     }
 
     [Function(nameof(ObsoleteJwtTokenCleaner))]
@@ -27,7 +26,9 @@ public class ObsoleteJwtTokenCleaner
     {
         _logger.LogInformation("Clearing down expired JWT");
 
-        await _jwtTokenService.CleardownExpiredTokensAsync(cancellationToken);
-        
+        await _jwtCleardownService.ClearDownJwtTokensAsync(cancellationToken);
+
+        _logger.LogInformation("Clearing down completed");
+
     }
 }
