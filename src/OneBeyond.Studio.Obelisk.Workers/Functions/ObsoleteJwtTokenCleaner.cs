@@ -9,20 +9,20 @@ using OneBeyond.Studio.Obelisk.Authentication.Application.Services.JwtAuthentica
 
 namespace OneBeyond.Studio.Obelisk.Workers.Functions;
 
-public class JwtCleardown
+public class ObsoleteJwtTokenCleaner
 {
     private readonly IJwtTokenService _jwtTokenService;
 
     private const string Schedule = "Jwt_Schedule";
     private static readonly ILogger _logger = LogManager.CreateLogger<DomainEventProcessor>();
 
-    public JwtCleardown(IJwtTokenService jwtTokenService)
+    public ObsoleteJwtTokenCleaner(IJwtTokenService jwtTokenService)
     {
         EnsureArg.IsNotNull(jwtTokenService, nameof(jwtTokenService));
         _jwtTokenService = jwtTokenService;
     }
 
-    [Function(nameof(JwtCleardown))]
+    [Function(nameof(ObsoleteJwtTokenCleaner))]
     public async Task RunAsync([TimerTrigger($"%{Schedule}%")] TimerInfo _, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Clearing down expired JWT");
