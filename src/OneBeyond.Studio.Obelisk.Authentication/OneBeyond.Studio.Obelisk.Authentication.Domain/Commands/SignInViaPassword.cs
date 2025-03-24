@@ -1,7 +1,9 @@
+using System;
 using EnsureThat;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
+[Obsolete("This relies on cross-origin cookies, which are now deprecated in some browsers")]
 public sealed record SignInViaPassword : SignIn
 {
     public SignInViaPassword(

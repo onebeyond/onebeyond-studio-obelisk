@@ -60,6 +60,7 @@ public sealed class AuthController : ControllerBase
         => _mediator.Send(new WhoAmI(), cancellationToken);
 
     [HttpPost("Basic/SignIn")]
+    [Obsolete("This relies on cross-origin cookies, which are now deprecated in some browsers")]
     public Task<SignInResult> BasicSignIn(
         [FromBody] SignInViaPassword signInViaPassword,
         CancellationToken cancellationToken)
