@@ -17,7 +17,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [AllowAnonymous]
 [Produces("application/json")]
 [Route("api/account/jwt")]
-public sealed partial class JWTAuthenticationController : Controller
+public sealed class JWTAuthenticationController : Controller
 {
 
     private readonly IMediator _mediator;
