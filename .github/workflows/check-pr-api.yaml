@@ -43,7 +43,7 @@ jobs:
           --logger "trx;logfileprefix=tr"
 
       - name: "Publish Solution Test Results"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
           name: "test-results"
