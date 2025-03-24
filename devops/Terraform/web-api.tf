@@ -185,6 +185,7 @@ module "web_api_workers" {
   app_settings = {
     "DomainEvents_Queue_ConnectionString" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "DomainEvents_Queue_QueueName"        = "obelisk-domain-events"
+    "Jwt_Schedule"                        = "0 0 0 * * *"
   }
   connection_strings = {
     "ApplicationConnectionString" = {
