@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
@@ -12,6 +13,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
+[Obsolete("This relies on cross-origin cookies, which are now deprecated in some browsers")]
 internal sealed class SignInViaPasswordHandler : SignInHandler<SignInViaPassword>
 {
     private readonly UserManager<AuthUser> _userManager;

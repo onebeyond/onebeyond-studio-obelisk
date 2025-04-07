@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Folder" />
@@ -37,6 +38,7 @@
       <DependentUpon>appsettings.json</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Application\OneBeyond.Studio.Obelisk.Authentication.Application.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Infrastructure\OneBeyond.Studio.Obelisk.Infrastructure.csproj" />
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

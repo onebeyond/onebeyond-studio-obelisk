@@ -1,9 +1,13 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationClaims;
@@ -17,11 +21,12 @@ internal sealed class JwtTokenService : IJwtTokenService
     private readonly JwtAuthenticationOptions _jwtConfiguration;
     private readonly IApplicationClaimsService _applicationClaimsService;
 
+    private static readonly ILogger _logger = LogManager.CreateLogger<JwtTokenService>();
+
     public JwtTokenService(
         UserManager<AuthUser> userManager,
         JwtAuthenticationOptions jwtConfiguration,
-        IApplicationClaimsService applicationClaimsService
-        )
+        IApplicationClaimsService applicationClaimsService)
     {
         EnsureArg.IsNotNull(userManager, nameof(userManager));
         EnsureArg.IsNotNull(jwtConfiguration, nameof(jwtConfiguration));
@@ -29,7 +34,7 @@ internal sealed class JwtTokenService : IJwtTokenService
 
         _userManager = userManager;
         _jwtConfiguration = jwtConfiguration;
-        _applicationClaimsService = applicationClaimsService;
+        _applicationClaimsService = applicationClaimsService;                
     }
 
     public Task<JwtToken> RefreshTokenAsync(
@@ -64,17 +69,34 @@ internal sealed class JwtTokenService : IJwtTokenService
 
         var additionalClaims = userRoles.Concat(applicationClaims);
 
-        var jwtToken = TokenGenerator.GenerateJwtToken(
+        try
+        {
+            var jwtToken = TokenGenerator.GenerateJwtToken(
                 identityUser,
                 additionalClaims,
                 _jwtConfiguration);
 
-        var (refreshToken, expiresOn) = TokenGenerator.GenerateRefreshToken(_jwtConfiguration);
+            var (refreshToken, expiresOn) = TokenGenerator.GenerateRefreshToken(_jwtConfiguration);
 
-        identityUser.AddAuthToken(refreshToken, expiresOn);
+            identityUser.AddAuthToken(refreshToken, expiresOn);
 
-        await _userManager.UpdateAsync(identityUser).ConfigureAwait(false); //Save auth token
+            await _userManager.UpdateAsync(identityUser).ConfigureAwait(false); //Save auth token
 
-        return new JwtToken(identityUser.Id, jwtToken, refreshToken);
+            return new JwtToken(identityUser.Id, jwtToken, refreshToken);
+        }
+        catch (Exception exc)
+        {
+            // Rethrow as the UI handles this fine - but this exception needs logging as it usually
+            // indicates something wrong with the setup
+            _logger.LogError(exc, "Error generating JWT for user {userId}", identityUser.Id);
+            throw;
+        }        
+    }
+
+    public async Task SignOutAsync(AuthUser identityUser)
+    {
+        EnsureArg.IsNotNull(identityUser, nameof (identityUser));
+        identityUser.SignOutAllTokens();
+        await _userManager.UpdateAsync(identityUser);
     }
 }

@@ -25,6 +25,7 @@ resource "azurerm_linux_web_app" "web_api" {
     "DomainEvents__Queue__ConnectionString"           = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "FileStorage__AzureBlobStorage__ConnectionString" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "Identities__Seeding__AdminPassword"              = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${module.web_api_admin_password.secret_name})"
+    "Jwt__Secret"                                     = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${local.key_vault_secret_names.jwt_secret})"
   }
   connection_string {
     name  = "ApplicationConnectionString"
@@ -184,6 +185,7 @@ module "web_api_workers" {
   app_settings = {
     "DomainEvents_Queue_ConnectionString" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "DomainEvents_Queue_QueueName"        = "obelisk-domain-events"
+    "Jwt_Schedule"                        = "0 0 0 * * *"
   }
   connection_strings = {
     "ApplicationConnectionString" = {
