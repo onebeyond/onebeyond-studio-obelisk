@@ -8,13 +8,11 @@ using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
-using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
 using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts.AmbientContext;
 
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
-[AllowAnonymous]
 [Produces("application/json")]
 [Route("api/account/jwt")]
 public sealed class JWTAuthenticationController : Controller
@@ -38,6 +36,7 @@ public sealed class JWTAuthenticationController : Controller
     /// <remarks>
     /// Authenticates a user and returns a JWT token, which will be used to further web API requests the endpoints that require user authentication
     /// </remarks>
+    [AllowAnonymous]
     [HttpPost("signIn")]
     public Task<JwtToken> Authenticate(
         [FromBody] SignInJwtDto credentials,
@@ -55,6 +54,7 @@ public sealed class JWTAuthenticationController : Controller
     /// <remarks>
     /// Refreshes the active token in order it to be valid for future requests.
     /// </remarks>
+    [AllowAnonymous]
     [HttpPut("refreshToken")]
     public Task<JwtToken> RefreshToken(
         [FromBody] string refreshToken,
