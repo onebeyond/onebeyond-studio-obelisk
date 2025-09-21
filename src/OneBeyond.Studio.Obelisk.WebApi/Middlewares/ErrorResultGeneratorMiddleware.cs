@@ -12,9 +12,10 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 internal sealed class ErrorResultGeneratorMiddleware
 {
     public const string ProblemContent = "application/problem+json";
+    public const string TraceIdKey = "traceId";
+
     private const string ErrorMessageTemplate = "Error has occurred while processing HTTP request.{CheckErrorResponse}";
     private const string CheckResponseMessage = " Check error response";
-    private const string TraceIdKey = "traceId";
 
     private readonly ILogger<ErrorResultGeneratorMiddleware> _logger;
     private readonly RequestDelegate _next;
