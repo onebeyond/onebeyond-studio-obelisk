@@ -238,7 +238,18 @@ public static class Program
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            string[] methodsOrder = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"];
+            options.OrderActionsBy(apiDesccription =>
+            {
+                var route = apiDesccription.ActionDescriptor.RouteValues["controller"];
+                var methodIndex = Array.FindIndex(
+                    methodsOrder,
+                    method => method.Equals(apiDesccription.HttpMethod, StringComparison.OrdinalIgnoreCase));
+                return $"{route}_{methodIndex}";
+            });
+        });
 
         services.AddDataAccessSeeding(
             configuration.GetOptions<IdentitiesSeederOptions>("Identities:Seeding"));
@@ -247,8 +258,9 @@ public static class Program
             configuration,
             (dataAccessBuilder) =>
                 dataAccessBuilder
-                    .WithDomainEvents(isReceiverHost: true)); // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
-                                                              //.WithUnitOfWork();
+                    // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
+                    .WithDomainEvents(isReceiverHost: true));
+                    //.WithUnitOfWork());
 
         services.AddHostedService<DomainEventRelayJob>();
 
