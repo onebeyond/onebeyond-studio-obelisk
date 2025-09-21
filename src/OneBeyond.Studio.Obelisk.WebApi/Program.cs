@@ -50,6 +50,7 @@ using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.HostedServices;
+using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
@@ -347,7 +348,7 @@ public static class Program
 
         app.UseUnhandledExceptionLogging();
 
-        app.UseErrorResultGenerator();
+        app.UseMiddleware<ErrorResultGeneratorMiddleware>();
 
         app.UseExceptionHandling();
 

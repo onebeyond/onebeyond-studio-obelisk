@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
@@ -19,108 +20,131 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [Authorize(Roles = UserRole.ADMINISTRATOR)]
 [Produces("application/json")]
 [ApiVersion("1.0")]
-public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
+public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, User, Guid>
 {
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
     public UsersController(
+        ILogger<UsersController> logger,
         IMediator mediator,
         ClientApplicationLinkGenerator clientApplicationLinkGenerator)
-        : base(mediator)
+        : base(logger, mediator)
     {
-        EnsureArg.IsNotNull(mediator, nameof(mediator));
-        EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
-
-        _clientApplicationLinkGenerator = clientApplicationLinkGenerator;
+        _clientApplicationLinkGenerator = EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
     }
 
     /// <summary>
     /// Creates a new user.
     /// </summary>
-    /// <param name="dto"></param>
-    /// <param name="cancellationToken"></param>  // Swagger ignores this
-    /// <response code="200">If the GUID of the new user is returned</response>
-    /// <response code="400">If the DTO is invalid</response>
-    [ProducesResponseType(typeof(Guid), 200)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    /// <param name="dto">A <see cref="CreateUserDto"/> with the new user's data.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
+    /// <returns><see cref="CreatedAtActionResult"/> with the <see cref="Guid"/> of the new user.</returns>
+    /// <response code="201">Returns the GUID of the new user.</response>
+    /// <response code="400">If the request body is invalid.</response>
     [HttpPost()]
-    public async Task<Guid> CreateUser(
-        [FromBody] CreateUserDto dto,
-        CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUserDto dto, CancellationToken cancellationToken)
     {
         var newLogin = await Mediator.Send(
             new CreateLogin(
                 dto.UserName,
                 dto.Email,
-                dto.RoleId
-            ),
-            cancellationToken).ConfigureAwait(false);
+                dto.RoleId),
+            cancellationToken);
 
         var createCommand = new CreateUser(
             newLogin.LoginId,
-                dto.UserName,
-                dto.Email,
-                dto.RoleId,
-                _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value)
-        );
+            dto.UserName,
+            dto.Email,
+            dto.RoleId,
+            _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value));
 
-        return await Mediator.Send(createCommand, cancellationToken).ConfigureAwait(false);
+        var result = await Mediator.Send(createCommand, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = result }, result);
     }
 
-    //Please note! command parameter has FromMixedSource attribute!
-    //That means this command will be assembled from different sources:
-    // - UpdateUser.UserId will be bound from query (userId)
-    // - other command properties (userName, email, role, isActive) will be taken from request body
+
     /// <summary>
     /// Updates a specified user.
     /// </summary>
-    /// <param name="command"></param>
-    /// <param name="cancellationToken"></param>
-    /// <response code="200">If the user has been updated successfully</response>
-    /// <response code="400">If the user does not exist</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    /// <remarks>
+    /// Please note! command parameter has <see cref="FromMixedSourceAttribute">FromMixedSourceAttribute</see>!<br />
+    /// That means this command will be assembled from different sources:
+    /// <list type="bullet">
+    ///   <item>
+    ///   <see cref="UpdateUser.UserId">UpdateUser.UserId</see> will be bound from query (userId),
+    ///   </item>
+    ///   <item>
+    ///   other command properties
+    ///     (<see cref="UpdateUser.UserName">userName</see>,
+    ///     <see cref="UpdateUser.Email">email</see>,
+    ///     <see cref="UpdateUser.RoleId">roleId</see>,
+    ///     <see cref="UpdateUser.IsActive">isActive</see>)
+    ///   will be taken from the request body.
+    ///   </item>
+    /// </list>
+    /// </remarks>>
+    /// TODO!
+    /// <param name="command">Am <see cref="Domain.Features.Users.Commands.UpdateUser">UpdateUser</see> with the user's updated data.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
+    /// <returns><see cref="NoContentResult"/>.</returns>
+    /// <response code="204">If the user has been updated successfully.</response>
+    /// <response code="400">If the specified ID or the request body is invalid.</response>
+    /// <response code="404">If the user does not exist.</response>
     [HttpPut("{userId}")]
-    public Task UpdateUser(
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UpdateUser(
         [FromMixedSource] UpdateUser command,
         CancellationToken cancellationToken)
-        => Mediator.Send(command, cancellationToken);
+    {
+        await Mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
 
     /// <summary>
     /// Generates a reset password token for a specified login ID.
     /// </summary>
-    /// <param name="loginId">The login Id of the user</param>
-    /// <param name="cancellationToken"></param>
-    /// <response code="200">If the token is generated successfully</response>
-    /// <response code="400">If the login ID does not exist</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    /// <param name="loginId">The <see cref="UserBase.LoginId">login ID</see> of the user.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
+    /// <returns><see cref="NoContentResult"/>.</returns>
+    /// <response code="204">If the token is generated successfully.</response>
+    /// <response code="404">If a user with the specified login ID does not exist.</response>
     [HttpPut("{loginId}/ResetPassword")]
-    public async Task ResetPassword(
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ResetPassword(
         string loginId,
         CancellationToken cancellationToken)
     {
         var resetPasswordToken = await Mediator.Send(
-            new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken).ConfigureAwait(false);
+            new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken);
 
         await Mediator.Send(
             new SendResetPasswordEmail(
                 loginId,
-                _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId,resetPasswordToken)),
-            cancellationToken)
-            .ConfigureAwait(false);
+                _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId, resetPasswordToken)),
+            cancellationToken);
+
+        return NoContent();
     }
 
     /// <summary>
     /// Unlocks a specified user.
     /// </summary>
-    /// <param name="userId" example="3fa85f64-5717-4562-b3fc-2c963f66afa6">The ID of the user</param>
-    /// <param name="cancellationToken"></param>
-    /// <response code="200">If the user has been unlocked successfully</response>
-    /// <response code="400">If the user with the specified ID does not exist</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    /// <param name="userId" example="3fa85f64-5717-4562-b3fc-2c963f66afa6">The ID of the user.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken"/> token to cancel the operation.</param>
+    /// <returns><see cref="NoContentResult"/>.</returns>
+    /// <response code="204">If the user has been successfully unlocked.</response>
+    /// <response code="404">If the user does not exist.</response>
     [HttpPut("{userId}/Unlock")]
-    public Task UnlockUser(Guid userId, CancellationToken cancellationToken)
-        => Mediator.Send(new UnlockUser(userId), cancellationToken);
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UnlockUser(Guid userId, CancellationToken cancellationToken)
+    {
+        await Mediator.Send(new UnlockUser(userId), cancellationToken);
+        return NoContent();
+    }
 }
