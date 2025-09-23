@@ -19,7 +19,7 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 [Authorize(Roles = UserRole.ADMINISTRATOR)]
 [Produces("application/json")]
 [ApiVersion("1.0")]
-public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, User, Guid>
+public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto, UserBase, Guid>
 {
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
@@ -42,7 +42,9 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [HttpPost()]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<ActionResult<Guid>> CreateUser(
+        [FromBody] CreateUserDto dto,
+        CancellationToken cancellationToken)
     {
         var newLogin = await Mediator.Send(
             new CreateLogin(
