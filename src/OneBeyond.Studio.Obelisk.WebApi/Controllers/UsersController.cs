@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
@@ -25,10 +24,9 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     private readonly ClientApplicationLinkGenerator _clientApplicationLinkGenerator;
 
     public UsersController(
-        ILogger<UsersController> logger,
         IMediator mediator,
         ClientApplicationLinkGenerator clientApplicationLinkGenerator)
-        : base(logger, mediator)
+        : base(mediator)
     {
         _clientApplicationLinkGenerator = EnsureArg.IsNotNull(clientApplicationLinkGenerator, nameof(clientApplicationLinkGenerator));
     }
@@ -64,29 +62,14 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         return CreatedAtAction(nameof(GetById), new { id = result }, result);
     }
 
-
+    // Please note! command parameter has FromMixedSource attribute!
+    // That means this command will be assembled from different sources:
+    //   - UpdateUser.UserId will be bound from query (userId)
+    //   - other command properties (userName, email, roleId, isActive) will be taken from request body
     /// <summary>
     /// Updates a specified user.
     /// </summary>
-    /// <remarks>
-    /// Please note! command parameter has <see cref="FromMixedSourceAttribute">FromMixedSourceAttribute</see>!<br />
-    /// That means this command will be assembled from different sources:
-    /// <list type="bullet">
-    ///   <item>
-    ///   <see cref="UpdateUser.UserId">UpdateUser.UserId</see> will be bound from query (userId),
-    ///   </item>
-    ///   <item>
-    ///   other command properties
-    ///     (<see cref="UpdateUser.UserName">userName</see>,
-    ///     <see cref="UpdateUser.Email">email</see>,
-    ///     <see cref="UpdateUser.RoleId">roleId</see>,
-    ///     <see cref="UpdateUser.IsActive">isActive</see>)
-    ///   will be taken from the request body.
-    ///   </item>
-    /// </list>
-    /// </remarks>>
-    /// TODO!
-    /// <param name="command">Am <see cref="Domain.Features.Users.Commands.UpdateUser">UpdateUser</see> with the user's updated data.</param>
+    /// <param name="command">An <see cref="Domain.Features.Users.Commands.UpdateUser">UpdateUser</see> with the user's updated data.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
     /// <returns><see cref="NoContentResult"/>.</returns>
     /// <response code="204">If the user has been updated successfully.</response>
@@ -135,7 +118,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     /// Unlocks a specified user.
     /// </summary>
     /// <param name="userId" example="3fa85f64-5717-4562-b3fc-2c963f66afa6">The ID of the user.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> token to cancel the operation.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
     /// <returns><see cref="NoContentResult"/>.</returns>
     /// <response code="204">If the user has been successfully unlocked.</response>
     /// <response code="404">If the user does not exist.</response>

@@ -5,7 +5,6 @@ using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.Entities.Dto;
 using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
 using OneBeyond.Studio.Domain.SharedKernel.Entities;
@@ -21,15 +20,10 @@ public abstract class QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, T
     where TEntityGetDTO : new()
     where TEntityListDTO : new()
 {
-    protected QBasedController(
-        ILogger<QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, TEntityId>> logger,
-        IMediator mediator)
+    protected QBasedController(IMediator mediator)
     {
-        Logger = EnsureArg.IsNotNull(logger, nameof(logger));
         Mediator = EnsureArg.IsNotNull(mediator, nameof(mediator));
     }
-
-    protected ILogger<QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, TEntityId>> Logger { get; }
 
     protected IMediator Mediator { get; }
 
