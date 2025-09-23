@@ -7,15 +7,13 @@ using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Tests.Middlewares;
 
-public class ErrorResultGeneratorMiddlewareTests : IClassFixture<CustomWebApplicationFactory>
+public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixture>
 {
-    private readonly CustomWebApplicationFactory _factory;
     private readonly HttpClient _client;
 
-    public ErrorResultGeneratorMiddlewareTests(CustomWebApplicationFactory factory)
+    public ErrorResultGeneratorMiddlewareTests(TestServerFixture testServer)
     {
-        _factory = factory;
-        _client = _factory.CreateClient();
+        _client = testServer.Client;
     }
 
     [Fact]

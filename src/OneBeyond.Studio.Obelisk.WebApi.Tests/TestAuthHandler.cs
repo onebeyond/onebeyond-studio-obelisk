@@ -6,8 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Tests;
 
-public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+internal sealed class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
+    public const string AuthenticationType = "Test";
     public const string AuthenticationScheme = "Test";
 
     public TestAuthHandler(
@@ -25,9 +26,11 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
             new Claim(ClaimTypes.Name, "TestUser"),
             new Claim(ClaimTypes.Role, "Administrator")
         };
-        var identity = new ClaimsIdentity(claims, AuthenticationScheme);
+        var identity = new ClaimsIdentity(claims, AuthenticationType);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
-        return Task.FromResult(AuthenticateResult.Success(ticket));
+
+        var result = AuthenticateResult.Success(ticket);
+        return Task.FromResult(result);
     }
 }
