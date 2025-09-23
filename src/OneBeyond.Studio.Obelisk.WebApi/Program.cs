@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -45,11 +44,11 @@ using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationCl
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
-using OneBeyond.Studio.Obelisk.WebApi;
 using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.HostedServices;
+using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
@@ -60,10 +59,8 @@ using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
 namespace OneBeyond.Studio.Obelisk.WebApi;
 
-public static class Program
+public class Program
 {
-    private const string _selfCheck = "self";
-
     public static async Task Main(string[] args)
     {
         // Logger used during app bootstrap
@@ -237,7 +234,18 @@ public static class Program
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            string[] methodsOrder = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"];
+            options.OrderActionsBy(apiDesccription =>
+            {
+                var route = apiDesccription.ActionDescriptor.RouteValues["controller"];
+                var methodIndex = Array.FindIndex(
+                    methodsOrder,
+                    method => method.Equals(apiDesccription.HttpMethod, StringComparison.OrdinalIgnoreCase));
+                return $"{route}_{methodIndex}";
+            });
+        });
 
         services.AddDataAccessSeeding(
             configuration.GetOptions<IdentitiesSeederOptions>("Identities:Seeding"));
@@ -246,8 +254,9 @@ public static class Program
             configuration,
             (dataAccessBuilder) =>
                 dataAccessBuilder
-                    .WithDomainEvents(isReceiverHost: true)); // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
-                                                              //.WithUnitOfWork();
+                    // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
+                    .WithDomainEvents(isReceiverHost: true));
+                    //.WithUnitOfWork());
 
         services.AddHostedService<DomainEventRelayJob>();
 
@@ -267,39 +276,6 @@ public static class Program
         services.AddLocalization(options => options.ResourcesPath = "Localizations/Resources");
 
         services.AddHealthChecks(environment, configuration);
-    }
-
-    private static IServiceCollection AddHealthChecks(
-        this IServiceCollection services,
-        IHostEnvironment environment,
-        IConfiguration configuration)
-    {
-        var hcBuilder = services.AddHealthChecks();
-
-        hcBuilder.AddCheck(_selfCheck, () => HealthCheckResult.Healthy());
-
-        hcBuilder
-            .AddSqlServer(
-                configuration.GetConnectionString("ApplicationConnectionString")!,
-                name: "DB-check",
-                tags: new string[] { "db" });
-
-        hcBuilder
-            .AddAzureQueueStorage(
-                configuration.GetOptions<AzureMessageQueueOptions>("DomainEvents:Queue").ConnectionString!,
-                name: "queue-check",
-                tags: new string[] { "queue" });
-
-        if (!environment.IsDevelopment())
-        {
-            hcBuilder
-                .AddAzureBlobStorage(
-                    configuration.GetOptions<AzureBlobFileStorageOptions>("FileStorage:AzureBlobStorage").ConnectionString!,
-                    name: "storage-check",
-                    tags: new string[] { "storage" });
-        }
-
-        return services;
     }
 
     private static void ConfigureAutofacServices(HostBuilderContext hostBuilderContext, ContainerBuilder containerBuilder)
@@ -347,7 +323,7 @@ public static class Program
 
         app.UseUnhandledExceptionLogging();
 
-        app.UseErrorResultGenerator();
+        app.UseMiddleware<ErrorResultGeneratorMiddleware>();
 
         app.UseExceptionHandling();
 
@@ -401,7 +377,7 @@ public static class Program
                 });
                 endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
                 {
-                    Predicate = r => r.Name.Contains(_selfCheck)
+                    Predicate = r => r.Name.Contains(HealthCheckExtensions.SelfCheck)
                 });
             });
     }
