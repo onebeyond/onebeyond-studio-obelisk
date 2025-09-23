@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- File name extension must be .runsettings -->
 <RunSettings>
-    <RunConfiguration>
-        <EnvironmentVariables>
-            <ASPNETCORE_ENVIRONMENT>Development</ASPNETCORE_ENVIRONMENT>
-        </EnvironmentVariables>
-    </RunConfiguration>
     <DataCollectionRunSettings>
         <DataCollectors>
             <DataCollector friendlyName="XPlat Code Coverage">
