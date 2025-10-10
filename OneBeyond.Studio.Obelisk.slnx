@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Authentication/">
+    <Project Path="src/OneBeyond.Studio.Obelisk.Authentication/OneBeyond.Studio.Obelisk.Authentication.Application/OneBeyond.Studio.Obelisk.Authentication.Application.csproj">
+      <BuildDependency Project="src/OneBeyond.Studio.Obelisk.Authentication/OneBeyond.Studio.Obelisk.Authentication.Domain/OneBeyond.Studio.Obelisk.Authentication.Domain.csproj" />
+    </Project>
+    <Project Path="src/OneBeyond.Studio.Obelisk.Authentication/OneBeyond.Studio.Obelisk.Authentication.Domain/OneBeyond.Studio.Obelisk.Authentication.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="src/OneBeyond.Studio.Obelisk.Application/OneBeyond.Studio.Obelisk.Application.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.Domain.Tests/OneBeyond.Studio.Obelisk.Domain.Tests.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.Domain/OneBeyond.Studio.Obelisk.Domain.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.Infrastructure/OneBeyond.Studio.Obelisk.Infrastructure.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.WebApi.Tests/OneBeyond.Studio.Obelisk.WebApi.Tests.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.WebApi/OneBeyond.Studio.Obelisk.WebApi.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj" />
+</Solution>
