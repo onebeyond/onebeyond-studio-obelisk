@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
   <Project Path="src/OneBeyond.Studio.Obelisk.Application/OneBeyond.Studio.Obelisk.Application.csproj" />
