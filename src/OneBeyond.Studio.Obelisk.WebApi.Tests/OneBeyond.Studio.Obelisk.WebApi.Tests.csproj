@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" VersionOverride="9.0.6" />
     <Using Include="Xunit" />
   </ItemGroup>
 
