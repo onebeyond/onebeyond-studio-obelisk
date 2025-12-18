@@ -2,15 +2,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class ChangePasswordHandler : IRequestHandler<ChangePassword, ChangePasswordResult>
+internal sealed class ChangePasswordHandler : ICommandHandler<ChangePassword, ChangePasswordResult>
 {
     private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
@@ -27,7 +27,7 @@ internal sealed class ChangePasswordHandler : IRequestHandler<ChangePassword, Ch
         _signInManager = signInManager;
     }
 
-    public async Task<ChangePasswordResult> Handle(ChangePassword command, CancellationToken cancellationToken)
+    public async Task<ChangePasswordResult> HandleAsync(ChangePassword command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

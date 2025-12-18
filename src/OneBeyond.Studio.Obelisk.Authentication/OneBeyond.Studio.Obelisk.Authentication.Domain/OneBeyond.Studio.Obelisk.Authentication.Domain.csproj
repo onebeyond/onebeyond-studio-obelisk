@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" />
+    <PackageReference Include="OneBeyond.Studio.Core.Mediator" />
   </ItemGroup>
 
 </Project>

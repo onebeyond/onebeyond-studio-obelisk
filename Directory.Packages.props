@@ -11,7 +11,7 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
-    <PackageVersion Include="Ensure.That" Version="10.1.0" />    
+    <PackageVersion Include="Ensure.That" Version="10.1.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.23.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
@@ -27,6 +27,7 @@
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.2.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0" />
     <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" Version="10.0.0.2" />
+    <PackageVersion Include="OneBeyond.Studio.Core.Mediator" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="10.0.0.2" />
@@ -49,7 +50,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
   </ItemGroup>
   <!-- ================= Test projects ================ -->
-  <ItemGroup>    
+  <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.1" />
