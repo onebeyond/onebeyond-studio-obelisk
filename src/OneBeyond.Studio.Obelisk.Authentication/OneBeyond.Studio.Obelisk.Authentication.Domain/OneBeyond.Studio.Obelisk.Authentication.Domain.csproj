@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" />
-    <PackageReference Include="MediatR" />
   </ItemGroup>
 
 </Project>

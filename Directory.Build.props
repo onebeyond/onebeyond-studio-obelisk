@@ -17,8 +17,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(IsTestProject) == 'true'">
-    <PackageReference Include="FluentAssertions" />
+  <ItemGroup Condition="$(IsTestProject) == 'true'">    
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
@@ -26,8 +25,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(IsTestProject) == 'true'">
-    <Using Include="Xunit" />
-    <Using Include="FluentAssertions" />
-    <Using Include="FluentAssertions.Execution" />
+    <Using Include="Xunit" />    
   </ItemGroup>
 </Project>
