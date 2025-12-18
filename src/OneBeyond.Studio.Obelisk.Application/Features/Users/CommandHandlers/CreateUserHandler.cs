@@ -2,14 +2,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.CommandHandlers;
 
-internal sealed class CreateUserHandler : IRequestHandler<CreateUser, Guid>
+internal sealed class CreateUserHandler : ICommandHandler<CreateUser, Guid>
 {
     private readonly IRWRepository<UserBase, Guid> _userRWRepository;
 
@@ -20,7 +20,7 @@ internal sealed class CreateUserHandler : IRequestHandler<CreateUser, Guid>
         _userRWRepository = userRWRepository;
     }
 
-    public async Task<Guid> Handle(CreateUser command, CancellationToken cancellationToken)
+    public async Task<Guid> HandleAsync(CreateUser command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
