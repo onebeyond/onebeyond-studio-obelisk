@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
@@ -14,7 +14,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain.SignInResult>
+internal abstract class SignInHandler<TSignIn> : ICommandHandler<TSignIn, Domain.SignInResult>
     where TSignIn : SignIn
 {
     private static readonly ILogger Logger = LogManager.CreateLogger<TSignIn>();
@@ -33,7 +33,7 @@ internal abstract class SignInHandler<TSignIn> : IRequestHandler<TSignIn, Domain
     protected IAuthenticationFlowHandler AuthFlowHandler { get; }
     protected SignInManager<AuthUser> SignInManager { get; }
 
-    public async Task<Domain.SignInResult> Handle(
+    public async Task<Domain.SignInResult> HandleAsync(
         TSignIn command,
         CancellationToken cancellationToken)
     {

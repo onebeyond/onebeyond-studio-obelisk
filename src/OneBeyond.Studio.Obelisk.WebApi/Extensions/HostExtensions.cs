@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Services.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 
@@ -38,7 +38,7 @@ public static class HostExtensions
         using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         {
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            await mediator.Publish(new SeedApplication(), cancellationToken).ConfigureAwait(false);
+            await mediator.NotifyAsync(new SeedApplication(), cancellationToken).ConfigureAwait(false);
             return host;
         }
     }

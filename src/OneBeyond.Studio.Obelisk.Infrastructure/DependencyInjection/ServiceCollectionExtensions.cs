@@ -1,9 +1,9 @@
 using System;
 using EnsureThat;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OneBeyond.Studio.Core.Mediator.Notifications;
 using OneBeyond.Studio.Crosscuts.Options;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.DataAccess.EFCore.Options;
@@ -65,7 +65,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(identitySeedingOptions);
 
         services.AddScoped<INotificationHandler<SeedApplication>, IdentitiesSeeder>();
-
         services.AddScoped<INotificationHandler<SeedApplication>, EmailTemplatesSeeder>();
 
         return services;

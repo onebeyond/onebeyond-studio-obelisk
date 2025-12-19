@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
 using OneBeyond.Studio.Crosscuts.Utilities.Templating;
@@ -36,7 +37,6 @@ using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource.DependencyInjecti
 using OneBeyond.Studio.Infrastructure.Azure.KeyVault.Configurations;
 using OneBeyond.Studio.Infrastructure.Azure.MessageQueues.DependencyInjection;
 using OneBeyond.Studio.Infrastructure.Azure.MessageQueues.Options;
-using OneBeyond.Studio.Obelisk.Application;
 using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Application.DependencyInjection;
@@ -227,10 +227,7 @@ public class Program
                 options.SuppressInferBindingSourcesForParameters = true;
             });
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-            Assembly.GetExecutingAssembly(),
-            typeof(AssemblyMark).Assembly,
-            typeof(Authentication.Application.AssemblyMark).Assembly));
+        services.AddCoreMediator();
 
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -260,9 +257,7 @@ public class Program
 
         services.AddHostedService<DomainEventRelayJob>();
 
-        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
-
-        services.AddAutoMapper(typeof(AssemblyMark).Assembly);
+        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);        
 
         services.AddFileStorage(
             (builder) =>

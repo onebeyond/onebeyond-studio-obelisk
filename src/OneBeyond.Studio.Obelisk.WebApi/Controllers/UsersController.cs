@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
@@ -46,7 +47,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         [FromBody] CreateUserDto dto,
         CancellationToken cancellationToken)
     {
-        var newLogin = await Mediator.Send(
+        var newLogin = await Mediator.CommandAsync<CreateLogin, ResetPasswordToken>(
             new CreateLogin(
                 dto.UserName,
                 dto.Email,
@@ -60,7 +61,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
             dto.RoleId,
             _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value));
 
-        var result = await Mediator.Send(createCommand, cancellationToken);
+        var result = await Mediator.CommandAsync<CreateUser, Guid>(createCommand, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = result }, result);
     }
 
@@ -85,7 +86,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         [FromMixedSource] UpdateUser command,
         CancellationToken cancellationToken)
     {
-        await Mediator.Send(command, cancellationToken);
+        await Mediator.CommandAsync(command, cancellationToken);
         return NoContent();
     }
 
@@ -104,10 +105,10 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         string loginId,
         CancellationToken cancellationToken)
     {
-        var resetPasswordToken = await Mediator.Send(
+        var resetPasswordToken = await Mediator.CommandAsync<GenerateResetPasswordTokenByLoginId, string>(
             new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken);
 
-        await Mediator.Send(
+        await Mediator.CommandAsync(
             new SendResetPasswordEmail(
                 loginId,
                 _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId, resetPasswordToken)),
@@ -129,7 +130,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UnlockUser(Guid userId, CancellationToken cancellationToken)
     {
-        await Mediator.Send(new UnlockUser(userId), cancellationToken);
+        await Mediator.CommandAsync(new UnlockUser(userId), cancellationToken);
         return NoContent();
     }
 }

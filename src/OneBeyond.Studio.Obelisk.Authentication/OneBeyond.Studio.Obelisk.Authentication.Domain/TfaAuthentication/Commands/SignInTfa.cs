@@ -1,9 +1,9 @@
 using EnsureThat;
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
-public sealed class SignInTfa : IRequest<SignInResult>
+public sealed class SignInTfa : ICommand<SignInResult>
 {
     public SignInTfa(
         string code,

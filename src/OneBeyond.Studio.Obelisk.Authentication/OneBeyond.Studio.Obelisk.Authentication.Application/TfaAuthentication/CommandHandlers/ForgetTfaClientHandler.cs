@@ -1,15 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class ForgetTfaClientHandler : IRequestHandler<ForgetTfaClient, Unit>
+internal sealed class ForgetTfaClientHandler : ICommandHandler<ForgetTfaClient>
 {
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly UserManager<AuthUser> _userManager;
@@ -26,15 +26,13 @@ internal sealed class ForgetTfaClientHandler : IRequestHandler<ForgetTfaClient, 
         _signInManager = signInManager;
     }
 
-    public async Task<Unit> Handle(ForgetTfaClient command, CancellationToken cancellationToken)
+    public async Task HandleAsync(ForgetTfaClient command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
         _ = await _userManager.FindByIdAsync(command.LoginId).ConfigureAwait(false)
             ?? throw new AuthLoginNotFoundException($"Login with id {command.LoginId} not found");
 
-        await _signInManager.ForgetTwoFactorClientAsync().ConfigureAwait(false);
-
-        return Unit.Value;
+        await _signInManager.ForgetTwoFactorClientAsync().ConfigureAwait(false);        
     }
 }

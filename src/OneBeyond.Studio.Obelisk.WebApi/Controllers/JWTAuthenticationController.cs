@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
@@ -41,7 +41,7 @@ public sealed class JWTAuthenticationController : Controller
     public Task<JwtToken> Authenticate(
         [FromBody] SignInJwtDto credentials,
         CancellationToken cancellationToken)
-        => _mediator.Send(
+        => _mediator.CommandAsync<SignInJwtToken, JwtToken>(
                 new SignInJwtToken(
                     credentials.Username,
                     credentials.Password
@@ -59,13 +59,13 @@ public sealed class JWTAuthenticationController : Controller
     public Task<JwtToken> RefreshToken(
         [FromBody] string refreshToken,
         CancellationToken cancellationToken)
-        => _mediator.Send(
+        => _mediator.CommandAsync<RefreshJwtToken, JwtToken>(
                 new RefreshJwtToken(refreshToken),
                 cancellationToken);
 
     [Authorize]
     [HttpPost("signout")]
     public Task SignOutAllTokens(CancellationToken cancellationToken)
-        => _mediator.Send(new SignOutAllTokens(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
+        => _mediator.CommandAsync(new SignOutAllTokens(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
 
 }

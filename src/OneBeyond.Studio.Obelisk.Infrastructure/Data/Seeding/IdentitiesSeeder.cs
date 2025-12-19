@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneBeyond.Studio.Core.Mediator.Notifications;
 using OneBeyond.Studio.Obelisk.Application.Services.Seeding;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
@@ -24,7 +24,7 @@ internal sealed class IdentitiesSeeder : INotificationHandler<SeedApplication>
         _adminPassword = options.AdminPassword;
     }
 
-    public async Task Handle(SeedApplication notification, CancellationToken cancellationToken)
+    public async Task HandleAsync(SeedApplication notification, CancellationToken cancellationToken)
     {
         await AuthContextExtensions.SeedRolesAsync(_domainContext, cancellationToken).ConfigureAwait(false);
         await SeedAdminUserAsync(_domainContext, _adminPassword, cancellationToken).ConfigureAwait(false);

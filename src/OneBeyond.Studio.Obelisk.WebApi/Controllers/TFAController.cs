@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
@@ -44,13 +44,13 @@ public sealed class TFAController : ControllerBase
 
     [HttpGet("tfaSettings")]
     public Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
-        => _mediator.Send(
+        => _mediator.QueryAsync<GetTfaSettings, LoginTfaSettings>(
             new GetTfaSettings(_userContext.UserAuthId), cancellationToken);
 
     [HttpPost("generateTfaKey")]
     public async Task<TfaAuthenticatorSettings> GenerateTfaKey(CancellationToken cancellationToken)
     {
-        var authenticatorKey = await _mediator.Send(
+        var authenticatorKey = await _mediator.CommandAsync<GenerateTfaKey, TfaKey>(
             new GenerateTfaKey(_userContext.UserAuthId), cancellationToken).ConfigureAwait(false);
 
         return new TfaAuthenticatorSettings
@@ -64,27 +64,27 @@ public sealed class TFAController : ControllerBase
     public Task<IEnumerable<string>> EnableTfa(
         [FromBody] EnableTfaRequest enableTfaDto,
         CancellationToken cancellationToken)
-    => _mediator.Send(
+    => _mediator.CommandAsync<EnableTfa, IEnumerable<string>>(
         new EnableTfa(_userContext.UserAuthId, enableTfaDto.Code), cancellationToken);
     
     [HttpPost("disableTfa")]
     public Task DisableTfa(CancellationToken cancellationToken) 
-        => _mediator.Send(
+        => _mediator.CommandAsync<DisableTfa, bool>(
             new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken);
 
     [HttpPost("resetTfa")]
     public Task Reset(CancellationToken cancellationToken) 
-        => _mediator.Send(
+        => _mediator.CommandAsync<DisableTfa, bool>(
             new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken);
 
     [HttpPost("forgetBrowser")]
     public Task ForgetBrowser(CancellationToken cancellationToken)
-        => _mediator.Send(
+        => _mediator.CommandAsync(
             new ForgetTfaClient(_userContext.UserAuthId), cancellationToken);
 
     [HttpPost("generateRecoveryCodes")]
     public Task<IEnumerable<string>> GenerateRecoveryCodes(CancellationToken cancellationToken)
-        => _mediator.Send(
+        => _mediator.CommandAsync<GenerateTfaRecoveryCodes, IEnumerable<string>>(
             new GenerateTfaRecoveryCodes(_userContext.UserAuthId), cancellationToken);
 
     private string GenerateQrCodeUri(string email, string unformattedKey)

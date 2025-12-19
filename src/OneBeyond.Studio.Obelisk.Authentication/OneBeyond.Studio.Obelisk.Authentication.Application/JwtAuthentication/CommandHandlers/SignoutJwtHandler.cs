@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.CommandHandlers;
-internal class SignoutJwtHandler : IRequestHandler<SignOutAllTokens>
+internal class SignoutJwtHandler : ICommandHandler<SignOutAllTokens>
 {
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly UserManager<AuthUser> _userManager;
@@ -25,9 +25,7 @@ internal class SignoutJwtHandler : IRequestHandler<SignOutAllTokens>
         _jwtTokenService = jwtTokenService;
     }
 
-
-
-    public async Task Handle(SignOutAllTokens request, CancellationToken cancellationToken)
+    public async Task HandleAsync(SignOutAllTokens request, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(request, nameof(request));
         var identityUser = await _userManager.FindByNameAsync(request.UserName);

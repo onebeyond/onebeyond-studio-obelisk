@@ -1,15 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Queries;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.QueryHandlers;
 
-internal sealed class CheckLoginHasPasswordHandler : IRequestHandler<CheckLoginHasPassword, bool>
+internal sealed class CheckLoginHasPasswordHandler : IQueryHandler<CheckLoginHasPassword, bool>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -22,7 +22,7 @@ internal sealed class CheckLoginHasPasswordHandler : IRequestHandler<CheckLoginH
         _userManager = userManager;
     }
 
-    public async Task<bool> Handle(CheckLoginHasPassword query, CancellationToken cancellationToken)
+    public async Task<bool> HandleAsync(CheckLoginHasPassword query, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(query, nameof(query));
 

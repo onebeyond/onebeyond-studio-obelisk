@@ -3,8 +3,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Crosscuts.Strings;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
@@ -13,7 +13,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class GenerateTfaKeyHandler : IRequestHandler<GenerateTfaKey, TfaKey>
+internal sealed class GenerateTfaKeyHandler : ICommandHandler<GenerateTfaKey, TfaKey>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -24,7 +24,7 @@ internal sealed class GenerateTfaKeyHandler : IRequestHandler<GenerateTfaKey, Tf
         _userManager = userManager;
     }
 
-    public async Task<TfaKey> Handle(GenerateTfaKey command, CancellationToken cancellationToken)
+    public async Task<TfaKey> HandleAsync(GenerateTfaKey command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

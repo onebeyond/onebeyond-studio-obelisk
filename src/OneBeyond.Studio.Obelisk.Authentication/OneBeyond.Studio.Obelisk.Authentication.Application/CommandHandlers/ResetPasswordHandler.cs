@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
@@ -14,7 +14,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, ResetPasswordStatus>
+internal sealed class ResetPasswordHandler : ICommandHandler<ResetPassword, ResetPasswordStatus>
 {
     private readonly UserManager<AuthUser> _userManager;
     private static readonly ILogger Logger = LogManager.CreateLogger<ResetPasswordHandler>();
@@ -27,7 +27,7 @@ internal sealed class ResetPasswordHandler : IRequestHandler<ResetPassword, Rese
         _userManager = userManager;
     }
 
-    public async Task<ResetPasswordStatus> Handle(ResetPassword command, CancellationToken cancellationToken)
+    public async Task<ResetPasswordStatus> HandleAsync(ResetPassword command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

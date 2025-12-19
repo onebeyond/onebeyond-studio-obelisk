@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
+using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
 using OneBeyond.Studio.Crosscuts.Utilities.Templating;
@@ -66,14 +67,12 @@ internal static class Program
         var configuration = hostBuilderContext.Configuration;
         var environment = hostBuilderContext.HostingEnvironment;
 
-        serviceCollection.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        serviceCollection.AddCoreMediator();
 
         serviceCollection.AddDataAccess(
                 configuration,
                 (dataAccessBuilder) => dataAccessBuilder.WithDomainEvents())
-            .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
-
-        serviceCollection.AddAutoMapper(typeof(Application.AssemblyMark).Assembly);
+            .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);        
 
         serviceCollection.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
 

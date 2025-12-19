@@ -1,9 +1,9 @@
 using EnsureThat;
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
 
-public sealed class RefreshJwtToken : IRequest<JwtToken>
+public sealed class RefreshJwtToken : ICommand<JwtToken>
 {
     public RefreshJwtToken(
         string refreshToken

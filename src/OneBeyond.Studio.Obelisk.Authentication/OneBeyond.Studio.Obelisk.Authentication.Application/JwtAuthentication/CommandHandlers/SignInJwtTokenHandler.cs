@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.JwtAuthentication;
@@ -13,7 +13,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Exception
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.CommandHandlers;
 
-internal sealed class SignInJwtTokenHandler : IRequestHandler<SignInJwtToken, JwtToken>
+internal sealed class SignInJwtTokenHandler : ICommandHandler<SignInJwtToken, JwtToken>
 {
     private static readonly ILogger Logger = LogManager.CreateLogger<SignInJwtTokenHandler>();
 
@@ -35,7 +35,7 @@ internal sealed class SignInJwtTokenHandler : IRequestHandler<SignInJwtToken, Jw
         _jWTokenService = jWTokenservice;
     }
 
-    public async Task<JwtToken> Handle(SignInJwtToken command, CancellationToken cancellationToken)
+    public async Task<JwtToken> HandleAsync(SignInJwtToken command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

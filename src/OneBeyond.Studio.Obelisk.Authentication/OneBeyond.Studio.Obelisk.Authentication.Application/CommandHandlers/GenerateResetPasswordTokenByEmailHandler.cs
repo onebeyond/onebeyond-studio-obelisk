@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
@@ -10,7 +10,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class GenerateResetPasswordTokenByEmailHandler : IRequestHandler<GenerateResetPasswordTokenByEmail, ResetPasswordToken>
+internal sealed class GenerateResetPasswordTokenByEmailHandler : ICommandHandler<GenerateResetPasswordTokenByEmail, ResetPasswordToken>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -23,8 +23,10 @@ internal sealed class GenerateResetPasswordTokenByEmailHandler : IRequestHandler
         _userManager = userManager;
     }
 
-    public async Task<ResetPasswordToken> Handle(GenerateResetPasswordTokenByEmail command, CancellationToken cancellationToken)
+    public async Task<ResetPasswordToken> HandleAsync(GenerateResetPasswordTokenByEmail command, CancellationToken cancellationToken)
     {
+        EnsureArg.IsNotNull(command, nameof(command));
+
         var identityUser = await _userManager.FindByEmailAsync(command.Email).ConfigureAwait(false)
             ?? throw new AuthLoginNotFoundException($"Login with email {command.Email} not found");
 

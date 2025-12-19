@@ -1,15 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin>
+internal sealed class UnlockLoginHandler : ICommandHandler<UnlockLogin>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -21,7 +21,7 @@ internal sealed class UnlockLoginHandler : IRequestHandler<UnlockLogin>
         _userManager = userManager;
     }
 
-    public async Task Handle(UnlockLogin command, CancellationToken cancellationToken)
+    public async Task HandleAsync(UnlockLogin command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
