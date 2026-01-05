@@ -113,6 +113,7 @@ jobs:
                 --no-restore
                 --no-build
                 --configuration $(buildConfiguration)
+                --runtime linux-x64
                 --output $(Build.ArtifactStagingDirectory)/Workers
               zipAfterPublish: true
 

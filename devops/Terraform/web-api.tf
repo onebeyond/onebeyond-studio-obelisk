@@ -194,4 +194,5 @@ module "web_api_workers" {
     }
   }
   tags = local.default_tags
+  sku_name = var.worker_sku_size
 }
