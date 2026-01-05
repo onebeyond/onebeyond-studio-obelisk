@@ -164,7 +164,7 @@ public class Program
 
         services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
-        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();        
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 

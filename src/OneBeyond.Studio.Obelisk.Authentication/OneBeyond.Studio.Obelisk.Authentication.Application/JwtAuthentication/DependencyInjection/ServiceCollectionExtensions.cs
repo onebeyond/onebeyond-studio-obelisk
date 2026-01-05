@@ -39,4 +39,10 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddJwtBackgroundServices(this IServiceCollection services)
+    {
+        services.AddTransient<IJwtCleardownService, JwtCleardownServce>();
+        return services;
+    }
 }

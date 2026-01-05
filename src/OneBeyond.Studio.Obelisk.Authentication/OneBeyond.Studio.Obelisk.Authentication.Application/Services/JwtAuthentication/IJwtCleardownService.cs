@@ -9,5 +9,5 @@ public interface IJwtCleardownService
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task ClearDownJwtTokensAsync(CancellationToken cancellationToken);
+    public Task ClearDownJwtTokensAsync(CancellationToken cancellationToken);
 }
