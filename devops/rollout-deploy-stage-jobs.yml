@@ -96,7 +96,7 @@ jobs:
                 archiveFilePatterns: "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/EF-Bundle/*.zip"
                 destinationFolder: "$(ef.workingDirectory)"
 
-            - task: TerraformInstaller@0
+            - task: TerraformInstaller@1
               displayName: "Install TF"
               inputs:
                 terraformVersion: latest
@@ -147,17 +147,26 @@ jobs:
                 deploymentMethod: zipDeploy
                 appSettings: >
                   -ASPNETCORE_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
-
-            # [BUG]: using inline script instead of AzureFunctionApp, as deployment gets stuck and fails sporadically:
-            # https://github.com/microsoft/azure-pipelines-tasks/issues/18766
-            - task: AzureCLI@2
+            - task: AzureFunctionApp@2
               displayName: "Deploy Workers Function"
+              inputs:
+                azureSubscription: ${{parameters.devOpsServiceConnection}}
+                appType: "functionApp"
+                appName: "$(Terraform_Output.workers_app_name)"
+                resoureGroupName: "$(Terraform_Output.rg_name)""
+                package: $(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip
+                runtimeStack: "DOTNET-ISOLATED|10.0"
+                appSettings: |
+                  -AZURE_FUNCTIONS_ENVIRONMENT "${{parameters.runtimeEnvironment}}"
+
+            - task: AzureCLI@2
+              displayName: "Force Restart Function App" # Handle occasional DLL loading issue
               inputs:
                 azureSubscription: ${{parameters.devOpsServiceConnection}}
                 scriptType: "pscore"
                 scriptLocation: "inlineScript"
                 inlineScript: |
-                  az functionapp deployment source config-zip --src "$(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip" --name "$(Terraform_Output.workers_app_name)" --resource-group "$(Terraform_Output.rg_name)"
+                  az functionapp restart --name "$(Terraform_Output.workers_app_name)" --resource-group "$(Terraform_Output.rg_name)"
 
             - task: AzureCLI@2
               displayName: "Update Workers Function Settings"

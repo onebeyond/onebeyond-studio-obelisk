@@ -63,6 +63,10 @@ variable "web_api_sqldb_max_size_gb" {
 
 variable "web_api_sqldb_sku_size" {
   type        = string
-  description = "SKU for Web API SQL DB. Defaults to Basic."
-  default     = "Basic"
+  description = "SKU for Web API SQL DB."  
+}
+
+variable "worker_sku_size" {
+  type        = string
+  description = "SKU for Worker for background jobs."
 }

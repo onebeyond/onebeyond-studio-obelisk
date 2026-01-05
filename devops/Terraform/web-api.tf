@@ -43,7 +43,7 @@ resource "azurerm_linux_web_app" "web_api" {
     health_check_path     = "/health/ready"
     health_check_eviction_time_in_min = 10
     application_stack {
-      dotnet_version = "8.0"
+      dotnet_version = "10.0"
     }
   }
   logs {
@@ -194,4 +194,5 @@ module "web_api_workers" {
     }
   }
   tags = local.default_tags
+  sku_name = var.worker_sku_size
 }
