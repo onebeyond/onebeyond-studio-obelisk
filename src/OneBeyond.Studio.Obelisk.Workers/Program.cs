@@ -18,6 +18,7 @@ using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
 using OneBeyond.Studio.Infrastructure.Azure.KeyVault.Configurations;
 using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
+using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
@@ -72,9 +73,11 @@ internal static class Program
         serviceCollection.AddDataAccess(
                 configuration,
                 (dataAccessBuilder) => dataAccessBuilder.WithDomainEvents())
-            .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);        
+            .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
 
-        serviceCollection.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        serviceCollection.AddJwtBackgroundServices();
+
+        serviceCollection.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();        
 
         if (environment.IsDevelopment())
         {
