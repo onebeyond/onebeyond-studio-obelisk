@@ -5,6 +5,7 @@
     <Configurations>Debug;Release</Configurations>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -43,11 +44,7 @@
     <PackageReference Include="OneBeyond.Studio.FileStorage.FileSystem" />
     <PackageReference Include="OneBeyond.Studio.Hosting.AspNet" />
     <PackageReference Include="OneBeyond.Studio.Infrastructure.Azure" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" />
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Infrastructure\OneBeyond.Studio.Obelisk.Infrastructure.csproj" />

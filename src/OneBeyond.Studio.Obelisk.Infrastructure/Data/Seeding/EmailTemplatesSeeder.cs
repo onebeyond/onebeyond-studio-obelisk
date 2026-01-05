@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OneBeyond.Studio.Core.Mediator.Notifications;
 using OneBeyond.Studio.Obelisk.Application.Services.Seeding;
 using OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 
@@ -19,7 +19,7 @@ internal sealed class EmailTemplatesSeeder : INotificationHandler<SeedApplicatio
         _domainContext = domainContext;
     }
 
-    public async Task Handle(SeedApplication notification, CancellationToken cancellationToken)
+    public async Task HandleAsync(SeedApplication notification, CancellationToken cancellationToken)
     {
         await SeedPredefinedEmailTemplateAsync(
                 _domainContext,

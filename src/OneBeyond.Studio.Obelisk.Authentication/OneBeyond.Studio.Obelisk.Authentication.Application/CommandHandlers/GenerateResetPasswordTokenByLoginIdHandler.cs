@@ -1,15 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class GenerateResetPasswordTokenByLoginIdHandler : IRequestHandler<GenerateResetPasswordTokenByLoginId, string>
+internal sealed class GenerateResetPasswordTokenByLoginIdHandler : ICommandHandler<GenerateResetPasswordTokenByLoginId, string>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -22,8 +22,10 @@ internal sealed class GenerateResetPasswordTokenByLoginIdHandler : IRequestHandl
         _userManager = userManager;
     }
 
-    public async Task<string> Handle(GenerateResetPasswordTokenByLoginId command, CancellationToken cancellationToken)
+    public async Task<string> HandleAsync(GenerateResetPasswordTokenByLoginId command, CancellationToken cancellationToken)
     {
+        EnsureArg.IsNotNull(command, nameof(command));
+
         var identityUser = await _userManager.FindByIdAsync(command.LoginId).ConfigureAwait(false)
             ?? throw new AuthLoginNotFoundException($"Login with id {command.LoginId} not found");
 

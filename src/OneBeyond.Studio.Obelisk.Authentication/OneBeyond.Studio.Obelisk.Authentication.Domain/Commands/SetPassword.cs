@@ -1,9 +1,9 @@
 using EnsureThat;
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record SetPassword : IRequest
+public sealed record SetPassword : ICommand
 {
     public SetPassword(
         string loginId,

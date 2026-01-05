@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
@@ -57,31 +57,31 @@ public sealed class AuthController : ControllerBase
     [Authorize]
     [HttpGet("WhoAmI")]
     public Task<WhoAmIDto> WhoAmI(CancellationToken cancellationToken)
-        => _mediator.Send(new WhoAmI(), cancellationToken);
+        => _mediator.QueryAsync<WhoAmI, WhoAmIDto>(new WhoAmI(), cancellationToken);
 
     [HttpPost("Basic/SignIn")]
     [Obsolete("This relies on cross-origin cookies, which are now deprecated in some browsers")]
     public Task<SignInResult> BasicSignIn(
         [FromBody] SignInViaPassword signInViaPassword,
         CancellationToken cancellationToken)
-        => _mediator.Send(signInViaPassword, cancellationToken);
+        => _mediator.CommandAsync<SignInViaPassword, SignInResult>(signInViaPassword, cancellationToken);
 
     [HttpPost("Basic/SignInWithTwoFA")]
     public Task<SignInResult> SignInWithTwoFA(
         [FromBody] SignInTfa signInViaTfa,
         CancellationToken cancellationToken)
-        => _mediator.Send(signInViaTfa, cancellationToken);
+        => _mediator.CommandAsync<SignInTfa, SignInResult>(signInViaTfa, cancellationToken);
 
     [HttpPost("Basic/SignInWithRecoveryCode")]
     public Task<SignInWithRecoveryCodeResult> SignInWithRecoveryCode(
     [FromBody] SignInTfaWithRecoveryCode signInViaRecoveryCode,
     CancellationToken cancellationToken)
-    => _mediator.Send(signInViaRecoveryCode, cancellationToken);
+    => _mediator.CommandAsync<SignInTfaWithRecoveryCode, SignInWithRecoveryCodeResult>(signInViaRecoveryCode, cancellationToken);
 
     [Authorize]
     [HttpPost("SignOut")]
     public Task SignOut(CancellationToken cancellationToken)
-        => _mediator.Send(new SignOut(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
+        => _mediator.CommandAsync(new SignOut(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
 
 
     [HttpPost("ForgotPassword")]
@@ -94,11 +94,11 @@ public sealed class AuthController : ControllerBase
 
         try
         {
-            var resetPasswordTokenResult = await _mediator.Send(
+            var resetPasswordTokenResult = await _mediator.CommandAsync<GenerateResetPasswordTokenByEmail, ResetPasswordToken>(
                 new GenerateResetPasswordTokenByEmail(forgotPassword.Email), cancellationToken)
             .ConfigureAwait(false);
 
-            await _mediator.Send(
+            await _mediator.CommandAsync(
                 new SendResetPasswordEmail(
                         resetPasswordTokenResult.LoginId,
                         _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.LoginId, resetPasswordTokenResult.Value)),
@@ -115,7 +115,7 @@ public sealed class AuthController : ControllerBase
     public Task<ResetPasswordStatus> ResetPassword(
         [FromBody] ResetPasswordRequest resetPassword,
         CancellationToken cancellationToken)
-        => _mediator.Send(new ResetPassword(
+        => _mediator.CommandAsync<ResetPassword, ResetPasswordStatus>(new ResetPassword(
             resetPassword.UserId,
             resetPassword.Token,
             resetPassword.Password),
@@ -126,7 +126,7 @@ public sealed class AuthController : ControllerBase
     public Task<ChangePasswordResult> ChangePassword(
         [FromBody] ChangePasswordRequest changePassword,
         CancellationToken cancellationToken)
-        => _mediator.Send(new ChangePassword(
+        => _mediator.CommandAsync<ChangePassword, ChangePasswordResult>(new ChangePassword(
             _ambientContext.GetUserContext().UserAuthId,
             changePassword.OldPassword,
             changePassword.NewPassword), cancellationToken);

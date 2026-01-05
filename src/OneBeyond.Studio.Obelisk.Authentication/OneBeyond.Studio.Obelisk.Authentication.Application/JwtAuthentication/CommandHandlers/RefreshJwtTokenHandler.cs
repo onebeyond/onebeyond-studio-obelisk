@@ -2,9 +2,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication;
@@ -13,7 +13,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Exception
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.CommandHandlers;
 
-internal sealed class RefreshJwtTokenHandler : IRequestHandler<RefreshJwtToken, JwtToken>
+internal sealed class RefreshJwtTokenHandler : ICommandHandler<RefreshJwtToken, JwtToken>
 {
     private readonly UserManager<AuthUser> _userManager;
     private readonly IRORepository<AuthToken, int> _authTokenRORepository;
@@ -33,7 +33,7 @@ internal sealed class RefreshJwtTokenHandler : IRequestHandler<RefreshJwtToken, 
         _jWTokenService = jWTokenService;
     }
 
-    public async Task<JwtToken> Handle(RefreshJwtToken command, CancellationToken cancellationToken)
+    public async Task<JwtToken> HandleAsync(RefreshJwtToken command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

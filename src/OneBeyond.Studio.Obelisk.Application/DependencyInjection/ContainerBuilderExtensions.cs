@@ -1,10 +1,10 @@
 using System.Reflection;
 using Autofac;
 using EnsureThat;
-using MediatR;
 using OneBeyond.Studio.Application.SharedKernel.Authorization;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
+using OneBeyond.Studio.Core.Mediator.Notifications;
 using OneBeyond.Studio.Obelisk.Application.Services.AuthenticationFlows;
 using OneBeyond.Studio.Obelisk.Application.Services.EmailTemplateService;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.AuthenticationFlows;

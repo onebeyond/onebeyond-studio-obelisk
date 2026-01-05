@@ -3,7 +3,7 @@ using EnsureThat;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
-public sealed record EnableTfa : LoginRequest<IEnumerable<string>>
+public sealed record EnableTfa : LoginCommand<IEnumerable<string>>
 {
     public EnableTfa(
         string loginId,

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Queries;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication;
@@ -10,7 +10,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Queries;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.QueryHandlers;
 
-internal sealed class GetTfaSettingsHandler : IRequestHandler<GetTfaSettings, LoginTfaSettings>
+internal sealed class GetTfaSettingsHandler : IQueryHandler<GetTfaSettings, LoginTfaSettings>
 {
     private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
@@ -27,7 +27,7 @@ internal sealed class GetTfaSettingsHandler : IRequestHandler<GetTfaSettings, Lo
         _signInManager = signInManager;
     }
 
-    public async Task<LoginTfaSettings> Handle(GetTfaSettings query, CancellationToken cancellationToken)
+    public async Task<LoginTfaSettings> HandleAsync(GetTfaSettings query, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(query, nameof(query));
 

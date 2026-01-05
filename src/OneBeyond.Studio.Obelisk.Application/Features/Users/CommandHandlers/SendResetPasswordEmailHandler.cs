@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Utilities.Templating;
@@ -18,7 +18,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.CommandHandlers;
 
-internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetPasswordEmail>
+internal sealed class SendResetPasswordEmailHandler : ICommandHandler<SendResetPasswordEmail>
 {
     private static readonly ILogger Logger = LogManager.CreateLogger<SendResetPasswordEmailHandler>();
 
@@ -45,7 +45,7 @@ internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetP
         _emailTemplateLoader = emailTemplateLoader;
     }
 
-    public async Task Handle(SendResetPasswordEmail command, CancellationToken cancellationToken)
+    public async Task HandleAsync(SendResetPasswordEmail command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

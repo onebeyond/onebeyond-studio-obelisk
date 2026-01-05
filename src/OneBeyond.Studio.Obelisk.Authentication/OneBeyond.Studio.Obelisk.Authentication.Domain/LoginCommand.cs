@@ -1,11 +1,11 @@
 using EnsureThat;
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain;
 
-public abstract record LoginRequest<TResult> : IRequest<TResult>
+public abstract record LoginCommand<TResult> : ICommand<TResult>
 {
-    protected LoginRequest(string loginId)
+    protected LoginCommand(string loginId)
     {
         EnsureArg.IsNotNullOrWhiteSpace(loginId, nameof(loginId));
 

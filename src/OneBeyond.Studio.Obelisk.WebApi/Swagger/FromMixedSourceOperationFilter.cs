@@ -1,6 +1,6 @@
 using HandlebarsDotNet;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using OneBeyond.Studio.Hosting.AspNet.ModelBinders.MixedSource;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
@@ -57,8 +57,8 @@ internal sealed class FromMixedSourceOperationFilter : IOperationFilter
 
         var schema = new OpenApiSchema
         {
-            Type = "object",
-            Properties = GetShemaProperties(operation, context, properties)
+            Type = JsonSchemaType.Object,
+            Properties = GetSchemaProperties(operation, context, properties)
         };
 
         operation.RequestBody = new OpenApiRequestBody
@@ -75,20 +75,24 @@ internal sealed class FromMixedSourceOperationFilter : IOperationFilter
         };
 
         // Get rid of wrong Query parameter for the [FromMixedSource] object
-        operation.Parameters.Remove(operation.Parameters.FirstOrDefault(p => p.Name == parameter.Name));
+        if (operation.Parameters!.FirstOrDefault(p => p.Name == parameter.Name) != null)
+        {
+            operation.Parameters!.Remove(operation.Parameters!.First(p => p.Name == parameter.Name));
+        }
+        
 
         return true;
     }
 
-    private static Dictionary<string, OpenApiSchema> GetShemaProperties(
+    private static Dictionary<string, IOpenApiSchema> GetSchemaProperties(
         OpenApiOperation operation,
         OperationFilterContext context,
         Dictionary<string, System.Type> properties)
     {
-        var schemaProperties = new Dictionary<string, OpenApiSchema>();
+        var schemaProperties = new Dictionary<string, IOpenApiSchema>();
         foreach (var property in properties)
         {
-            if (!operation.Parameters.Any(p => p.Name == property.Key)) // Avoid adding the property if it's bound with a Query parameter
+            if (!operation.Parameters!.Any(p => p.Name == property.Key)) // Avoid adding the property if it's bound with a Query parameter
             {
                 var schemaRepository = context.SchemaRepository ?? new SchemaRepository();
                 var generatedSchema = context.SchemaGenerator.GenerateSchema(property.Value, schemaRepository);

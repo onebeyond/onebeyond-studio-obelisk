@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8625;CS8714</WarningsAsErrors>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" />
-    <PackageReference Include="MediatR" />
+    <PackageReference Include="OneBeyond.Studio.Core.Mediator" />
   </ItemGroup>
 
 </Project>

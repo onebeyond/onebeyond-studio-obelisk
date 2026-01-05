@@ -1,15 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
+using OneBeyond.Studio.Core.Mediator.Queries;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.QueryHandlers;
 
 internal sealed class GetLoginForProviderLoginHandler
-    : IRequestHandler<GetLoginForProviderLogin, string?>
+    : IQueryHandler<GetLoginForProviderLogin, string?>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -21,7 +21,7 @@ internal sealed class GetLoginForProviderLoginHandler
         _userManager = userManager;
     }
 
-    public async Task<string?> Handle(
+    public async Task<string?> HandleAsync(
         GetLoginForProviderLogin query,
         CancellationToken cancellationToken)
     {

@@ -1,9 +1,9 @@
 using EnsureThat;
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Queries;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 
-public sealed class CheckLoginHasPassword : IRequest<bool>
+public sealed class CheckLoginHasPassword : IQuery<bool>
 {
     public CheckLoginHasPassword(
         string loginId)

@@ -13,7 +13,7 @@ public interface IAuthenticationFlowHandler
     /// <param name="signInStatus"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task OnSignInCompletedAsync(string loginId, SignInStatus signInStatus, CancellationToken cancellationToken);
+    public Task OnSignInCompletedAsync(string loginId, SignInStatus signInStatus, CancellationToken cancellationToken);
 
     /// <summary>
     /// Allows to do application specific validations against the login.
@@ -24,12 +24,12 @@ public interface IAuthenticationFlowHandler
     /// <param name="loginId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task OnValidatingLoginAsync(string loginId, CancellationToken cancellationToken);
+    public Task OnValidatingLoginAsync(string loginId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Allows a domain to specify on per user bases which users require two factor authentication 
     /// </summary>
     /// <param name="loginId"></param>
     /// <returns>True, if two factor authentication if required for a user</returns>
-    Task<bool> IsTwoFactorAthenticationRequiredForLoginAsync(string loginId, CancellationToken cancellationToken);
+    public Task<bool> IsTwoFactorAthenticationRequiredForLoginAsync(string loginId, CancellationToken cancellationToken);
 }

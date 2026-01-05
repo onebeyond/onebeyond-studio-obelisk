@@ -1,4 +1,4 @@
-using MediatR;
+using OneBeyond.Studio.Core.Mediator.Notifications;
 
 namespace OneBeyond.Studio.Obelisk.Application.Services.Seeding;
 
