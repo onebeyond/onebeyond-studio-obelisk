@@ -153,7 +153,7 @@ jobs:
                 azureSubscription: ${{parameters.devOpsServiceConnection}}
                 appType: "functionApp"
                 appName: "$(Terraform_Output.workers_app_name)"
-                resoureGroupName: "$(Terraform_Output.rg_name)""
+                resoureGroupName: "$(Terraform_Output.rg_name)"
                 package: $(Pipeline.Workspace)/${{parameters.buildArtifactPipelineId}}/Workers/Workers.zip
                 runtimeStack: "DOTNET-ISOLATED|10.0"
                 appSettings: |
