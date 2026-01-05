@@ -3,7 +3,6 @@
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
     <UserSecretsId>3a5d5cd1-bf85-4760-85e1-9f6e0bcfadbf</UserSecretsId>
-    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enabled</ImplicitUsings>
   </PropertyGroup>
 

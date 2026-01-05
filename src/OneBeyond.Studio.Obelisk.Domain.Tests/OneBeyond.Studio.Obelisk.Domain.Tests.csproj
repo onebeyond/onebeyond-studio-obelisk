@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
-    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
