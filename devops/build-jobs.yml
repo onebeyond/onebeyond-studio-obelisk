@@ -112,7 +112,7 @@ jobs:
               arguments: >
                 --no-restore
                 --no-build
-                --configuration $(buildConfiguration)                
+                --configuration $(buildConfiguration)
                 --output $(Build.ArtifactStagingDirectory)/Workers
               zipAfterPublish: true
 
