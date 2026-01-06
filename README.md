@@ -12,11 +12,13 @@ Obelisk is a WebAPI template built in ASP.Net and used in hundreds of succesful 
 
 ### Supported .NET version:
 
-8.0
+10.0
 
 ### Setup
 
 The project largely works out of the box when opening with a modern version of Visual Studio. 
+
+Please note, Obelisk solution uses Directory.Build.props (central package management) for managing common project properties. The framework targets and language versions are specified there and used by all projects within a solution.  
 
 Please note, Obelisk architecture uses Azure queues to dispatch domain events, to run the solution locally you'll need to have [Azurite](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) running.
 
