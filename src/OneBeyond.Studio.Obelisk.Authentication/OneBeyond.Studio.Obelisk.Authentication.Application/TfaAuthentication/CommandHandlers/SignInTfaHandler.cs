@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
@@ -11,7 +11,7 @@ using SignInResult = OneBeyond.Studio.Obelisk.Authentication.Domain.SignInResult
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class SignInTfaHandler : ICommandHandler<SignInTfa, SignInResult>
+internal sealed class SignInTfaHandler : IRequestHandler<SignInTfa, SignInResult>
 {
     private readonly SignInManager<AuthUser> _signInManager;
 
@@ -24,7 +24,7 @@ internal sealed class SignInTfaHandler : ICommandHandler<SignInTfa, SignInResult
         _signInManager = signInManager;
     }
 
-    public async Task<SignInResult> HandleAsync(SignInTfa command, CancellationToken cancellationToken)
+    public async Task<SignInResult> Handle(SignInTfa command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

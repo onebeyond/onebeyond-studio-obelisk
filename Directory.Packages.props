@@ -27,18 +27,18 @@
     <PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.2.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.1" />
-    <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" Version="10.0.0.3" />
-    <PackageVersion Include="OneBeyond.Studio.Core.Mediator" Version="10.0.0.3" />
-    <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="10.0.0.3" />
-    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="10.0.0.3" />
+    <PackageVersion Include="OneBeyond.Studio.Application.SharedKernel" Version="10.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.Core.Mediator" Version="10.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.DataAccess.EFCore" Version="10.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.Domain.SharedKernel" Version="10.0.0.6" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Domain" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.Folder" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.EmailProviders.SendGrid" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.Azure" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.Domain" Version="10.0.0.2" />
     <PackageVersion Include="OneBeyond.Studio.FileStorage.FileSystem" Version="10.0.0.2" />
-    <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="10.0.0.3" />
-    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="10.0.0.3" />
+    <PackageVersion Include="OneBeyond.Studio.Hosting.AspNet" Version="10.0.0.6" />
+    <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="10.0.0.6" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="10.0.0" />

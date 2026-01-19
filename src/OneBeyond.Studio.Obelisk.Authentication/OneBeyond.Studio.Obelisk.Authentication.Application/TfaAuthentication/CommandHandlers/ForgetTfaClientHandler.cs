@@ -2,14 +2,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class ForgetTfaClientHandler : ICommandHandler<ForgetTfaClient>
+internal sealed class ForgetTfaClientHandler : IRequestHandler<ForgetTfaClient>
 {
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly UserManager<AuthUser> _userManager;
@@ -26,7 +26,7 @@ internal sealed class ForgetTfaClientHandler : ICommandHandler<ForgetTfaClient>
         _signInManager = signInManager;
     }
 
-    public async Task HandleAsync(ForgetTfaClient command, CancellationToken cancellationToken)
+    public async Task Handle(ForgetTfaClient command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

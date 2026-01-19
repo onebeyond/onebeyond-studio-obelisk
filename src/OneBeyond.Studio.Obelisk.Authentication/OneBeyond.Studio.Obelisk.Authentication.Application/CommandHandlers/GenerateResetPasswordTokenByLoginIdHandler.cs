@@ -2,14 +2,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class GenerateResetPasswordTokenByLoginIdHandler : ICommandHandler<GenerateResetPasswordTokenByLoginId, string>
+internal sealed class GenerateResetPasswordTokenByLoginIdHandler : IRequestHandler<GenerateResetPasswordTokenByLoginId, string>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -22,7 +22,7 @@ internal sealed class GenerateResetPasswordTokenByLoginIdHandler : ICommandHandl
         _userManager = userManager;
     }
 
-    public async Task<string> HandleAsync(GenerateResetPasswordTokenByLoginId command, CancellationToken cancellationToken)
+    public async Task<string> Handle(GenerateResetPasswordTokenByLoginId command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

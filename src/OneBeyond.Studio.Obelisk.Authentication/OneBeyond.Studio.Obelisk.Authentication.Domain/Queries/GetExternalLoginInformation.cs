@@ -1,8 +1,8 @@
-using OneBeyond.Studio.Core.Mediator.Queries;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 
-public sealed class GetExternalLoginInformation : IQuery<ExternalLoginInfo>
+public sealed class GetExternalLoginInformation : IRequest<ExternalLoginInfo>
 {
     public GetExternalLoginInformation()
     {

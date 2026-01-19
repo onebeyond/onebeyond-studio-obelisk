@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Queries;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 
-public sealed class GetLoginForProviderLogin : IQuery<string?>
+public sealed class GetLoginForProviderLogin : IRequest<string?>
 {
     public GetLoginForProviderLogin(
         SignInProviderLogin login

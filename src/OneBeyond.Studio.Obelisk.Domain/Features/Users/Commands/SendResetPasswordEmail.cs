@@ -1,10 +1,10 @@
 using System;
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 
-public sealed record SendResetPasswordEmail : ICommand
+public sealed record SendResetPasswordEmail : IRequest
 {
     public SendResetPasswordEmail(
         string loginId,

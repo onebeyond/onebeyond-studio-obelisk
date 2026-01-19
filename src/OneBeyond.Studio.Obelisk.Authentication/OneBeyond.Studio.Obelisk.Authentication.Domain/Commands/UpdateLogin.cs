@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record UpdateLogin : ICommand<UpdateLoginResult>
+public sealed record UpdateLogin : IRequest<UpdateLoginResult>
 {
     public UpdateLogin(
         string loginId,

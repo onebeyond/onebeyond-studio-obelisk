@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using EnsureThat;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Core.Mediator;
-using OneBeyond.Studio.Core.Mediator.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.CommandHandlers;
 
-internal sealed class UnlockUserHandler : ICommandHandler<UnlockUser>
+internal sealed class UnlockUserHandler : IRequestHandler<UnlockUser>
 {
     private readonly IRWRepository<UserBase, Guid> _userRWRepository;
     private readonly IMediator _mediator;
@@ -27,7 +26,7 @@ internal sealed class UnlockUserHandler : ICommandHandler<UnlockUser>
         _mediator = mediator;
     }
 
-    public async Task HandleAsync(
+    public async Task Handle(
         UnlockUser command,
         CancellationToken cancellationToken)
     {
@@ -35,7 +34,7 @@ internal sealed class UnlockUserHandler : ICommandHandler<UnlockUser>
 
         var user = await _userRWRepository.GetByIdAsync(command.UserId, cancellationToken).ConfigureAwait(false);
 
-        await _mediator.CommandAsync(
+        await _mediator.Send(
             new UnlockLogin(user.LoginId),
             cancellationToken).ConfigureAwait(false);
 

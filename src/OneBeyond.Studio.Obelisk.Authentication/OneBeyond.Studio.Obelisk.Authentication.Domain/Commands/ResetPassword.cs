@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record ResetPassword : ICommand<ResetPasswordStatus>
+public sealed record ResetPassword : IRequest<ResetPasswordStatus>
 {
     public ResetPassword(
         string userId,

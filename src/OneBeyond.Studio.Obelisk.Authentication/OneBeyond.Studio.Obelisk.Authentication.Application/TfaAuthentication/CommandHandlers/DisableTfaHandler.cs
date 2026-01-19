@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
@@ -12,7 +12,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.TfaAuthentication.CommandHandlers;
 
-internal sealed class DisableTfaHandler : ICommandHandler<DisableTfa, bool>
+internal sealed class DisableTfaHandler : IRequestHandler<DisableTfa, bool>
 {
     private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
@@ -30,7 +30,7 @@ internal sealed class DisableTfaHandler : ICommandHandler<DisableTfa, bool>
         _signInManager = signInManager;
     }
 
-    public async Task<bool> HandleAsync(DisableTfa command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(DisableTfa command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

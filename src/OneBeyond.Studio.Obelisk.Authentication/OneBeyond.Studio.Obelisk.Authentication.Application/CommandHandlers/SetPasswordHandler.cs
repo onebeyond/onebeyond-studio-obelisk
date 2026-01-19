@@ -3,14 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class SetPasswordHandler : ICommandHandler<SetPassword>
+internal sealed class SetPasswordHandler : IRequestHandler<SetPassword>
 {
     private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
@@ -27,7 +27,7 @@ internal sealed class SetPasswordHandler : ICommandHandler<SetPassword>
         _signInManager = signInManager;
     }
 
-    public async Task HandleAsync(SetPassword command, CancellationToken cancellationToken)
+    public async Task Handle(SetPassword command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
