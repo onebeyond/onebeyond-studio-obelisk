@@ -1,8 +1,7 @@
-
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public abstract record SignIn : ICommand<SignInResult>
+public abstract record SignIn : IRequest<SignInResult>
 {
 }

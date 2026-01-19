@@ -44,13 +44,13 @@ public sealed class TFAController : ControllerBase
 
     [HttpGet("tfaSettings")]
     public Task<LoginTfaSettings> GetTfaSettings(CancellationToken cancellationToken)
-        => _mediator.QueryAsync<GetTfaSettings, LoginTfaSettings>(
+        => _mediator.Send(
             new GetTfaSettings(_userContext.UserAuthId), cancellationToken);
 
     [HttpPost("generateTfaKey")]
     public async Task<TfaAuthenticatorSettings> GenerateTfaKey(CancellationToken cancellationToken)
     {
-        var authenticatorKey = await _mediator.CommandAsync<GenerateTfaKey, TfaKey>(
+        var authenticatorKey = await _mediator.Send(
             new GenerateTfaKey(_userContext.UserAuthId), cancellationToken).ConfigureAwait(false);
 
         return new TfaAuthenticatorSettings
@@ -64,27 +64,27 @@ public sealed class TFAController : ControllerBase
     public Task<IEnumerable<string>> EnableTfa(
         [FromBody] EnableTfaRequest enableTfaDto,
         CancellationToken cancellationToken)
-    => _mediator.CommandAsync<EnableTfa, IEnumerable<string>>(
+    => _mediator.Send(
         new EnableTfa(_userContext.UserAuthId, enableTfaDto.Code), cancellationToken);
     
     [HttpPost("disableTfa")]
     public Task DisableTfa(CancellationToken cancellationToken) 
-        => _mediator.CommandAsync<DisableTfa, bool>(
+        => _mediator.Send(
             new DisableTfa(_userContext.UserAuthId, disableAuthenticator: false), cancellationToken);
 
     [HttpPost("resetTfa")]
     public Task Reset(CancellationToken cancellationToken) 
-        => _mediator.CommandAsync<DisableTfa, bool>(
+        => _mediator.Send(
             new DisableTfa(_userContext.UserAuthId, disableAuthenticator: true), cancellationToken);
 
     [HttpPost("forgetBrowser")]
     public Task ForgetBrowser(CancellationToken cancellationToken)
-        => _mediator.CommandAsync(
+        => _mediator.Send(
             new ForgetTfaClient(_userContext.UserAuthId), cancellationToken);
 
     [HttpPost("generateRecoveryCodes")]
     public Task<IEnumerable<string>> GenerateRecoveryCodes(CancellationToken cancellationToken)
-        => _mediator.CommandAsync<GenerateTfaRecoveryCodes, IEnumerable<string>>(
+        => _mediator.Send(
             new GenerateTfaRecoveryCodes(_userContext.UserAuthId), cancellationToken);
 
     private string GenerateQrCodeUri(string email, string unformattedKey)

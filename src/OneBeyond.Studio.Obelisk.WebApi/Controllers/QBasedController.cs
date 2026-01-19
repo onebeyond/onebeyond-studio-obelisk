@@ -46,7 +46,7 @@ public abstract class QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, T
     {
         query = ControllerHelpers.CleanQuery(query);
         var request = queryParameters.ToListQuery<TEntityListDTO, TEntity, TEntityId>(query);
-        var result = await Mediator.QueryAsync<List<TEntityListDTO, TEntity, TEntityId>, PagedList<TEntityListDTO>>(request, cancellationToken);
+        var result = await Mediator.Send(request, cancellationToken);
         return result;
     }
 
@@ -66,7 +66,7 @@ public abstract class QBasedController<TEntityGetDTO, TEntityListDTO, TEntity, T
     public virtual async Task<ActionResult<TEntityGetDTO>> GetById(TEntityId id, CancellationToken cancellationToken)
     {
         var request = new GetById<TEntityGetDTO, TEntity, TEntityId>(id);
-        var result = await Mediator.QueryAsync<GetById<TEntityGetDTO, TEntity, TEntityId>, TEntityGetDTO>(request, cancellationToken);
+        var result = await Mediator.Send(request, cancellationToken);
         return result;
     }
 }

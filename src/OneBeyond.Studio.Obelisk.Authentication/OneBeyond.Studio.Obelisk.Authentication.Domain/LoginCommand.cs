@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain;
 
-public abstract record LoginCommand<TResult> : ICommand<TResult>
+public abstract record LoginCommand<TResult> : IRequest<TResult>
 {
     protected LoginCommand(string loginId)
     {

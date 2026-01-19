@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EnsureThat;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
-using OneBeyond.Studio.Core.Mediator.Queries;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Queries;
 using OneBeyond.Studio.Obelisk.Application.Services.AmbientContexts;
@@ -12,7 +12,7 @@ using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.QueryHandlers;
 
-internal sealed class WhoAmIHandler : IQueryHandler<WhoAmI, WhoAmIDto>
+internal sealed class WhoAmIHandler : IRequestHandler<WhoAmI, WhoAmIDto>
 {
     private readonly IRORepository<UserBase, Guid> _userRORepository;
     private readonly UserContext _userContext;
@@ -28,7 +28,7 @@ internal sealed class WhoAmIHandler : IQueryHandler<WhoAmI, WhoAmIDto>
         _userContext = ambientContextAccessor.AmbientContext.GetUserContext();
     }
 
-    public async Task<WhoAmIDto> HandleAsync(WhoAmI query, CancellationToken cancellationToken)
+    public async Task<WhoAmIDto> Handle(WhoAmI query, CancellationToken cancellationToken)
     {
         var user = await _userRORepository.GetByIdAsync<UserNameDto>(_userContext.UserId, cancellationToken).ConfigureAwait(false);
 

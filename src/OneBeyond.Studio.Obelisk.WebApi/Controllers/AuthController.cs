@@ -57,31 +57,31 @@ public sealed class AuthController : ControllerBase
     [Authorize]
     [HttpGet("WhoAmI")]
     public Task<WhoAmIDto> WhoAmI(CancellationToken cancellationToken)
-        => _mediator.QueryAsync<WhoAmI, WhoAmIDto>(new WhoAmI(), cancellationToken);
+        => _mediator.Send(new WhoAmI(), cancellationToken);
 
     [HttpPost("Basic/SignIn")]
     [Obsolete("This relies on cross-origin cookies, which are now deprecated in some browsers")]
     public Task<SignInResult> BasicSignIn(
         [FromBody] SignInViaPassword signInViaPassword,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<SignInViaPassword, SignInResult>(signInViaPassword, cancellationToken);
+        => _mediator.Send(signInViaPassword, cancellationToken);
 
     [HttpPost("Basic/SignInWithTwoFA")]
     public Task<SignInResult> SignInWithTwoFA(
         [FromBody] SignInTfa signInViaTfa,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<SignInTfa, SignInResult>(signInViaTfa, cancellationToken);
+        => _mediator.Send(signInViaTfa, cancellationToken);
 
     [HttpPost("Basic/SignInWithRecoveryCode")]
     public Task<SignInWithRecoveryCodeResult> SignInWithRecoveryCode(
     [FromBody] SignInTfaWithRecoveryCode signInViaRecoveryCode,
     CancellationToken cancellationToken)
-    => _mediator.CommandAsync<SignInTfaWithRecoveryCode, SignInWithRecoveryCodeResult>(signInViaRecoveryCode, cancellationToken);
+    => _mediator.Send(signInViaRecoveryCode, cancellationToken);
 
     [Authorize]
     [HttpPost("SignOut")]
     public Task SignOut(CancellationToken cancellationToken)
-        => _mediator.CommandAsync(new SignOut(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
+        => _mediator.Send(new SignOut(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
 
 
     [HttpPost("ForgotPassword")]
@@ -94,11 +94,11 @@ public sealed class AuthController : ControllerBase
 
         try
         {
-            var resetPasswordTokenResult = await _mediator.CommandAsync<GenerateResetPasswordTokenByEmail, ResetPasswordToken>(
+            var resetPasswordTokenResult = await _mediator.Send(
                 new GenerateResetPasswordTokenByEmail(forgotPassword.Email), cancellationToken)
             .ConfigureAwait(false);
 
-            await _mediator.CommandAsync(
+            await _mediator.Send(
                 new SendResetPasswordEmail(
                         resetPasswordTokenResult.LoginId,
                         _clientApplicationLinkGenerator.GetResetPasswordUrl(resetPasswordTokenResult.LoginId, resetPasswordTokenResult.Value)),
@@ -115,7 +115,7 @@ public sealed class AuthController : ControllerBase
     public Task<ResetPasswordStatus> ResetPassword(
         [FromBody] ResetPasswordRequest resetPassword,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<ResetPassword, ResetPasswordStatus>(new ResetPassword(
+        => _mediator.Send(new ResetPassword(
             resetPassword.UserId,
             resetPassword.Token,
             resetPassword.Password),
@@ -126,7 +126,7 @@ public sealed class AuthController : ControllerBase
     public Task<ChangePasswordResult> ChangePassword(
         [FromBody] ChangePasswordRequest changePassword,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<ChangePassword, ChangePasswordResult>(new ChangePassword(
+        => _mediator.Send(new ChangePassword(
             _ambientContext.GetUserContext().UserAuthId,
             changePassword.OldPassword,
             changePassword.NewPassword), cancellationToken);

@@ -2,13 +2,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class SignOutHandler : ICommandHandler<SignOut>
+internal sealed class SignOutHandler : IRequestHandler<SignOut>
 {
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly UserManager<AuthUser> _userManager;
@@ -25,7 +25,7 @@ internal sealed class SignOutHandler : ICommandHandler<SignOut>
         _signInManager = signInManager;
     }
 
-    public async Task HandleAsync(SignOut command, CancellationToken cancellationToken)
+    public async Task Handle(SignOut command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
@@ -12,7 +12,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.CommandHandlers;
 
-internal sealed class CreateLoginHandler : ICommandHandler<CreateLogin, ResetPasswordToken>
+internal sealed class CreateLoginHandler : IRequestHandler<CreateLogin, ResetPasswordToken>
 {
     private readonly UserManager<AuthUser> _userManager;
 
@@ -23,7 +23,7 @@ internal sealed class CreateLoginHandler : ICommandHandler<CreateLogin, ResetPas
         _userManager = userManager;
     }
 
-    public async Task<ResetPasswordToken> HandleAsync(CreateLogin command, CancellationToken cancellationToken)
+    public async Task<ResetPasswordToken> Handle(CreateLogin command, CancellationToken cancellationToken)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 

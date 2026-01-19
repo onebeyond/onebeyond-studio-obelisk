@@ -41,7 +41,7 @@ public sealed class JWTAuthenticationController : Controller
     public Task<JwtToken> Authenticate(
         [FromBody] SignInJwtDto credentials,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<SignInJwtToken, JwtToken>(
+        => _mediator.Send(
                 new SignInJwtToken(
                     credentials.Username,
                     credentials.Password
@@ -59,13 +59,13 @@ public sealed class JWTAuthenticationController : Controller
     public Task<JwtToken> RefreshToken(
         [FromBody] string refreshToken,
         CancellationToken cancellationToken)
-        => _mediator.CommandAsync<RefreshJwtToken, JwtToken>(
+        => _mediator.Send(
                 new RefreshJwtToken(refreshToken),
                 cancellationToken);
 
     [Authorize]
     [HttpPost("signout")]
     public Task SignOutAllTokens(CancellationToken cancellationToken)
-        => _mediator.CommandAsync(new SignOutAllTokens(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
+        => _mediator.Send(new SignOutAllTokens(_ambientContext.GetUserContext().UserAuthId), cancellationToken);
 
 }

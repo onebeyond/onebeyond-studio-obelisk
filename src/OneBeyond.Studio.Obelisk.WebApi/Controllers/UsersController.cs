@@ -47,7 +47,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         [FromBody] CreateUserDto dto,
         CancellationToken cancellationToken)
     {
-        var newLogin = await Mediator.CommandAsync<CreateLogin, ResetPasswordToken>(
+        var newLogin = await Mediator.Send(
             new CreateLogin(
                 dto.UserName,
                 dto.Email,
@@ -61,7 +61,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
             dto.RoleId,
             _clientApplicationLinkGenerator.GetSetPasswordUrl(newLogin.LoginId, newLogin.Value));
 
-        var result = await Mediator.CommandAsync<CreateUser, Guid>(createCommand, cancellationToken);
+        var result = await Mediator.Send(createCommand, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = result }, result);
     }
 
@@ -86,7 +86,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         [FromMixedSource] UpdateUser command,
         CancellationToken cancellationToken)
     {
-        await Mediator.CommandAsync(command, cancellationToken);
+        await Mediator.Send(command, cancellationToken);
         return NoContent();
     }
 
@@ -105,10 +105,10 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         string loginId,
         CancellationToken cancellationToken)
     {
-        var resetPasswordToken = await Mediator.CommandAsync<GenerateResetPasswordTokenByLoginId, string>(
+        var resetPasswordToken = await Mediator.Send(
             new GenerateResetPasswordTokenByLoginId(loginId), cancellationToken);
 
-        await Mediator.CommandAsync(
+        await Mediator.Send(
             new SendResetPasswordEmail(
                 loginId,
                 _clientApplicationLinkGenerator.GetResetPasswordUrl(loginId, resetPasswordToken)),
@@ -130,7 +130,7 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UnlockUser(Guid userId, CancellationToken cancellationToken)
     {
-        await Mediator.CommandAsync(new UnlockUser(userId), cancellationToken);
+        await Mediator.Send(new UnlockUser(userId), cancellationToken);
         return NoContent();
     }
 }

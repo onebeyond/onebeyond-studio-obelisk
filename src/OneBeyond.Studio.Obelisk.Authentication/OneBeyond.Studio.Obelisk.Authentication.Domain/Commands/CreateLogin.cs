@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.Commands;
 
-public sealed record CreateLogin : ICommand<ResetPasswordToken>
+public sealed record CreateLogin : IRequest<ResetPasswordToken>
 {
     public CreateLogin(
         string userName,

@@ -1,8 +1,8 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
-public sealed record class SignOutAllTokens : ICommand
+public sealed record class SignOutAllTokens : IRequest
 {
     public SignOutAllTokens(string username)
     {

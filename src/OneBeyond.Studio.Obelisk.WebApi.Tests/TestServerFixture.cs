@@ -40,7 +40,7 @@ public sealed class TestServerFixture : IAsyncLifetime
 
                         var mediatorMock = new Mock<IMediator>();
                         mediatorMock
-                            .Setup(mediator => mediator.QueryAsync<GetById<GetUserDto, UserBase, Guid>, GetUserDto>(It.IsAny<GetById<GetUserDto, UserBase, Guid>>(),It.IsAny<CancellationToken>()))
+                            .Setup(mediator => mediator.Send(It.IsAny<GetById<GetUserDto, UserBase, Guid>>(),It.IsAny<CancellationToken>()))
                             .ThrowsAsync(new EntityNotFoundException<User, Guid>(Guid.NewGuid()));
 
                         services.TryAddTransient(_ => mediatorMock.Object);

@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.AspNetCore.Identity;
-using OneBeyond.Studio.Core.Mediator.Queries;
+using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
@@ -10,7 +10,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Domain.Queries;
 namespace OneBeyond.Studio.Obelisk.Authentication.Application.QueryHandlers;
 
 internal sealed class GetExternalLoginInformationHandler
-    : IQueryHandler<GetExternalLoginInformation, Domain.ExternalLoginInfo>
+    : IRequestHandler<GetExternalLoginInformation, Domain.ExternalLoginInfo>
 {
     private readonly SignInManager<AuthUser> _signInManager;
 
@@ -21,7 +21,7 @@ internal sealed class GetExternalLoginInformationHandler
         _signInManager = signInManager;
     }
 
-    public async Task<Domain.ExternalLoginInfo> HandleAsync(
+    public async Task<Domain.ExternalLoginInfo> Handle(
         GetExternalLoginInformation query,
         CancellationToken cancellationToken)
     {

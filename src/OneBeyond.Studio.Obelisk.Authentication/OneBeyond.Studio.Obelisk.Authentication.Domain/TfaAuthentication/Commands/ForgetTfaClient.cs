@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.TfaAuthentication.Commands;
 
-public sealed record ForgetTfaClient : ICommand
+public sealed record ForgetTfaClient : IRequest
 {
     public ForgetTfaClient(string loginId)
     {

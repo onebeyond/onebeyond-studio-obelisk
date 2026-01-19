@@ -1,9 +1,9 @@
 using EnsureThat;
-using OneBeyond.Studio.Core.Mediator.Commands;
+using OneBeyond.Studio.Core.Mediator;
 
 namespace OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
 
-public sealed class SignInJwtToken : ICommand<JwtToken>
+public sealed class SignInJwtToken : IRequest<JwtToken>
 {
     public SignInJwtToken(
         string username,
