@@ -5,7 +5,7 @@ public static class PredefinedEmailTemplates
     public const string ACCOUNT_SETUP = nameof(ACCOUNT_SETUP);
     public const string RESET_PASSWORD = nameof(RESET_PASSWORD);
 
-    //Please note, those default templates are used to seed the database when the applicaiton is initialised.
+    //Please note, those default templates are used to seed the database when the application is initialised.
     //After that they may be changed there.
     public static EmailTemplate DefaultAccountSetupEmailTemplate =>
         new
