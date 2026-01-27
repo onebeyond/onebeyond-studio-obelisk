@@ -19,7 +19,7 @@ internal sealed class EmailTemplatesSeeder : INotificationHandler<SeedApplicatio
         _domainContext = domainContext;
     }
 
-    public async Task HandleAsync(SeedApplication notification, CancellationToken cancellationToken)
+    public async Task HandleAsync(SeedApplication notification, CancellationToken cancellationToken = default)
     {
         await SeedPredefinedEmailTemplateAsync(
                 _domainContext,
