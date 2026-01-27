@@ -52,7 +52,7 @@ internal sealed class NewUserPasswordEmailSender : IPostSaveDomainEventHandler<U
 
         if (domainEvent.ResetPasswordUrl == null)
         {
-            //For some users (for example, for those, who were created for extranal sing ins (Azue AD))
+            //For some users (for example, for those, who were created for external sing ins (Azure AD))
             //reset password url feature is not supported
             return;
         }
