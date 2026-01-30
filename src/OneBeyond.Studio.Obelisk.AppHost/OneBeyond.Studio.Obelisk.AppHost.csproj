@@ -1,0 +1,14 @@
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.1.0">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>56230f4c-99af-44b4-9d89-a40c29e97490</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OneBeyond.Studio.Obelisk.WebApi\OneBeyond.Studio.Obelisk.WebApi.csproj" />
+    <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Workers\OneBeyond.Studio.Obelisk.Workers.csproj" />
+  </ItemGroup>
+
+</Project>

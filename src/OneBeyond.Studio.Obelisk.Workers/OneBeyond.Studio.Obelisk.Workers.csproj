@@ -38,6 +38,7 @@
     </None>
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Authentication\OneBeyond.Studio.Obelisk.Authentication.Application\OneBeyond.Studio.Obelisk.Authentication.Application.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Infrastructure\OneBeyond.Studio.Obelisk.Infrastructure.csproj" />
+    <ProjectReference Include="..\OneBeyond.Studio.Obelisk.ServiceDefaults\OneBeyond.Studio.Obelisk.ServiceDefaults.csproj" />
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
