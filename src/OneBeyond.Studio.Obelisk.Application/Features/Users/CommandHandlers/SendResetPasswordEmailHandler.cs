@@ -51,22 +51,23 @@ internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetP
 
         try
         {
-            var users = await _userRORepository.ListAsync(x => x.LoginId == command.LoginId, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var users = await _userRORepository.ListAsync(user => user.LoginId == command.LoginId, cancellationToken: cancellationToken);
 
             var user = users.FirstOrDefault() ?? throw new ObeliskDomainException($"User with Login Id {command.LoginId} not found");
 
-            var template = await _emailTemplateLoader.GetTemplateByKeyAsync(PredefinedEmailTemplates.RESET_PASSWORD).ConfigureAwait(false);
+            var template = await _emailTemplateLoader.GetTemplateByKeyAsync(PredefinedEmailTemplates.RESET_PASSWORD);
 
             var parameters = new
             {
-                callbackUrl = command.ResetPasswordUrl,
-                userName = user.UserName,
-                name = user.UserName
+                template.Subject,
+                CallBackUrl = command.ResetPasswordUrl,
+                user.UserName,
+                Name = user.UserName
             };
 
-            var renderedBody = _templateRenderer.RenderTemplate(template.Body, parameters);
+            var renderedBody = _templateRenderer.Render(template.Body, parameters);
 
-            await _mailSender.SendEmailAsync(user.Email, template.Subject, renderedBody, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await _mailSender.SendEmailAsync(user.Email, template.Subject, renderedBody, cancellationToken: cancellationToken);
         }
         catch (Exception exception)
         when (!exception.IsCritical())

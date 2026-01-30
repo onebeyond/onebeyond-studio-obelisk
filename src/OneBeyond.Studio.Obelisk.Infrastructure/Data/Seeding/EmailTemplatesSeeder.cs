@@ -13,44 +13,25 @@ internal sealed class EmailTemplatesSeeder : INotificationHandler<SeedApplicatio
     private readonly DomainContext _domainContext;
 
     public EmailTemplatesSeeder(DomainContext domainContext)
-    {
-        EnsureArg.IsNotNull(domainContext, nameof(domainContext));
-
-        _domainContext = domainContext;
-    }
+        => _domainContext = EnsureArg.IsNotNull(domainContext, nameof(domainContext));
 
     public async Task HandleAsync(SeedApplication notification, CancellationToken cancellationToken = default)
     {
-        await SeedPredefinedEmailTemplateAsync(
-                _domainContext,
-                PredefinedEmailTemplates.DefaultAccountSetupEmailTemplate,
-                cancellationToken)
-            .ConfigureAwait(false);
-        await SeedPredefinedEmailTemplateAsync(
-                _domainContext,
-                PredefinedEmailTemplates.DefaultPasswordResetEmailTemplate,
-                cancellationToken)
-            .ConfigureAwait(false);
-    }
-
-    private static async Task SeedPredefinedEmailTemplateAsync(
-        DomainContext context,
-        EmailTemplate template,
-        CancellationToken cancellationToken)
-    {
-        var templateExists = await context
-            .Set<EmailTemplate>()
-            .AnyAsync(
-                x => x.Id == template.Id,
-                cancellationToken)
-            .ConfigureAwait(false);
-
-        if (!templateExists)
+        foreach (var template in PredefinedEmailTemplates.All)
         {
-            context
+            var templateExists = await _domainContext
                 .Set<EmailTemplate>()
-                .Add(template);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                .AnyAsync(
+                    emailTemplate => emailTemplate.Id == template.Id,
+                    cancellationToken);
+
+            if (!templateExists)
+            {
+                _domainContext
+                    .Set<EmailTemplate>()
+                    .Add(template);
+                await _domainContext.SaveChangesAsync(cancellationToken);
+            }
         }
     }
 }

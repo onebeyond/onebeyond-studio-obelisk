@@ -1,10 +1,13 @@
 using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
@@ -20,6 +23,7 @@ using OneBeyond.Studio.Infrastructure.Azure.KeyVault.Configurations;
 using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
+using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using Serilog;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
@@ -29,7 +33,7 @@ namespace OneBeyond.Studio.Obelisk.Workers;
 
 internal static class Program
 {
-    public static void Main(string[] _)
+    public static async Task Main(string[] _)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -49,7 +53,8 @@ internal static class Program
 
                 LogManager.Configure(host.Services.GetRequiredService<ILoggerFactory>());
 
-                host.Run();
+                await host.RegisterLayoutTemplateAsync(CancellationToken.None);
+                await host.RunAsync();
 
                 Log.Information("Azure Function host stopped");
             }
@@ -57,7 +62,7 @@ internal static class Program
         catch (Exception exception)
         {
             Log.Fatal(exception, "Azure Function host terminated unexpectedly");
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 
@@ -77,7 +82,7 @@ internal static class Program
 
         serviceCollection.AddJwtBackgroundServices();
 
-        serviceCollection.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();        
+        serviceCollection.TryAddSingleton<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
         if (environment.IsDevelopment())
         {

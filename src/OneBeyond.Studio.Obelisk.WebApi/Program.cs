@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -44,6 +45,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Application.Services.ApplicationCl
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
+using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
@@ -95,6 +97,8 @@ public class Program
             await app.InitialiseAsync(builder.Environment, CancellationToken.None);
 
             await app.SeedAsync(CancellationToken.None);
+
+            await app.RegisterLayoutTemplateAsync(CancellationToken.None);
 
             await app.RunAsync();
         }
@@ -164,7 +168,7 @@ public class Program
 
         services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
-        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();        
+        services.TryAddSingleton<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 
@@ -257,7 +261,7 @@ public class Program
 
         services.AddHostedService<DomainEventRelayJob>();
 
-        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);        
+        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
 
         services.AddFileStorage(
             (builder) =>

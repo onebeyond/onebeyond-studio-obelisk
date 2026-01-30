@@ -1,3 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Mime;
+using System.Reflection;
+using EnsureThat;
+
 namespace OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 
 /// <remarks>
@@ -6,39 +14,71 @@ namespace OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 /// </remarks>
 public static class PredefinedEmailTemplates
 {
+    private const string DefaultDirectory = "Features/EmailTemplates/Templates";
+
+    public const string LAYOUT = nameof(LAYOUT);
     public const string ACCOUNT_SETUP = nameof(ACCOUNT_SETUP);
     public const string RESET_PASSWORD = nameof(RESET_PASSWORD);
 
+    private static string GetTemplateBody(string fileName, string directory = DefaultDirectory)
+    {
+        EnsureArg.IsNotNullOrWhiteSpace(fileName, nameof(fileName));
+        EnsureArg.IsNotNullOrWhiteSpace(directory, nameof(directory));
+
+        fileName = fileName.ToLowerInvariant();
+        var templatePath = Path.Combine(AppContext.BaseDirectory, directory, fileName);
+        return File.ReadAllText(templatePath);
+    }
+
+    private static string GetLayoutTemplateBody(
+        string fileName,
+        string directory = DefaultDirectory,
+        string logoPath = "Features/EmailTemplates/Templates/logo.webp",
+        string mediaType = MediaTypeNames.Image.Webp)
+    {
+        var body = GetTemplateBody(fileName, directory);
+
+        logoPath = Path.Combine(AppContext.BaseDirectory, logoPath);
+        var logoContent = File.ReadAllBytes(logoPath);
+        var encodedLogo = Convert.ToBase64String(logoContent);
+
+        return body.Replace("{{{Logo}}}", $"data:{mediaType};base64,{encodedLogo}");
+    }
+
+
+    public static IEnumerable<EmailTemplate> All =>
+        typeof(PredefinedEmailTemplates)
+            .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Where(property => typeof(EmailTemplate).IsAssignableFrom(property.PropertyType))
+            .Select(property => property.GetValue(null))
+            .OfType<EmailTemplate>();
+
+
+    public static EmailTemplate DefaultEmailLayoutTemplate =>
+        new EmailTemplate
+        (
+            id: LAYOUT,
+            description: "Email layout",
+            subject: "dummy",
+            body: GetLayoutTemplateBody($"{LAYOUT}.html")
+        );
+
 
     public static EmailTemplate DefaultAccountSetupEmailTemplate =>
-        new
+        new EmailTemplate
         (
             id: ACCOUNT_SETUP,
             description: "Account Setup",
             subject: "Set up your account for Obelisk",
-            body: @"<html>
-<body>
-<p>Hello {{name}},</p>
-<p>You have been sent this email as an invitation to access Obelisk. In order to access the system you will first need to set a password. Please click <a href=""{{callbackUrl}}"">here</a> to set your password.</p>
-<p>If you're having trouble clicking the link, copy and paste the URL below into your web browser: {{callbackUrl}}.</p>
-<p>To log in to your account use the following user name: {{userName}}.</p>
-<p>Best Regards,<br />Obelisk Team</p>
-</body></html>"
+            body: GetTemplateBody($"{ACCOUNT_SETUP}.html")
         );
 
     public static EmailTemplate DefaultPasswordResetEmailTemplate =>
-        new
+        new EmailTemplate
         (
             id: RESET_PASSWORD,
             description: "Password Reset",
             subject: $"Reset password for Obelisk user",
-            body: @"<html>
-<body>
-<p>Hello {{name}},</p>
-<p>You recently requested to reset your password for your Obelisk admin account. Click <a href=""{{callbackUrl}}"">here</a> to reset it.</p>
-<p>If you did not request a password reset, please ignore this email or contact us.</p>
-<p>If you're having trouble clicking the password rest link, copy and paste the URL below into your web browser: {{callbackUrl}}.</p>
-<p>Best Regards,<br />Obelisk Team</p>
-</body></html>"
+            body: GetTemplateBody($"{RESET_PASSWORD}.html")
         );
 }
