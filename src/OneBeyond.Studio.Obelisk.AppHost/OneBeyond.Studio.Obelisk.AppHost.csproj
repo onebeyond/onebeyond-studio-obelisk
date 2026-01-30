@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Azure.Functions" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.WebApi\OneBeyond.Studio.Obelisk.WebApi.csproj" />
     <ProjectReference Include="..\OneBeyond.Studio.Obelisk.Workers\OneBeyond.Studio.Obelisk.Workers.csproj" />
   </ItemGroup>

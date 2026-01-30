@@ -21,8 +21,6 @@ internal static class HealthCheckExtensions
     {
         var hcBuilder = services.AddHealthChecks();
 
-        hcBuilder.AddCheck(SelfCheck, () => HealthCheckResult.Healthy());
-
         hcBuilder
             .AddSqlServer(
                 configuration.GetConnectionString("ApplicationConnectionString")!,

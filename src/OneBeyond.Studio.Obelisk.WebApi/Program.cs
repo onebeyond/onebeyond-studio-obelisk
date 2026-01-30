@@ -80,6 +80,7 @@ public class Program
             ConfigureConfiguration(builder.Configuration, environmentName);
 
             ConfigureLogging(builder.Host);
+            builder.AddServiceDefaults();
 
             builder.Host.ConfigureServices(ConfigureServices);
 
@@ -288,7 +289,7 @@ public class Program
     }
 
     private static void ConfigureMiddleware(
-        IApplicationBuilder app,
+        WebApplication app,
         IServiceProvider services,
         IConfiguration configuration)
     {
@@ -361,19 +362,7 @@ public class Program
                 }
             });
 
-        app.UseEndpoints(
-            (endpoints) =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Contains(HealthCheckExtensions.SelfCheck)
-                });
-            });
+        app.MapControllers();
+        app.MapDefaultEndpoints();
     }
 }
