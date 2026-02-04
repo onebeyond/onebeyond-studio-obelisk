@@ -1,47 +1,45 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using OneBeyond.Studio.Crosscuts.Options;
 using OneBeyond.Studio.FileStorage.Azure.Options;
 using OneBeyond.Studio.Infrastructure.Azure.MessageQueues.Options;
-using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Extensions;
 
 internal static class HealthCheckExtensions
 {
-    public const string SelfCheck = "self";
-
-    public static IServiceCollection AddHealthChecks(
-        this IServiceCollection services,
-        IHostEnvironment environment,
-        IConfiguration configuration)
+    /// <summary>
+    /// Configures additional app-specific health checks. A basic liveness health check is already configured by the
+    /// ServiceDefaults.
+    /// </summary>
+    public static TBuilder AddAdditionalHealthChecks<TBuilder>(this TBuilder builder)
+        where TBuilder : IHostApplicationBuilder
     {
-        var hcBuilder = services.AddHealthChecks();
+        var hcBuilder = builder.Services.AddHealthChecks();
 
         hcBuilder
             .AddSqlServer(
-                configuration.GetConnectionString("ApplicationConnectionString")!,
+                builder.Configuration.GetConnectionString("ApplicationConnectionString")!,
                 name: "DB-check",
                 tags: ["db"]);
 
         hcBuilder
             .AddAzureQueueStorage(
-                configuration.GetOptions<AzureMessageQueueOptions>("DomainEvents:Queue").ConnectionString!,
+                builder.Configuration.GetOptions<AzureMessageQueueOptions>("DomainEvents:Queue").ConnectionString!,
                 name: "queue-check",
                 tags: ["queue"]);
 
-        if (!environment.IsDevelopment())
+        if (!builder.Environment.IsDevelopment())
         {
             hcBuilder
                 .AddAzureBlobStorage(
-                    configuration.GetOptions<AzureBlobFileStorageOptions>("FileStorage:AzureBlobStorage").ConnectionString!,
+                    builder.Configuration.GetOptions<AzureBlobFileStorageOptions>("FileStorage:AzureBlobStorage")
+                        .ConnectionString!,
                     name: "storage-check",
                     tags: ["storage"]);
         }
 
-        return services;
+        return builder;
     }
 }
