@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,13 +20,8 @@ using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
-using Serilog;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
-
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -37,20 +31,9 @@ builder.ConfigureContainer(new AutofacServiceProviderFactory(), containerBuilder
     containerBuilder.AddAmbientContextAccessor<AmbientContextAccessor, AmbientContext>();
 });
 
+builder.Configuration.AddKeyVault("KeyVault");
 
-builder.Configuration
-    .SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile(
-        $"appsettings.{builder.Environment.EnvironmentName}.json",
-        optional: true)
-    .AddEnvironmentVariables()
-    .AddKeyVault("KeyVault");
-
-if (builder.Environment.IsDevelopment())
-{
-    builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
-}
+builder.AddServiceDefaults();
 
 builder.Services.AddCoreMediator();
 
@@ -75,24 +58,6 @@ else
         builder.Configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>(
             "EmailSender:SendGrid"));
 }
-
-builder.Services.AddApplicationInsightsTelemetryWorkerService();
-
-var loggerConfiguration = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration);
-
-Log.Logger = builder.Environment.IsDevelopment()
-    ? loggerConfiguration.CreateLogger()
-    : loggerConfiguration
-        .Enrich.FromLogContext()
-        // NOTE: the line below needs to be hardcoded even if the same property is already set in the configuration JSON
-        .Enrich.WithProperty("ApplicationExecutable", "Workers")
-        .WriteTo.ApplicationInsights(
-            TelemetryConfiguration.CreateDefault(),
-            TelemetryConverter.Traces)
-        .CreateLogger();
-
-builder.Services.AddLogging(cfg => cfg.AddSerilog(Log.Logger, true));
 
 var host = builder.Build();
 
