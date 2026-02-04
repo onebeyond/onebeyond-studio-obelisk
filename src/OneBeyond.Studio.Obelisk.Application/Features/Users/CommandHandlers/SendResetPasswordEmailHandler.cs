@@ -8,13 +8,13 @@ using OneBeyond.Studio.Application.SharedKernel.Repositories;
 using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Crosscuts.Exceptions;
 using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.EmailProviders.Domain;
 using OneBeyond.Studio.Obelisk.Application.Services.EmailTemplateService;
 using OneBeyond.Studio.Obelisk.Domain.Exceptions;
 using OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Commands;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
+using OneBeyond.Studio.TemplateRendering;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.CommandHandlers;
 

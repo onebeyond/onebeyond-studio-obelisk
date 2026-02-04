@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -25,7 +24,6 @@ using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
@@ -54,6 +52,7 @@ using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
+using OneBeyond.Studio.TemplateRendering.DependencyInjection;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
@@ -168,7 +167,7 @@ public class Program
 
         services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
-        services.TryAddSingleton<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        services.AddHandlebarsTemplateRenderer();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 

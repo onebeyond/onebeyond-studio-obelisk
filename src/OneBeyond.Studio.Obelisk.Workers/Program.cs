@@ -7,7 +7,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OneBeyond.Studio.Application.SharedKernel.AmbientContexts;
@@ -15,7 +14,6 @@ using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
@@ -25,6 +23,7 @@ using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.Depe
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
+using OneBeyond.Studio.TemplateRendering.DependencyInjection;
 using Serilog;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
@@ -82,7 +81,7 @@ internal static class Program
 
         serviceCollection.AddJwtBackgroundServices();
 
-        serviceCollection.TryAddSingleton<ITemplateRenderer, HandleBarsTemplateRenderer>();
+        serviceCollection.AddHandlebarsTemplateRenderer();
 
         if (environment.IsDevelopment())
         {

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
+using OneBeyond.Studio.TemplateRendering.Handlebars;
 
 namespace OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 
@@ -28,12 +28,13 @@ public static class HostExtensions
         using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
         using (var dbContext = scope.ServiceProvider.GetRequiredService<DomainContext>())
         {
+            var templateRenderer = scope.ServiceProvider.GetRequiredService<IHandlebarsTemplateRenderer>();
             var layoutTemplate = await dbContext.Set<EmailTemplate>()
                 .FirstOrDefaultAsync(emailTemplate => emailTemplate.Id == PredefinedEmailTemplates.LAYOUT, cancellationToken);
 
             layoutTemplate ??= PredefinedEmailTemplates.DefaultEmailLayoutTemplate;
 
-            HandlebarsLayoutTemplateManager.RegisterLayout(layoutTemplate.Id, layoutTemplate.Body);
+            templateRenderer.RegisterTemplate(layoutTemplate.Id, layoutTemplate.Body);
         }
     }
 }
