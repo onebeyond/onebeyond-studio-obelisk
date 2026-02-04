@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 using Asp.Versioning.ApiExplorer;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MoreLinq;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
@@ -63,51 +60,40 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        // Logger used during app bootstrap
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateBootstrapLogger();
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            ?? throw new Exception("The ASPNETCORE_ENVIRONMENT variable is not set.");
+
+
+        var builder = WebApplication.CreateBuilder(args);
+
+        ConfigureConfiguration(builder.Configuration, environmentName);
+
+        builder.AddServiceDefaults();
+
+        builder.Host.ConfigureServices(ConfigureServices);
+
+        // Autofac factory will automatically populate services defined above into its container
+        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+        builder.Host.ConfigureContainer<ContainerBuilder>(ConfigureAutofacServices);
+
+        var app = builder.Build();
 
         try
         {
-            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-                ?? throw new Exception("The ASPNETCORE_ENVIRONMENT variable is not set.");
-
-            Log.Information("Obelisk starting up using environment: {RunTimeEnvironment}", environmentName);
-
-            var builder = WebApplication.CreateBuilder(args);
-
-            ConfigureConfiguration(builder.Configuration, environmentName);
-
-            ConfigureLogging(builder.Host);
-            builder.AddServiceDefaults();
-
-            builder.Host.ConfigureServices(ConfigureServices);
-
-            // Autofac factory will automatically populate services defined above into its container
-            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-            builder.Host.ConfigureContainer<ContainerBuilder>(ConfigureAutofacServices);
-
-            var app = builder.Build();
-
             ConfigureMiddleware(app, app.Services, builder.Configuration);
 
             await app.InitialiseAsync(builder.Environment, CancellationToken.None);
-
             await app.SeedAsync(CancellationToken.None);
-
             await app.RunAsync();
         }
-        catch (Exception exception)
-        when (exception is not HostAbortedException) // Used by EF migration building process
+        catch (Exception exception) when (exception is not HostAbortedException) // Used by EF migration building process
         {
-            Log.Fatal(exception, "Obelisk web host terminated unexpectedly");
+            app.Logger.LogCritical(exception, "Obelisk web host terminated unexpectedly");
         }
         finally
         {
-            Log.Information("Obelisk shut down complete");
-            Log.CloseAndFlush();
+            app.Logger.LogInformation("Obelisk shut down complete");
         }
     }
 
@@ -120,10 +106,6 @@ public class Program
             .AddEnvironmentVariables()
             .AddUserSecrets(Assembly.GetExecutingAssembly());
 
-    private static void ConfigureLogging(IHostBuilder builder)
-        => builder.UseSerilog(
-            (context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
-
     private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection services)
     {
         var configuration = hostBuilderContext.Configuration;
@@ -132,11 +114,6 @@ public class Program
         services.AddOptions();
 
         services.AddSignalR();
-
-        // This is required in order to restore telemetry collection. Azure agent-based collection
-        // stops working as soon as AI SDK gets referenced from the project which is needed for logging to AI.
-        services.AddApplicationInsightsTelemetry(
-            (options) => options.ConnectionString = configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING"));
 
         if (environment.IsDevelopment())
         {
@@ -153,19 +130,18 @@ public class Program
 
         if (!environment.IsDevelopment())
         {
-            services.AddHttpsRedirection(
-                (options) =>
-                {
-                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
-                    options.HttpsPort = 443;
-                });
+            services.AddHttpsRedirection((options) =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                options.HttpsPort = 443;
+            });
         }
 
         services.Configure<ClientApplicationOptions>(configuration.GetSection("ClientApplication"));
 
         services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
-        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();        
+        services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
 
         services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 
@@ -176,57 +152,50 @@ public class Program
 
         if (!environment.IsDevelopment())
         {
-            services.AddAntiforgery(
-            (options) =>
+            services.AddAntiforgery((options) =>
             {
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
         }
 
         services.AddControllers()
-            .AddNewtonsoftJson(
-                (options) =>
-                {
-                    options.AddPrivateSettersSerialization();
-                });
-
-        var apiVersioningBuilder = services.AddApiVersioning(
-            (options) =>
+            .AddNewtonsoftJson((options) =>
             {
-                options.AssumeDefaultVersionWhenUnspecified = false;
-                options.ReportApiVersions = true;
+                options.AddPrivateSettersSerialization();
             });
 
-        apiVersioningBuilder.AddApiExplorer(
-            (options) =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
+        var apiVersioningBuilder = services.AddApiVersioning((options) =>
+        {
+            options.AssumeDefaultVersionWhenUnspecified = false;
+            options.ReportApiVersions = true;
+        });
 
-        services.AddCors(
-            (options) =>
-            {
-                options.AddDefaultPolicy(
-                    (builder) =>
-                    {
-                        var origins = configuration
-                            .GetOptions<string[]>("Cors:AllowedOrigins")
-                            .Select(origin => origin.TrimEnd('/')) //trim ending slash for urls (to eliminate CORS issues)
-                            .ToArray();
+        apiVersioningBuilder.AddApiExplorer((options) =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
 
-                        builder.WithOrigins(origins)
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
-                    });
-            });
-
-        services.Configure<ApiBehaviorOptions>(
-            (options) =>
+        services.AddCors((options) =>
+        {
+            options.AddDefaultPolicy((builder) =>
             {
-                options.SuppressInferBindingSourcesForParameters = true;
+                var origins = configuration
+                    .GetOptions<string[]>("Cors:AllowedOrigins")
+                    .Select(origin => origin.TrimEnd('/')) //trim ending slash for urls (to eliminate CORS issues)
+                    .ToArray();
+
+                builder.WithOrigins(origins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
+        });
+
+        services.Configure<ApiBehaviorOptions>((options) =>
+        {
+            options.SuppressInferBindingSourcesForParameters = true;
+        });
 
         services.AddCoreMediator();
 
@@ -235,12 +204,15 @@ public class Program
         services.AddSwaggerGen(options =>
         {
             string[] methodsOrder = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"];
+
             options.OrderActionsBy(apiDesccription =>
             {
                 var route = apiDesccription.ActionDescriptor.RouteValues["controller"];
+
                 var methodIndex = Array.FindIndex(
                     methodsOrder,
                     method => method.Equals(apiDesccription.HttpMethod, StringComparison.OrdinalIgnoreCase));
+
                 return $"{route}_{methodIndex}";
             });
         });
@@ -254,17 +226,18 @@ public class Program
                 dataAccessBuilder
                     // If DE support is enabled, make sure the DomainContextFactory does also when constructing the DomainContext.
                     .WithDomainEvents(isReceiverHost: true));
-                    //.WithUnitOfWork());
+        //.WithUnitOfWork());
 
         services.AddHostedService<DomainEventRelayJob>();
 
-        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);        
+        services.AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
 
-        services.AddFileStorage(
-            (builder) =>
-                _ = environment.IsDevelopment()
-                    ? builder.UseFileSystem(configuration.GetOptions<FileSystemFileStorageOptions>("FileStorage:FileSystem"))
-                    : builder.UseAzureBlobs(configuration.GetOptions<AzureBlobFileStorageOptions>("FileStorage:AzureBlobStorage")));
+        services.AddFileStorage((builder) =>
+            _ = environment.IsDevelopment()
+                ? builder.UseFileSystem(
+                    configuration.GetOptions<FileSystemFileStorageOptions>("FileStorage:FileSystem"))
+                : builder.UseAzureBlobs(
+                    configuration.GetOptions<AzureBlobFileStorageOptions>("FileStorage:AzureBlobStorage")));
 
 
         services.AddMixedSourceBinder(); //Mixed source binder used to gather commands, queries and dtos in controllers from mixed sources: body and route
@@ -274,7 +247,9 @@ public class Program
         services.AddHealthChecks(environment, configuration);
     }
 
-    private static void ConfigureAutofacServices(HostBuilderContext hostBuilderContext, ContainerBuilder containerBuilder)
+    private static void ConfigureAutofacServices(
+        HostBuilderContext hostBuilderContext,
+        ContainerBuilder containerBuilder)
     {
         var configuration = hostBuilderContext.Configuration;
 
@@ -295,8 +270,6 @@ public class Program
     {
         var loggerFactory = services.GetRequiredService<ILoggerFactory>();
         LogManager.Configure(loggerFactory);
-
-        app.UseSerilogRequestLogging();
 
         var environment = services.GetRequiredService<IWebHostEnvironment>();
 
@@ -332,6 +305,7 @@ public class Program
         app.UseCors();
 
         var cultures = configuration.GetOptions<string[]>("Localization:SupportedCultures");
+
         if (cultures.Any())
         {
             app.UseRequestLocalization(
@@ -347,20 +321,20 @@ public class Program
 
         app.UseSwagger();
 
-        app.UseSwaggerUI(
-            (options) =>
-            {
-                var provider = services.GetRequiredService<IApiVersionDescriptionProvider>();
-                foreach (var description in provider.ApiVersionDescriptions)
-                {
-                    options.SwaggerEndpoint(
-                        $"/swagger/{description.GroupName}/swagger.json",
-                        $"{SwaggerConstants.APITitle} {description.GroupName.ToUpperInvariant()}");
+        app.UseSwaggerUI((options) =>
+        {
+            var provider = services.GetRequiredService<IApiVersionDescriptionProvider>();
 
-                    // Set Swagger UI as the homepage
-                    options.RoutePrefix = string.Empty;
-                }
-            });
+            foreach (var description in provider.ApiVersionDescriptions)
+            {
+                options.SwaggerEndpoint(
+                    $"/swagger/{description.GroupName}/swagger.json",
+                    $"{SwaggerConstants.APITitle} {description.GroupName.ToUpperInvariant()}");
+
+                // Set Swagger UI as the homepage
+                options.RoutePrefix = string.Empty;
+            }
+        });
 
         app.MapControllers();
         app.MapDefaultEndpoints();
