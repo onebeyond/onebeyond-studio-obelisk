@@ -10,10 +10,12 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Project Path="src/OneBeyond.Studio.Obelisk.AppHost/OneBeyond.Studio.Obelisk.AppHost.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.Application/OneBeyond.Studio.Obelisk.Application.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.Domain.Tests/OneBeyond.Studio.Obelisk.Domain.Tests.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.Domain/OneBeyond.Studio.Obelisk.Domain.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.Infrastructure/OneBeyond.Studio.Obelisk.Infrastructure.csproj" />
+  <Project Path="src/OneBeyond.Studio.Obelisk.ServiceDefaults/OneBeyond.Studio.Obelisk.ServiceDefaults.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.WebApi.Tests/OneBeyond.Studio.Obelisk.WebApi.Tests.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.WebApi/OneBeyond.Studio.Obelisk.WebApi.csproj" />
   <Project Path="src/OneBeyond.Studio.Obelisk.Workers/OneBeyond.Studio.Obelisk.Workers.csproj" />
