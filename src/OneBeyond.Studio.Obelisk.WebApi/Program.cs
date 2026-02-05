@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Asp.Versioning.ApiExplorer;
 using Autofac;
@@ -9,7 +7,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -42,11 +39,10 @@ using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
+using OneBeyond.Studio.Obelisk.WebApi.ExceptionHandlers;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.HostedServices;
-using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
-using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -163,6 +159,17 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressInferBindingSourcesForParameters = true;
 });
 
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = ctx =>
+    {
+        ctx.ProblemDetails.Extensions.Add("instance",
+            $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
+    };
+});
+
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
+
 builder.Services.AddCoreMediator();
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
@@ -235,11 +242,8 @@ app.UseSecurityHeadersMiddleware(
     new SecurityHeadersBuilder()
         .AddSecurityPolicyFromConfiguration(builder.Configuration.GetSection("SecurityHeaders")));
 
-app.UseUnhandledExceptionLogging();
-
-app.UseMiddleware<ErrorResultGeneratorMiddleware>();
-
-app.UseExceptionHandling();
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.UseStaticFiles();
 

@@ -3,21 +3,23 @@ using System.Net.Http.Json;
 using AwesomeAssertions;
 using AwesomeAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
-using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Tests.Middlewares;
 
-public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixture>
+public class ExceptionHandlerTests : IClassFixture<TestServerFixture>
 {
+    private const string ProblemContent = "application/problem+json";
+    private const string TraceIdKey = "traceId";
+
     private readonly HttpClient _client;
 
-    public ErrorResultGeneratorMiddlewareTests(TestServerFixture testServer)
+    public ExceptionHandlerTests(TestServerFixture testServer)
     {
         _client = testServer.Client;
     }
 
     [Fact]
-    public async Task InvokeAsync_NoException_Succeeds()
+    public async Task NoException_Succeeds()
     {
         // Act
         var response = await _client.GetAsync("/health/live");
@@ -27,9 +29,11 @@ public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixtu
     }
 
     [Fact]
-    public async Task InvokeAsync_ValidationException_ReturnsBadRequest()
+    public async Task ValidationError_ReturnsBadRequest()
     {
-        // Arrange
+        // Arrange — an empty body triggers ASP.NET model validation, not
+        // a ValidationException. The [ApiController] attribute handles this
+        // automatically and returns ProblemDetails with a 400 status.
         var invalidRequest = new { };
 
         // Act
@@ -42,12 +46,12 @@ public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixtu
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
         problemDetails?.Title.Should().Be("One or more validation errors occurred.");
 
-        var traceId = problemDetails?.Extensions[ErrorResultGeneratorMiddleware.TraceIdKey]?.ToString();
+        var traceId = problemDetails?.Extensions[TraceIdKey]?.ToString();
         traceId.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
-    public async Task InvokeAsync_EntityNotFoundException_ReturnsNotFound()
+    public async Task EntityNotFoundException_ReturnsNotFound()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
@@ -60,12 +64,12 @@ public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixtu
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
         var mediaType = response.Content.Headers.ContentType?.MediaType;
-        mediaType.Should().Be(ErrorResultGeneratorMiddleware.ProblemContent);
+        mediaType.Should().Be(ProblemContent);
 
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
         problemDetails?.Title.Should().Be("Not Found");
 
-        var traceId = problemDetails?.Extensions[ErrorResultGeneratorMiddleware.TraceIdKey]?.ToString();
+        var traceId = problemDetails?.Extensions[TraceIdKey]?.ToString();
         traceId.Should().NotBeNullOrEmpty();
     }
 }

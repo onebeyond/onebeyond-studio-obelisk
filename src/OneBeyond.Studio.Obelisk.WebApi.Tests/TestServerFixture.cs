@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -15,9 +16,8 @@ using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Controllers;
-using OneBeyond.Studio.Obelisk.WebApi.Extensions;
+using OneBeyond.Studio.Obelisk.WebApi.ExceptionHandlers;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
-using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Tests;
 
@@ -60,17 +60,31 @@ public sealed class TestServerFixture : IAsyncLifetime
                         services.AddApiVersioning();
                         services.AddHealthChecks()
                             .AddCheck(SelfCheck, () => HealthCheckResult.Healthy());
+
+                        services.AddProblemDetails(options =>
+                        {
+                            options.CustomizeProblemDetails = context =>
+                            {
+                                var extensions = context.ProblemDetails.Extensions;
+                                if (!extensions.ContainsKey("traceId"))
+                                {
+                                    extensions["traceId"] = Activity.Current?.Id;
+                                }
+                            };
+                        });
+                        services.AddExceptionHandler<DomainExceptionHandler>();
                     })
                     .Configure(app =>
                     {
                         app.UseRouting();
                         app.Use(async (context, next) =>
                         {
-                            using var activity = new System.Diagnostics.Activity("HttpRequest");
+                            using var activity = new Activity("HttpRequest");
                             activity.Start();
                             await next();
                         });
-                        app.UseMiddleware<ErrorResultGeneratorMiddleware>();
+                        app.UseExceptionHandler();
+                        app.UseStatusCodePages();
                         app.UseAuthentication();
                         app.UseAuthorization();
                         app.UseEndpoints(endpoints =>
