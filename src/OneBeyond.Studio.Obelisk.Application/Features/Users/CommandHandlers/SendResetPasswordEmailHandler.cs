@@ -45,7 +45,7 @@ internal sealed class SendResetPasswordEmailHandler : IRequestHandler<SendResetP
         _emailTemplateLoader = emailTemplateLoader;
     }
 
-    public async Task Handle(SendResetPasswordEmail command, CancellationToken cancellationToken)
+    public async Task Handle(SendResetPasswordEmail command, CancellationToken cancellationToken = default)
     {
         EnsureArg.IsNotNull(command, nameof(command));
 
