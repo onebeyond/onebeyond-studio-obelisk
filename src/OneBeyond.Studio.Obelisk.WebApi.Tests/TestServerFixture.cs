@@ -23,6 +23,8 @@ namespace OneBeyond.Studio.Obelisk.WebApi.Tests;
 
 public sealed class TestServerFixture : IAsyncLifetime
 {
+    private const string SelfCheck = "self";
+    
     public IHost Host { get; private set; } = default!;
     public HttpClient Client { get; private set; } = default!;
 
@@ -57,7 +59,7 @@ public sealed class TestServerFixture : IAsyncLifetime
 
                         services.AddApiVersioning();
                         services.AddHealthChecks()
-                            .AddCheck(HealthCheckExtensions.SelfCheck, () => HealthCheckResult.Healthy());
+                            .AddCheck(SelfCheck, () => HealthCheckResult.Healthy());
                     })
                     .Configure(app =>
                     {
@@ -76,7 +78,7 @@ public sealed class TestServerFixture : IAsyncLifetime
                             endpoints.MapControllers();
                             endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
                             {
-                                Predicate = registration => registration.Name.Contains(HealthCheckExtensions.SelfCheck)
+                                Predicate = registration => registration.Name.Contains(SelfCheck)
                             });
                         });
                     });

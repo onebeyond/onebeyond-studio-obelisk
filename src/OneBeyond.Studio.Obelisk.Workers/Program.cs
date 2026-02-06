@@ -1,11 +1,7 @@
 using System;
-using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,127 +20,58 @@ using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
 using OneBeyond.Studio.TemplateRendering.DependencyInjection;
-using Serilog;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
-namespace OneBeyond.Studio.Obelisk.Workers;
+var builder = FunctionsApplication.CreateBuilder(args);
 
-internal static class Program
+builder.ConfigureContainer(new AutofacServiceProviderFactory(), containerBuilder =>
 {
-    public static async Task Main(string[] _)
-    {
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateBootstrapLogger();
+    containerBuilder.AddApplication();
+    containerBuilder.AddAmbientContextAccessor<AmbientContextAccessor, AmbientContext>();
+});
 
-        try
-        {
-            using (var host = new HostBuilder()
-                .UseServiceProviderFactory<ContainerBuilder>(new AutofacServiceProviderFactory())
-                .ConfigureAppConfiguration(ConfigureAppConfiguration)
-                .ConfigureFunctionsWorkerDefaults()
-                .ConfigureServices(ConfigureServiceCollection)
-                .ConfigureContainer<ContainerBuilder>(ConfigureContainerBuilder)
-                .Build())
-            {
-                Log.Information("Azure Function host is starting");
+builder.Configuration.AddKeyVault("KeyVault");
 
-                LogManager.Configure(host.Services.GetRequiredService<ILoggerFactory>());
+builder.AddServiceDefaults();
 
-                await host.RegisterLayoutTemplateAsync(CancellationToken.None);
-                await host.RunAsync();
+builder.Services.AddCoreMediator();
 
-                Log.Information("Azure Function host stopped");
-            }
-        }
-        catch (Exception exception)
-        {
-            Log.Fatal(exception, "Azure Function host terminated unexpectedly");
-            await Log.CloseAndFlushAsync();
-        }
-    }
+builder.Services.AddDataAccess(
+        builder.Configuration,
+        (dataAccessBuilder) => dataAccessBuilder.WithDomainEvents())
+    .AddEntityTypeProjections(typeof(OneBeyond.Studio.Obelisk.Infrastructure.AssemblyMark).Assembly);
 
-    private static void ConfigureServiceCollection(
-        HostBuilderContext hostBuilderContext,
-        IServiceCollection serviceCollection)
-    {
-        var configuration = hostBuilderContext.Configuration;
-        var environment = hostBuilderContext.HostingEnvironment;
+builder.Services.AddJwtBackgroundServices();
 
-        serviceCollection.AddCoreMediator();
+builder.Services.AddHandlebarsTemplateRenderer();
 
-        serviceCollection.AddDataAccess(
-                configuration,
-                (dataAccessBuilder) => dataAccessBuilder.WithDomainEvents())
-            .AddEntityTypeProjections(typeof(Infrastructure.AssemblyMark).Assembly);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddEmailSender(
+        builder.Configuration
+            .GetOptions<FolderEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
+}
+else
+{
+    builder.Services.AddEmailSender(
+        builder.Configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>(
+            "EmailSender:SendGrid"));
+}
 
-        serviceCollection.AddJwtBackgroundServices();
+var host = builder.Build();
 
-        serviceCollection.AddHandlebarsTemplateRenderer();
+LogManager.Configure(host.Services.GetRequiredService<ILoggerFactory>());
+var logger = LogManager.CreateLogger<Program>();
 
-        if (environment.IsDevelopment())
-        {
-            serviceCollection.AddEmailSender(
-                configuration.GetOptions<FolderEmailSender.Options.EmailSenderOptions>("EmailSender:Folder"));
-        }
-        else
-        {
-            serviceCollection.AddEmailSender(
-                configuration.GetOptions<SendGridEmailSender.Options.EmailSenderOptions>("EmailSender:SendGrid"));
-        }
-
-        serviceCollection.AddApplicationInsightsTelemetryWorkerService();
-        ConfigureSerilog(hostBuilderContext, serviceCollection);
-    }
-
-    private static void ConfigureSerilog(
-        HostBuilderContext hostBuilderContext,
-        IServiceCollection serviceCollection)
-    {
-        var loggerConfiguration = new LoggerConfiguration()
-               .ReadFrom.Configuration(hostBuilderContext.Configuration);
-
-        Log.Logger = hostBuilderContext.HostingEnvironment.IsDevelopment()
-            ? loggerConfiguration.CreateLogger()
-            : loggerConfiguration
-                .Enrich.FromLogContext()
-                // NOTE: the line below needs to be hardcoded even if the same property is already set in the configuration JSON
-                .Enrich.WithProperty("ApplicationExecutable", "Workers")
-                .WriteTo.ApplicationInsights(
-                    TelemetryConfiguration.CreateDefault(),
-                    TelemetryConverter.Traces)
-                .CreateLogger();
-
-        serviceCollection.AddLogging(
-            cfg => cfg.AddSerilog(Log.Logger, true));
-    }
-
-    private static void ConfigureContainerBuilder(
-        HostBuilderContext _,
-        ContainerBuilder containerBuilder)
-    {
-        containerBuilder.AddApplication();
-
-        containerBuilder.AddAmbientContextAccessor<AmbientContextAccessor, AmbientContext>();
-    }
-
-    private static void ConfigureAppConfiguration(
-        HostBuilderContext hostBuilderContext,
-        IConfigurationBuilder builder)
-    {
-        builder
-            .SetBasePath(hostBuilderContext.HostingEnvironment.ContentRootPath)
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile(
-                $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.json",
-                optional: true)
-            .AddEnvironmentVariables()
-            .AddKeyVault("KeyVault");
-
-        if (hostBuilderContext.HostingEnvironment.IsDevelopment())
-        {
-            builder.AddUserSecrets(Assembly.GetExecutingAssembly());
-        }
-    }
+try
+{
+    logger.LogInformation("Azure Function host is starting");
+    await host.RegisterLayoutTemplateAsync(CancellationToken.None);
+    await host.RunAsync();
+    logger.LogInformation("Azure Function host stopped");
+}
+catch (Exception exception)
+{
+    logger.LogCritical(exception, "Azure Function host terminated unexpectedly");
 }
