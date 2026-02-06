@@ -14,32 +14,50 @@ namespace OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 /// </remarks>
 public static class PredefinedEmailTemplates
 {
-    private const string DefaultDirectory = "Features/EmailTemplates/Templates";
+    private const string DefaultFolderPath = "Features.EmailTemplates.Templates";
 
     public const string LAYOUT = nameof(LAYOUT);
     public const string ACCOUNT_SETUP = nameof(ACCOUNT_SETUP);
     public const string RESET_PASSWORD = nameof(RESET_PASSWORD);
 
-    private static string GetTemplateBody(string fileName, string directory = DefaultDirectory)
-    {
-        EnsureArg.IsNotNullOrWhiteSpace(fileName, nameof(fileName));
-        EnsureArg.IsNotNullOrWhiteSpace(directory, nameof(directory));
+    private static readonly Assembly _assembly = typeof(PredefinedEmailTemplates).Assembly;
+    private static readonly string _assemblyName = _assembly.GetName().Name!;
 
-        fileName = fileName.ToLowerInvariant();
-        var templatePath = Path.Combine(AppContext.BaseDirectory, directory, fileName);
-        return File.ReadAllText(templatePath);
+    private static string GetManifestResourceName(string path)
+    {
+        return _assembly.GetManifestResourceNames()
+            .FirstOrDefault(resourceName => path.Equals(resourceName, StringComparison.OrdinalIgnoreCase))
+            ?? throw new FileNotFoundException($"Could not find resource: '{path}'.", path);
+    }
+
+    private static Stream GetManifestResourceStream(string path)
+        => _assembly.GetManifestResourceStream(path) ?? throw new UnauthorizedAccessException($"Could not read resource '{path}'.");
+
+    private static string GetTemplateBody(string filePath)
+    {
+        EnsureArg.IsNotNullOrWhiteSpace(filePath, nameof(filePath));
+
+        var path = GetManifestResourceName($"{_assemblyName}.{filePath}");
+
+        using var stream = GetManifestResourceStream(path);
+        using var streamReader = new StreamReader(stream);
+        return streamReader.ReadToEnd();
     }
 
     private static string GetLayoutTemplateBody(
-        string fileName,
-        string directory = DefaultDirectory,
-        string logoPath = "Features/EmailTemplates/Templates/logo.webp",
+        string filePath,
+        string logoPath = $"{DefaultFolderPath}.logo.webp",
         string mediaType = MediaTypeNames.Image.Webp)
     {
-        var body = GetTemplateBody(fileName, directory);
+        var body = GetTemplateBody(filePath);
 
-        logoPath = Path.Combine(AppContext.BaseDirectory, logoPath);
-        var logoContent = File.ReadAllBytes(logoPath);
+        var path = GetManifestResourceName($"{_assemblyName}.{logoPath}");
+
+        using var stream = GetManifestResourceStream(path);
+        using var memoryStream = new MemoryStream();
+        stream.CopyTo(memoryStream);
+
+        var logoContent = memoryStream.ToArray();
         var encodedLogo = Convert.ToBase64String(logoContent);
 
         return body.Replace("{{{Logo}}}", $"data:{mediaType};base64,{encodedLogo}");
@@ -60,7 +78,7 @@ public static class PredefinedEmailTemplates
             id: LAYOUT,
             description: "Email layout",
             subject: "dummy",
-            body: GetLayoutTemplateBody($"{LAYOUT}.html")
+            body: GetLayoutTemplateBody($"{DefaultFolderPath}.{LAYOUT}.html")
         );
 
 
@@ -70,7 +88,7 @@ public static class PredefinedEmailTemplates
             id: ACCOUNT_SETUP,
             description: "Account Setup",
             subject: "Set up your account for Obelisk",
-            body: GetTemplateBody($"{ACCOUNT_SETUP}.html")
+            body: GetTemplateBody($"{DefaultFolderPath}.{ACCOUNT_SETUP}.html")
         );
 
     public static EmailTemplate DefaultPasswordResetEmailTemplate =>
@@ -79,6 +97,6 @@ public static class PredefinedEmailTemplates
             id: RESET_PASSWORD,
             description: "Password Reset",
             subject: $"Reset password for Obelisk user",
-            body: GetTemplateBody($"{RESET_PASSWORD}.html")
+            body: GetTemplateBody($"{DefaultFolderPath}.{RESET_PASSWORD}.html")
         );
 }
