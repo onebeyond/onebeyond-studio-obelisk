@@ -289,6 +289,7 @@ try
 {
     await app.InitialiseAsync(builder.Environment, CancellationToken.None);
     await app.SeedAsync(CancellationToken.None);
+    await app.RegisterLayoutTemplateAsync(CancellationToken.None);
     await app.RunAsync();
 }
 catch (Exception exception) when (exception is not HostAbortedException) // Used by EF migration building process
