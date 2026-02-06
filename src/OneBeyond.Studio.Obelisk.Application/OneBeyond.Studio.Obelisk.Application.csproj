@@ -3,6 +3,7 @@
   <ItemGroup>
     <PackageReference Include="OneBeyond.Studio.Application.SharedKernel" />
     <PackageReference Include="OneBeyond.Studio.EmailProviders.Domain" />
+    <PackageReference Include="OneBeyond.Studio.TemplateRendering" />
   </ItemGroup>
 
   <ItemGroup>

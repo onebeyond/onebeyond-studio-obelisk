@@ -5,8 +5,9 @@ namespace OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 
 public sealed class EmailTemplate : AggregateRoot<string>
 {
+    /// <param name="id">For EmailTemplate Id is the Tag!</param>
     public EmailTemplate(
-        string id, //Note! For EmailTemplate Id is the Tag!
+        string id,
         string subject,
         string body,
         string? description)

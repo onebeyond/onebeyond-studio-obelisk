@@ -4,16 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using EnsureThat;
 using Microsoft.Extensions.Logging;
-using OneBeyond.Studio.Crosscuts.Exceptions;
-using OneBeyond.Studio.Crosscuts.Logging;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Application.SharedKernel.Repositories;
+using OneBeyond.Studio.Crosscuts.Exceptions;
+using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.EmailProviders.Domain;
 using OneBeyond.Studio.Obelisk.Application.Services.EmailTemplateService;
 using OneBeyond.Studio.Obelisk.Domain.Features.EmailTemplates.Entities;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.DomainEvents;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
+using OneBeyond.Studio.TemplateRendering;
 
 namespace OneBeyond.Studio.Obelisk.Application.Features.Users.DomainEventHandlers;
 
@@ -52,14 +52,14 @@ internal sealed class NewUserPasswordEmailSender : IPostSaveDomainEventHandler<U
 
         if (domainEvent.ResetPasswordUrl == null)
         {
-            //For some users (for example, for those, who were created for extranal sing ins (Azue AD))
+            //For some users (for example, for those, who were created for external sing ins (Azure AD))
             //reset password url feature is not supported
             return;
         }
 
-        var user = await _userRORepository.GetByIdAsync(domainEvent.UserId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var user = await _userRORepository.GetByIdAsync(domainEvent.UserId, cancellationToken: cancellationToken);
 
-        await SendEmailSync(user, domainEvent.ResetPasswordUrl, cancellationToken).ConfigureAwait(false);
+        await SendEmailSync(user, domainEvent.ResetPasswordUrl, cancellationToken);
     }
 
     private async Task SendEmailSync(
@@ -71,19 +71,19 @@ internal sealed class NewUserPasswordEmailSender : IPostSaveDomainEventHandler<U
 
         try
         {
-            var template = await _emailTemplateLoader.GetTemplateByKeyAsync(PredefinedEmailTemplates.ACCOUNT_SETUP).ConfigureAwait(false);
+            var template = await _emailTemplateLoader.GetTemplateByKeyAsync(PredefinedEmailTemplates.ACCOUNT_SETUP);
 
             var parameters = new
             {
-                callbackUrl = passwordResetUrl.ToString(),
-                name = user.UserName,
-                userName = user.UserName
+                template.Subject,
+                CallBackUrl = passwordResetUrl,
+                Name = user.UserName,
+                user.UserName
             };
 
-            var renderedBody = _templateRenderer.RenderTemplate(template.Body, parameters);
+            var renderedBody = _templateRenderer.Render(template.Body, parameters);
 
-            await _mailSender.SendEmailAsync(user.Email, template.Subject, renderedBody, cancellationToken: cancellationToken).ConfigureAwait(false);
-
+            await _mailSender.SendEmailAsync(user.Email, template.Subject, renderedBody, cancellationToken: cancellationToken);
         }
         catch (Exception exception)
         when (!exception.IsCritical())

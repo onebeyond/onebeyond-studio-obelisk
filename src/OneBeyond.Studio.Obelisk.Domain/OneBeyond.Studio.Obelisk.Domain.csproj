@@ -1,4 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <None Remove="Features\EmailTemplates\Templates\account_setup.html" />
+    <None Remove="Features\EmailTemplates\Templates\layout.html" />
+    <None Remove="Features\EmailTemplates\Templates\logo.webp" />
+    <None Remove="Features\EmailTemplates\Templates\reset_password.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Features\EmailTemplates\Templates\account_setup.html" />
+    <EmbeddedResource Include="Features\EmailTemplates\Templates\layout.html" />
+    <EmbeddedResource Include="Features\EmailTemplates\Templates\logo.webp" />
+    <EmbeddedResource Include="Features\EmailTemplates\Templates\reset_password.html" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OneBeyond.Studio.Domain.SharedKernel" />

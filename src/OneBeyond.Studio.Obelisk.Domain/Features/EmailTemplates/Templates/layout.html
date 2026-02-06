@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>{{Subject}}</title>
+</head>
+<body style="font-family: 'Kohinoor Telugu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; margin: 30px;">
+    <table role="presentation" style="width: 100%; max-width: 600px; border-collapse: collapse;">
+        <tr>
+            <td style="padding-bottom: 20px;">
+                <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td>
+                            <img src="{{{Logo}}}" style="max-width: 205px;" alt="Logo" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{{> @partial-block }}}
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-top: 20px;">
+                <div>Best Regards,</div>
+                <div style="font-weight:bold">Obelisk Team</div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,8 +1,7 @@
 using System;
-using System.Reflection;
+using System.Threading;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Azure.Functions.Worker.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,6 @@ using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.SendGrid.DependencyInjection;
@@ -19,7 +17,9 @@ using OneBeyond.Studio.Infrastructure.Azure.KeyVault.Configurations;
 using OneBeyond.Studio.Obelisk.Application.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Authentication.Application.JwtAuthentication.DependencyInjection;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
+using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.Workers.AmbientContexts;
+using OneBeyond.Studio.TemplateRendering.DependencyInjection;
 using FolderEmailSender = OneBeyond.Studio.EmailProviders.Folder;
 using SendGridEmailSender = OneBeyond.Studio.EmailProviders.SendGrid;
 
@@ -44,7 +44,7 @@ builder.Services.AddDataAccess(
 
 builder.Services.AddJwtBackgroundServices();
 
-builder.Services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+builder.Services.AddHandlebarsTemplateRenderer();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -67,6 +67,7 @@ var logger = LogManager.CreateLogger<Program>();
 try
 {
     logger.LogInformation("Azure Function host is starting");
+    await host.RegisterLayoutTemplateAsync(CancellationToken.None);
     await host.RunAsync();
     logger.LogInformation("Azure Function host stopped");
 }

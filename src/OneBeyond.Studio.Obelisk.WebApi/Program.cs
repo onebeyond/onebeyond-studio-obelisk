@@ -19,7 +19,6 @@ using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Crosscuts.Options;
-using OneBeyond.Studio.Crosscuts.Utilities.Templating;
 using OneBeyond.Studio.DataAccess.EFCore.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.DependencyInjection;
 using OneBeyond.Studio.EmailProviders.Folder.Options;
@@ -41,6 +40,7 @@ using OneBeyond.Studio.Obelisk.Infrastructure;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data;
 using OneBeyond.Studio.Obelisk.Infrastructure.Data.Seeding;
 using OneBeyond.Studio.Obelisk.Infrastructure.DependencyInjection;
+using OneBeyond.Studio.Obelisk.Infrastructure.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.AmbientContexts;
 using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
@@ -49,6 +49,7 @@ using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
 using OneBeyond.Studio.Obelisk.WebApi.Swagger;
+using OneBeyond.Studio.TemplateRendering.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 
@@ -107,7 +108,7 @@ builder.Services.Configure<ClientApplicationOptions>(builder.Configuration.GetSe
 
 builder.Services.AddTransient<ClientApplicationLinkGenerator, ClientApplicationLinkGenerator>();
 
-builder.Services.AddTransient<ITemplateRenderer, HandleBarsTemplateRenderer>();
+builder.Services.AddHandlebarsTemplateRenderer();
 
 builder.Services.AddTransient<IApplicationClaimsService, ApplicationClaimsIdentityFactory>();
 
@@ -288,6 +289,7 @@ try
 {
     await app.InitialiseAsync(builder.Environment, CancellationToken.None);
     await app.SeedAsync(CancellationToken.None);
+    await app.RegisterLayoutTemplateAsync(CancellationToken.None);
     await app.RunAsync();
 }
 catch (Exception exception) when (exception is not HostAbortedException) // Used by EF migration building process
