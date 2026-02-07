@@ -171,7 +171,6 @@ builder.Services.ConfigureAll<OpenApiOptions>(options =>
     options.AddDocumentTransformer<VersionInfoDocumentTransformer>();
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
     options.AddOperationTransformer<AuthorizeSummaryOperationTransformer>();
-    options.AddOperationTransformer<FromMixedSourceOperationTransformer>();
 });
 
 builder.Services.AddDataAccessSeeding(

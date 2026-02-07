@@ -65,14 +65,11 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
         return CreatedAtAction(nameof(GetById), new { id = result }, result);
     }
 
-    // Please note! command parameter has FromMixedSource attribute!
-    // That means this command will be assembled from different sources:
-    //   - UpdateUser.UserId will be bound from query (userId)
-    //   - other command properties (userName, email, roleId, isActive) will be taken from request body
     /// <summary>
     /// Updates a specified user.
     /// </summary>
-    /// <param name="command">An <see cref="Domain.Features.Users.Commands.UpdateUser">UpdateUser</see> with the user's updated data.</param>
+    /// <param name="userId">The id of the user.</param>
+    /// <param name="request">The updated user data.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/> token to cancel the operation.</param>
     /// <returns><see cref="NoContentResult"/>.</returns>
     /// <response code="204">If the user has been updated successfully.</response>
@@ -83,9 +80,17 @@ public sealed class UsersController : QBasedController<GetUserDto, ListUsersDto,
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateUser(
-        [FromMixedSource] UpdateUser command,
+        [FromRoute(Name = "userId")] Guid userId,
+        [FromBody] UpdateUserDto request,
         CancellationToken cancellationToken)
     {
+        var command = new UpdateUser(
+            userId,
+            request.UserName, 
+            request.Email, 
+            request.RoleId, 
+            request.IsActive);
+
         await Mediator.Send(command, cancellationToken);
         return NoContent();
     }
