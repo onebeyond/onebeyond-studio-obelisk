@@ -48,9 +48,8 @@
     <PackageVersion Include="OneBeyond.Studio.Infrastructure.Azure" Version="10.0.0.7" />
     <PackageVersion Include="OneBeyond.Studio.TemplateRendering" Version="10.0.0.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="10.0.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.2" />
   </ItemGroup>
   <!-- ================= Test projects ================ -->
   <ItemGroup>
