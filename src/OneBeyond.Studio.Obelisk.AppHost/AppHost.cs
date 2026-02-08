@@ -21,6 +21,6 @@ var workers = builder
 var api = builder
     .AddProject<Projects.OneBeyond_Studio_Obelisk_WebApi>("api")
     .WithHttpHealthCheck("/health/live")
-    .WaitFor(workers);
+    .WaitFor(storage);
 
 await builder.Build().RunAsync();
