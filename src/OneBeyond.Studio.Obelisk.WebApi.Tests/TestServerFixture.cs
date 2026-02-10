@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Moq;
 using OneBeyond.Studio.Application.SharedKernel.Entities.Queries;
@@ -13,7 +13,6 @@ using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Obelisk.Application.Features.Users.Dto;
 using OneBeyond.Studio.Obelisk.Domain.Features.Users.Entities;
 using OneBeyond.Studio.Obelisk.WebApi.Controllers;
-using OneBeyond.Studio.Obelisk.WebApi.Extensions;
 using OneBeyond.Studio.Obelisk.WebApi.Helpers;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 
@@ -50,8 +49,7 @@ public sealed class TestServerFixture : IAsyncLifetime
             .AddApplicationPart(typeof(UsersController).Assembly);
 
         builder.Services.AddApiVersioning();
-        builder.Services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+        builder.AddDefaultHealthChecks();
 
         var app = builder.Build();
 
