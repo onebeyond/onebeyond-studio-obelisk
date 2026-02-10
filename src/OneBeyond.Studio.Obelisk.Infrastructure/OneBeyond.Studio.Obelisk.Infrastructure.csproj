@@ -18,6 +18,7 @@
 
   <ItemGroup Condition="'$(CompileMigrationDesignerFiles)'=='false'">
     <!-- This will speed up build process by not compiling designer files -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" VersionOverride="10.0.2" />
     <Compile Remove="Migrations\*.Designer.cs" />
   </ItemGroup>
 
