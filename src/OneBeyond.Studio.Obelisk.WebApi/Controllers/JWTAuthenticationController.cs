@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using EnsureThat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,11 @@ using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientCont
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
+[ApiVersionNeutral]
 [Produces("application/json")]
 [Route("api/account/jwt")]
-public sealed class JWTAuthenticationController : Controller
+public sealed class JWTAuthenticationController : ControllerBase
 {
-
     private readonly IMediator _mediator;
     private readonly AmbientContext _ambientContext;
 
