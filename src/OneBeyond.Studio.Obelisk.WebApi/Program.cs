@@ -1,9 +1,8 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.OpenApi;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using OneBeyond.Studio.Application.SharedKernel.DependencyInjection;
 using OneBeyond.Studio.Application.SharedKernel.DomainEvents;
 using OneBeyond.Studio.Core.Mediator.DependencyInjection;
@@ -48,9 +46,8 @@ using OneBeyond.Studio.Obelisk.WebApi.HostedServices;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.ExceptionHandling;
 using OneBeyond.Studio.Obelisk.WebApi.Middlewares.Security;
-using OneBeyond.Studio.Obelisk.WebApi.Swagger;
+using OneBeyond.Studio.Obelisk.WebApi.OpenApi;
 using OneBeyond.Studio.TemplateRendering.DependencyInjection;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -166,22 +163,18 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddCoreMediator();
 
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+// Register one OpenAPI document per API version group.
+// Add new AddOpenApi() calls here when new API versions are introduced.
+builder.Services.AddOpenApi("v1");
 
-builder.Services.AddSwaggerGen(options =>
+builder.Services.ConfigureAll<OpenApiOptions>(options =>
 {
-    string[] methodsOrder = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"];
-
-    options.OrderActionsBy(apiDescription =>
-    {
-        var route = apiDescription.ActionDescriptor.RouteValues["controller"];
-
-        var methodIndex = Array.FindIndex(
-            methodsOrder,
-            method => method.Equals(apiDescription.HttpMethod, StringComparison.OrdinalIgnoreCase));
-
-        return $"{route}_{methodIndex}";
-    });
+    options.CreateSchemaReferenceId = typeInfo => typeInfo.Type.FullName;
+    options.AddDocumentTransformer<VersionInfoDocumentTransformer>();
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    options.AddOperationTransformer<AuthorizeSummaryOperationTransformer>();
+    options.AddOperationTransformer<FromMixedSourceOperationTransformer>();
+    options.AddSchemaTransformer<SmartEnumSchemaTransformer>();
 });
 
 builder.Services.AddDataAccessSeeding(
@@ -265,7 +258,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseSwagger();
+app.MapOpenApi();
 
 app.UseSwaggerUI(options =>
 {
@@ -274,12 +267,12 @@ app.UseSwaggerUI(options =>
     foreach (var description in provider.ApiVersionDescriptions)
     {
         options.SwaggerEndpoint(
-            $"/swagger/{description.GroupName}/swagger.json",
-            $"{SwaggerConstants.APITitle} {description.GroupName.ToUpperInvariant()}");
-
-        // Set Swagger UI as the homepage
-        options.RoutePrefix = string.Empty;
+            $"/openapi/{description.GroupName}.json",
+            $"{ApiConstants.ApiTitle} {description.GroupName.ToUpperInvariant()}");
     }
+
+    // Set Swagger UI as the homepage
+    options.RoutePrefix = string.Empty;
 });
 
 app.MapControllers();
