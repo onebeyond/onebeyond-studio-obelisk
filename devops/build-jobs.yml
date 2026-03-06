@@ -160,6 +160,18 @@ jobs:
             dotnet-ef
             --version 10.0.*
 
+      # there is a bug known EF Core/.NET 10 Linux regression: dotnet ef on Linux/macOS can create or resolve Windows-style paths incorrectly, 
+      # which then surfaces as MSB3552: Resource file "**/*.resx" cannot be found. 
+      # The EF Core team has this tracked as dotnet/efcore#37506, labeled a regression, affecting .NET 10, with milestone 10.0.4
+      # this is a workaround until the issue is fixed
+      - task: DotNetCoreCLI@2
+        displayName: Build startup project
+        inputs:
+          command: build
+          projects: ${{parameters.projects_webApi}}
+          arguments: >
+            --configuration $(buildConfiguration)
+
       - task: DotNetCoreCLI@2
         displayName: "Build EF Bundle"
         inputs:
@@ -171,7 +183,8 @@ jobs:
             --startup-project ${{parameters.projects_webApi}}
             --self-contained
             --target-runtime linux-x64
-            --configuration Release
+            --configuration $(buildConfiguration)
+            --no-build
             --verbose
 
       - ${{ if eq(parameters.publishArtifacts, true) }}:
