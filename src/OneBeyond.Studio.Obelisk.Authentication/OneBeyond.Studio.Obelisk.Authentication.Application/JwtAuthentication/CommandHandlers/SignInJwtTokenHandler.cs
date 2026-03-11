@@ -7,6 +7,8 @@ using OneBeyond.Studio.Core.Mediator;
 using OneBeyond.Studio.Crosscuts.Logging;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Entities;
 using OneBeyond.Studio.Obelisk.Authentication.Application.Services.JwtAuthentication;
+using OneBeyond.Studio.Obelisk.Authentication.Domain;
+using OneBeyond.Studio.Obelisk.Authentication.Domain.AuthenticationFlows;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Commands;
 using OneBeyond.Studio.Obelisk.Authentication.Domain.JwtAuthentication.Exceptions;
@@ -20,19 +22,23 @@ internal sealed class SignInJwtTokenHandler : IRequestHandler<SignInJwtToken, Jw
     private readonly UserManager<AuthUser> _userManager;
     private readonly SignInManager<AuthUser> _signInManager;
     private readonly IJwtTokenService _jWTokenService;
+    private readonly IAuthenticationFlowHandler _authFlowHandler;
 
     public SignInJwtTokenHandler(
         UserManager<AuthUser> userManager,
         SignInManager<AuthUser> signInManager,
-        IJwtTokenService jWTokenservice)
+        IJwtTokenService jWTokenservice,
+        IAuthenticationFlowHandler authFlowHandler)
     {
         EnsureArg.IsNotNull(signInManager, nameof(signInManager));
         EnsureArg.IsNotNull(userManager, nameof(userManager));
         EnsureArg.IsNotNull(jWTokenservice, nameof(jWTokenservice));
+        EnsureArg.IsNotNull(authFlowHandler, nameof(authFlowHandler));
 
         _userManager = userManager;
         _signInManager = signInManager;
         _jWTokenService = jWTokenservice;
+        _authFlowHandler = authFlowHandler;
     }
 
     public async Task<JwtToken> Handle(SignInJwtToken command, CancellationToken cancellationToken)
@@ -84,9 +90,17 @@ internal sealed class SignInJwtTokenHandler : IRequestHandler<SignInJwtToken, Jw
             await _userManager.ResetAccessFailedCountAsync(identityUser);
         }
 
-        return await _jWTokenService.CreateTokenAsync(
+        var jwtToken = await _jWTokenService.CreateTokenAsync(
                 identityUser,
                 cancellationToken)
             .ConfigureAwait(false);
+
+        await _authFlowHandler.OnSignInCompletedAsync(
+                identityUser.Id,
+                SignInStatus.Success,
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return jwtToken;
     }
 }
