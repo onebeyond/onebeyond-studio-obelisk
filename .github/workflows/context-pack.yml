@@ -1,0 +1,52 @@
+name: "Context Pack"
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "docs/context/**"
+      - "tools/Obelisk.ContextPack/**"
+      - ".github/copilot-instructions.md"
+      - "AGENTS.md"
+      - "src/**"
+      - "Directory.Build.props"
+      - "Directory.Packages.props"
+      - ".github/workflows/context-pack.yml"
+  pull_request:
+    paths:
+      - "docs/context/**"
+      - "tools/Obelisk.ContextPack/**"
+      - ".github/copilot-instructions.md"
+      - "AGENTS.md"
+      - "src/**"
+      - "Directory.Build.props"
+      - "Directory.Packages.props"
+      - ".github/workflows/context-pack.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: "${{github.workflow}}-${{github.head_ref || github.ref}}"
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: "Refresh And Check Generated Facts"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup .NET CLI"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+
+      - name: "Restore Context Pack Tool"
+        run: dotnet restore tools/Obelisk.ContextPack/Obelisk.ContextPack.csproj
+
+      - name: "Regenerate Context Pack Facts"
+        run: dotnet run --project tools/Obelisk.ContextPack -- generate-template --repo .
+
+      - name: "Check For Drift"
+        run: git diff --exit-code -- docs/context/_generated
