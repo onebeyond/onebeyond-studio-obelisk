@@ -28,6 +28,7 @@ To run it, please install:
 2. [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)
 3. and also make sure that Azure functions and toolsets are up to date. In Visual Studio `Tools`->`Options`-> `Azure Functions` <img width="767" height="181" alt="image" src="https://github.com/user-attachments/assets/82907921-91e9-4ddd-9e21-93f389f74a67" />
 
+
 The default implementation of IEmailSender used in the application will store all generated e-mails in the following folder: `C:\inetpub\mailroot\Obelisk` (you can find the related code [here](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/Program.cs#LL148C15-L148C15)). This folder can be configured in [`appsettings.json -> EmailSender -> Folder -> Folder` section](https://github.com/onebeyond/onebeyond-studio-obelisk/blob/main/src/OneBeyond.Studio.Obelisk.WebApi/appsettings.json#L33). Please create this folder manually if it does not exist. Note: this only applies to Windows.
 
 To run the solution in VS, select the AppHost as startup project and press run. Can also `dotnet run` in the AppHost project.
@@ -36,7 +37,7 @@ To run the solution in VS, select the AppHost as startup project and press run. 
 
 ### Documentation
 
-For more detailed documentation, please refer to our [Wiki](https://github.com/onebeyond/onebeyond-studio-obelisk/wiki). Repository-specific architecture and generated facts also live in the local Context Pack in [`docs/context/`](docs/context/), starting with [`docs/context/overview.md`](docs/context/overview.md). For greenfield project bootstrap, see [`DAY0.md`](DAY0.md). If Codex skills are available, the same workflow is also packaged as `$bootstrap-obelisk-greenfield`.
+For more detailed documentation, please refer to our [Wiki](https://github.com/onebeyond/onebeyond-studio-obelisk/wiki)
 
 ### Contributing
 

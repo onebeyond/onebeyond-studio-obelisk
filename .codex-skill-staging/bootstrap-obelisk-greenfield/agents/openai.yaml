@@ -1,4 +1,0 @@
-interface:
-  display_name: "Obelisk Greenfield Bootstrap"
-  short_description: "Bootstrap greenfield Obelisk projects"
-  default_prompt: "Use $bootstrap-obelisk-greenfield to bootstrap a new AI-assisted Obelisk project."
