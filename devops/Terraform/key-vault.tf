@@ -37,3 +37,11 @@ resource "azurerm_key_vault_access_policy" "ci_service" {
 data "azuread_users" "key_vault_admins" {
   user_principal_names = var.key_vault_admins
 }
+
+resource "azurerm_key_vault_secret" "signalr_connection_string" {
+  depends_on   = [ azurerm_key_vault_access_policy.ci_service ]
+  key_vault_id = azurerm_key_vault.stage.id
+  name         = "SignalRConnectionString"
+  value        = azurerm_signalr_service.signalr.primary_connection_string
+  tags         = local.default_tags
+}

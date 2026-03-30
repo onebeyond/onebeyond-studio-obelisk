@@ -22,6 +22,7 @@ resource "azurerm_linux_web_app" "web_api" {
     InstrumentationEngine_EXTENSION_VERSION           = "~1"
     XDT_MicrosoftApplicationInsights_BaseExtensions   = "~1"
     XDT_MicrosoftApplicationInsights_Mode             = "recommended"
+    "AzureSignalRConnectionString"                    = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.signalr_connection_string.name})"
     "DomainEvents__Queue__ConnectionString"           = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "FileStorage__AzureBlobStorage__ConnectionString" = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${azurerm_key_vault_secret.storage_connection_string.name})"
     "Identities__Seeding__AdminPassword"              = "@Microsoft.KeyVault(VaultName=${azurerm_key_vault.stage.name};SecretName=${module.web_api_admin_password.secret_name})"
@@ -40,8 +41,11 @@ resource "azurerm_linux_web_app" "web_api" {
     minimum_tls_version   = "1.2"
     use_32_bit_worker     = false
     websockets_enabled    = true
-    health_check_path     = "/health/ready"
+    health_check_path     = "/"
     health_check_eviction_time_in_min = 10
+    cors {
+      allowed_origins = var.allow_dev ? concat([var.spa_url], var.dev_urls) : [var.spa_url]
+    }
     application_stack {
       dotnet_version = "10.0"
     }

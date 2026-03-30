@@ -70,3 +70,24 @@ variable "worker_sku_size" {
   type        = string
   description = "SKU for Worker for background jobs."
 }
+
+variable "allow_dev" {
+  type        = bool
+  description = "Allows Developers to connect to the API from localhost."
+}
+
+variable "spa_url" {
+  type        = string
+  description = "URL of SPA being used to access API"
+}
+
+variable "dev_urls" {
+  type        = list(string)
+  description = "List of URLs that can be used by devs to connect to the API. Required if allow_dev is true"
+  nullable    = true
+}
+
+variable "signalr_service_sku" {
+  type        = string
+  description = "SKU for SignalR Service"
+}
