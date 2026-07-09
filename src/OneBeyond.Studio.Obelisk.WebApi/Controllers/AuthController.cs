@@ -90,7 +90,7 @@ public sealed class AuthController : ControllerBase
         CancellationToken cancellationToken)
     {
         // To guard against timing attacks
-        Thread.Sleep(new Random().Next(1000, 3000));
+        await Task.Delay(new Random().Next(1000, 3000), cancellationToken);
 
         try
         {
