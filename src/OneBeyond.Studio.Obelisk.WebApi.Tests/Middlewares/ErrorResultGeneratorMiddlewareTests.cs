@@ -33,7 +33,7 @@ public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixtu
         var invalidRequest = new { };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/users/v1", invalidRequest);
+        var response = await _client.PostAsJsonAsync("/api/v1/users", invalidRequest);
 
         // Assert
         using var _ = new AssertionScope();
@@ -53,7 +53,7 @@ public class ErrorResultGeneratorMiddlewareTests : IClassFixture<TestServerFixtu
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await _client.GetAsync($"/api/users/v1/{nonExistentId}");
+        var response = await _client.GetAsync($"/api/v1/users/{nonExistentId}");
 
         // Assert
         using var _ = new AssertionScope();
