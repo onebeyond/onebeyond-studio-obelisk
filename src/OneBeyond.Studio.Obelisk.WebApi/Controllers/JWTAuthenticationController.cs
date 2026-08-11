@@ -14,9 +14,9 @@ using AmbientContext = OneBeyond.Studio.Obelisk.Application.Services.AmbientCont
 
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
-[ApiVersionNeutral]
+[ApiVersion("1.0")]
 [Produces("application/json")]
-[Route("api/account/jwt")]
+[Route("api/v{version:apiVersion}/account/jwt")]
 public sealed class JWTAuthenticationController : ControllerBase
 {
     private readonly IMediator _mediator;

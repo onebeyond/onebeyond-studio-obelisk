@@ -4,7 +4,7 @@ using OneBeyond.Studio.Domain.SharedKernel.Entities.Dto;
 namespace OneBeyond.Studio.Obelisk.WebApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]/v{version:apiVersion}")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 {
     protected ControllerBase()
